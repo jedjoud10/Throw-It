@@ -13,17 +13,33 @@ public class BotPathfinderScript : MonoBehaviour
     private Vector3 currentpoint;//Our current point vector
     public float pointthreshold = 0.1f;//The threshold of the distance from us to the reach point to change point index float
     public float RefreshPathRate = 2.0f;//How much delay is there between each get path tests
+    private Vector3 MyPos;//The position of the bot
+    private Vector3 EndPos;//The position of the things that we are going for
     // Start is called before the first frame update
     void Start()
     {
         pathfinder = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<FloodFillPathfinder>();//Search the whole scene for the gameobject that holds the pathfinder script and set it as our own pathfinder
-        FindPath();//Try to get path
+        Invoke("FindPath", 1.0f);//Try to get path after delay so we are sure to get it correctly
         botMovementScript = GetComponent<BotMovementScript>();//Set movement script to our own
+        #region Position setting
+        /*
+         Setting the bot's position and the end point's position since we cannot call their position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
+        */
+        EndPos = pathfinder.endPoint.position;
+        MyPos = transform.position;
+        #endregion
     }
 
     // Update is called once per frame
     void Update()
     {
+        #region Position setting
+        /*
+         Setting the bot's position and the end point's position since we cannot call their position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
+        */
+        EndPos = pathfinder.endPoint.position;
+        MyPos = transform.position;
+        #endregion
         #region Path points loops
         if (points.Count != 0)
         {
@@ -42,10 +58,14 @@ public class BotPathfinderScript : MonoBehaviour
     }
     public void FindPath() //Method that can be called late so we are sure we called it after the calculations
     {        
-        points = pathfinder.FindPathFloodFill(transform.position, pathfinder.endPoint.position, this);//Pathfind
+        pathfinder.FindPathFloodFill(MyPos, EndPos, this);//Pathfind
+    }
+    public void SetNewPoints(List<Vector3> _points) //Settings of new points called from the threaded method
+    {
+        points = _points;//Sets new points
         if (points.Count == 0)//Repeat pathfinding until calculations are done
         {
-            Invoke("FindPath", RefreshPathRate);//Repeat with the refresh rate
+            //Invoke("FindPath", RefreshPathRate);//Repeat with the refresh rate
         }
         else
         {

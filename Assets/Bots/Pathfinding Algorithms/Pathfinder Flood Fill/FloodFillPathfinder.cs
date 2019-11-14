@@ -12,6 +12,8 @@ public class FloodFillPathfinder : MonoBehaviour
     public bool UseDebug;
     [Tooltip("How to use gizmos")]
     public GizmoMode gizmoMode;//How to use gizmos
+    [Tooltip("The max number of threads that this pathfinder can use when bots call for their path")]
+    public int MaxNumThread;//The max number of threads that this pathfinder can use when bots call for their path
     [Range(1, 10)]
     [Tooltip("How much detail can we allow")]
     public int Resolution = 1;//How much detail can we allow
@@ -58,6 +60,7 @@ public class FloodFillPathfinder : MonoBehaviour
     private List<Node> currentlyExploringNodes;//The current nodes that are being controlled
     private int BiggestNumNode = 0;//The biggest iteration count foreach node in calculated grid
     private List<BotPathfinderScript> bots = new List<BotPathfinderScript>();//The bots that called this pathfinder class 
+    private Thread[] reversecalculationthreads = new Thread[0];//The threads for each bot to use for reverse calculations
     public enum GizmoMode 
     {
         Explored_Node, Grid, Path, None
@@ -69,6 +72,7 @@ public class FloodFillPathfinder : MonoBehaviour
         gridsizeX *= Resolution;//Make more nodes in X
         gridsizeY *= Resolution;//Make more nodes int Y
         gridScale /= Resolution;//Make scale less
+        reversecalculationthreads = new Thread[MaxNumThread];//Setup the thread array
         RecalculateMap();//Calculate everything from start
     }
     public void RecalculateMap() //Method called when the map has changed (Ex : Player has placed a brick)
@@ -102,23 +106,48 @@ public class FloodFillPathfinder : MonoBehaviour
         }
         #endregion
     }
-    public List<Vector3> FindPathFloodFill(Vector3 pos, Vector3 endpos, BotPathfinderScript botscript)//A method to be called from bots when they need they'r path to be found 
+    public void FindPathFloodFill(Vector3 pos, Vector3 endpos, BotPathfinderScript botscript)//A method to be called from bots when they need they'r path to be found 
     {
+        Debug.Log(reversecalculationthreads.Length);
+        for (int i = 0; i < reversecalculationthreads.Length; i++)//Loops over all avaible threads
+        {
+            Thread thread = reversecalculationthreads[i];//Reference for helping me out
+            if (thread == null)
+            {
+                thread = new Thread(() => FindPathFloodFillThread(pos, endpos, botscript));//Init the thread
+                thread.Start();//Start the thread
+                return; //We have nothing else to do so we can return
+            }            
+            else if(!thread.IsAlive)//Checks available threads
+            {
+                thread = new Thread(() => FindPathFloodFillThread(pos, endpos, botscript));//Init the thread
+                thread.Start();//Start the thread
+                return; //We have nothing else to do so we can return
+            }
+        }        
+    }
+    private void FindPathFloodFillThread(Vector3 pos, Vector3 endpos, BotPathfinderScript botscript) //This method will handles the reverse pathfinding in other threads
+    {
+        /*
+         Every bot that wants its path calculated and if the grid has not been calculated yet, it will add it to the bots list and wait until the grid is done so we can call them all to calculate pathes
+        */         
+        if (!bots.Contains(botscript))//Doing this to avoid duplicates
+        {
+            bots.Add(botscript);//Adding the bot script to the list of bots, so when the map changes we can recall every path
+        }
         List<Vector3> endpathpoints = new List<Vector3>();//The output of point the bot is going to
+        Node myendnode;//A end node for this method only because we are multithreaded 
+        List<Node> mypath;//Make a path specific for this method only since again, we are multithreaded
         if (finishedCalculations)
         {
-            endNode = NodeFromWorldPosition(endpos);//Get end node from position of end object
-            endNode.Iteration = 0;
-            path = GetPath(NodeFromWorldPosition(pos), endNode);//Finding path
-            foreach (var node in path)//Change each node to point in 3D space for bot to move to
+            myendnode = NodeFromWorldPosition(endpos);//Get end node from position of end object
+            myendnode.Iteration = 0;
+            mypath = GetPath(NodeFromWorldPosition(pos), myendnode);//Finding path
+            foreach (var node in mypath)//Change each node to point in 3D space for bot to move to
             {
                 endpathpoints.Add(node.WorldPosition);//Add point to point list to return
             }
-            pathes.Add(path);//Add the path to the total pathes for gizmos
-            if (!bots.Contains(botscript))//Doing this to avoid duplicates
-            {
-                bots.Add(botscript);//Adding the bot script to the list of bots, so when the map changes we can recall every path
-            }
+            pathes.Add(mypath);//Add the path to the total pathes for gizmos
         }
         else
         {
@@ -127,7 +156,7 @@ public class FloodFillPathfinder : MonoBehaviour
                 Debug.Log("Didnt caclulate path yet !");//Still didnt calculate each node's number
             }
         }
-        return endpathpoints;//Finished getting path !!
+        botscript.SetNewPoints(endpathpoints);//Set new points of bot
     }
     private void SetDirections(bool diagonals) 
     {
@@ -352,6 +381,10 @@ public class FloodFillPathfinder : MonoBehaviour
         if (UseDebug)
         {
             Debug.Log("Time spent on calculating pathes : " + stopwatch.ElapsedMilliseconds / 1000.0f);
+        }
+        foreach (var bot in bots)//Call every bot to tell them that we recalculated
+        {
+            bot.FindPath();//Recall the pathfinding to call us back again to pathfind the new setted grid pathes
         }
         #endregion
     }
