@@ -22,7 +22,6 @@ public class SnowballMovementScript : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Damage *= Mathf.RoundToInt(rigidBody.velocity.magnitude);//Take account velocity to damage, so if the snowball is fast, it does more damage
-
         //Enter collision code handling
 
         Destroy(gameObject);//Destroys the snowball

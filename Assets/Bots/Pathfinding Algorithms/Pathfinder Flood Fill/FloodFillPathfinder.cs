@@ -287,7 +287,6 @@ public class FloodFillPathfinder : MonoBehaviour
     private List<Node> GetPath(Node startNode, Node endNode) 
     {
         #region Pathfinding
-        SetDirections(moveDiagonals);//Sets the directions of what node you can move on
         Node currentLoopNode = startNode;//The current node you are currently for the reverse pathfinding
         List<Node> neighbouringNodes = GetNeighbouringNodes(currentLoopNode);//Using the neighbouringNodes variable as advantage to store neighbours
         int lowestCost = 99999;//The lowest cost of each neighbour of currntLoopNode

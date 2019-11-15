@@ -7,11 +7,10 @@ public class SnowballThrowingScript : MonoBehaviour
     public GameObject Snowball;//The snowball prefab that we are going to throw
     public Transform ThrowPoint;//The point where the snowball is throwed
     private GameObject InstanceSnowball;//The instance of the Snowball var
-    private float ChargePercent;//How much did we charge the snowball ?
+    private float ChargePercent = 0;//How much did we charge the snowball ?
     public float ChargeIncement;//How fast does the charge rises ?
     public float ChargeTimeThreshold;//How much time before starting the charging of the snowball
     private float ChargeTime;//Variable taking track of the time the user held the mouse button
-
     // Start is called before the first frame update
     void Start()
     {
@@ -27,11 +26,15 @@ public class SnowballThrowingScript : MonoBehaviour
             if (ChargeTime > ChargeTimeThreshold)//If we held the button long enough, then start charging
             {
                 ChargePercent = ChargePercent + ChargeIncement * Time.deltaTime; //Charge the throw
-                ChargePercent = Mathf.Clamp(ChargePercent, 0, 1);//Clamp the value so we stay between a 0 - 1 range
+                ChargePercent = Mathf.Clamp(ChargePercent, 0.9f, 2);//Clamp the value so we stay between a 0 - 1 range
             }
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            if (ChargeTime < ChargeTimeThreshold)
+            {
+                ChargePercent = 1;//Reset the charge since we are not charging
+            }
             ThrowSnowball();//Throw snowball
             ChargePercent = 0;//Reset the charge since we threw the snowball
             ChargeTime = 0;//Reset the time since we threw the snowball
