@@ -35,8 +35,4 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
- 
-#Other useless stuff
-*.unity
-*.prefab
-*.asset
+
