@@ -1587,15 +1587,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32cd6956d3011854d904de8e73523fd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseDebug: 1
+  UseDebug: 0
   gizmoMode: 1
   MaxNumThread: 30
-  Resolution: 2
+  Resolution: 1
   endPoint: {fileID: 776076931}
   maxIterationReversePath: 800
   maxIterations: 800
-  useDiagonals: 1
-  moveDiagonals: 1
+  useDiagonals: 0
+  moveDiagonals: 0
   gridsizeX: 25
   gridsizeY: 25
   gridScale: -5
