@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using UnityEditor;
-//Multithreaded pathfinder
+//Multithreaded pathfinder that uses the flood fill algorithm
 public class FloodFillPathfinder : MonoBehaviour
 {
     [Header("Settings")]
