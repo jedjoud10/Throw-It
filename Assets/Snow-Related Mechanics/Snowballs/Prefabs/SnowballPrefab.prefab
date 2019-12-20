@@ -102,8 +102,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2592843989083868680}
-  - component: {fileID: 2592843989083868681}
   - component: {fileID: 2592843989083868682}
+  - component: {fileID: 8865243382577544088}
+  - component: {fileID: 6734747142790766063}
   m_Layer: 0
   m_Name: SnowballPrefab
   m_TagString: Untagged
@@ -126,21 +127,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2592843989083868681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2592843989083868683}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23e45a924e6f19a49a98179755a4c310, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Size: 0.5
-  Speed: 600
-  Damage: 0
 --- !u!54 &2592843989083868682
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -157,3 +143,33 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8865243382577544088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592843989083868683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a3db2cfed81aa5468cf0b82deaf7deb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 600
+  Size: 0.5
+  Damage: 10
+  Speed_Randomnes: 0.2
+  Size_Randomnes: 0.2
+  Damage_Randomnes: 0.2
+--- !u!114 &6734747142790766063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592843989083868683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23e45a924e6f19a49a98179755a4c310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
