@@ -11,6 +11,8 @@ public class PlayerControllerScript : MonoBehaviour
     public float MaxRotationUp;//The maximum rotation when looking up
     private float CameraRotationXAxis;
     [Header("Player Movement")]
+    [Range(1, 3)]
+    public float WalkSprintSmoothness;//How much smoothness to apply between the sprinting and walking
     public float WalkingFov;//The FOV of the camera when walking
     public float WalkingSpeed; //The speed of movement of the player
     public float SprintingSpeed; //The sprinting speed of the movement of the player
@@ -39,10 +41,10 @@ public class PlayerControllerScript : MonoBehaviour
         CameraRotationXAxis -= Input.GetAxis("Mouse Y") * Sensivity;//Sets the up-down value of camera rotation
         CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
         Camera.transform.localEulerAngles = new Vector3(CameraRotationXAxis, 0, 0);//Rotates the camera up-down motion from variable
-        Camera.fieldOfView = Mathf.Lerp(WalkingFov, WalkingFov + SprintingFovAdd, Input.GetAxis("Sprint"));//Changes the FOV of the player camera if sprinting
+        Camera.fieldOfView = Mathf.Lerp(WalkingFov, WalkingFov + (SprintingFovAdd * FOVFromInputMovement()), Input.GetAxis("Sprint") * WalkSprintSmoothness);//Changes the FOV of the player camera if sprinting. Also takes account the player velocity
         #endregion
         #region Player Movement Control
-        Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, Input.GetAxis("Sprint"));//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
+        Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, Input.GetAxis("Sprint") * WalkSprintSmoothness);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
         Movement.x = Input.GetAxis("LeftRight") * Speed * Time.deltaTime;//Left/right movement
         Movement.z = Input.GetAxis("ForwardBackward") * Speed * Time.deltaTime;//Forward/backwawrd movement
         Movement = transform.TransformDirection(Movement);//Takes account the rotation of the player when moving
@@ -71,6 +73,15 @@ public class PlayerControllerScript : MonoBehaviour
             }
         }//Allow debug stuff
     }
+    //Returns the fov the camera of the player needs to be based on the speed of the player, so if the player does not move, the fov will be normal, if they do, it will increase
+    private float FOVFromInputMovement()
+    {
+        //Inputs from keyboard
+        //Take absolute number since range is from -1 to 1
+        float x = Mathf.Abs(Input.GetAxis("LeftRight"));
+        float z = Mathf.Abs(Input.GetAxis("ForwardBackward"));
+        return (x + z) / 2;//Get the average of both speeds
+    }
     void OnGUI()
     {
         if (Debug.isDebugBuild)
@@ -83,6 +94,7 @@ public class PlayerControllerScript : MonoBehaviour
             GUI.Label(new Rect(100, 100, 100, 30), "Sprinting Speed");
             GUI.Label(new Rect(100, 125, 100, 30), "Walking FOV");
             GUI.Label(new Rect(100, 150, 100, 30), "Sprinting FOV");
+            GUI.Label(new Rect(100, 175, 100, 30), "Sprinting/Walking Smoothness");
             Sensivity = float.Parse(GUI.TextField(new Rect(0, 0, 100, 30), Sensivity.ToString()));
             WalkingSpeed = float.Parse(GUI.TextField(new Rect(0, 25, 100, 30), WalkingSpeed.ToString()));
             Jump = float.Parse(GUI.TextField(new Rect(0, 50, 100, 30), Jump.ToString()));
@@ -90,6 +102,7 @@ public class PlayerControllerScript : MonoBehaviour
             SprintingSpeed = float.Parse(GUI.TextField(new Rect(0, 100, 100, 30), SprintingSpeed.ToString()));
             WalkingFov = float.Parse(GUI.TextField(new Rect(0, 125, 100, 30), WalkingFov.ToString()));
             SprintingFovAdd = float.Parse(GUI.TextField(new Rect(0, 150, 100, 30), SprintingFovAdd.ToString()));
+            WalkSprintSmoothness = float.Parse(GUI.TextField(new Rect(0, 175, 100, 30), WalkSprintSmoothness.ToString()));
         }
     }//Debugging GUI stuff
 }
