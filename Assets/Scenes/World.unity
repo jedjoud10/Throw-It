@@ -205,7 +205,8 @@ MonoBehaviour:
   Camera: {fileID: 1083890688}
   MinRotationDown: -90
   MaxRotationUp: 90
-  WalkSprintSmoothness: 1
+  WalkSprintSmoothness: 2
+  WalkSprintSmoothnessFovInput: 0.1
   WalkingFov: 60
   WalkingSpeed: 5.5
   SprintingSpeed: 7

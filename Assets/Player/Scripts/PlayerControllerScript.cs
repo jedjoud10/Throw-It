@@ -13,6 +13,8 @@ public class PlayerControllerScript : MonoBehaviour
     [Header("Player Movement")]
     [Range(1, 3)]
     public float WalkSprintSmoothness;//How much smoothness to apply between the sprinting and walking
+    [Range(0.1f, 3)]
+    public float WalkSprintSmoothnessFovInput;//How much smoothness to apply between the sprinting and walking when moving
     public float WalkingFov;//The FOV of the camera when walking
     public float WalkingSpeed; //The speed of movement of the player
     public float SprintingSpeed; //The sprinting speed of the movement of the player
@@ -77,10 +79,10 @@ public class PlayerControllerScript : MonoBehaviour
     private float FOVFromInputMovement()
     {
         //Inputs from keyboard
-        //Take absolute number since range is from -1 to 1
+        //Take absolute number since range is from -1 to 1 and we need the range to be from 0 to 1
         float x = Mathf.Abs(Input.GetAxis("LeftRight"));
         float z = Mathf.Abs(Input.GetAxis("ForwardBackward"));
-        return (x + z) / 2;//Get the average of both speeds
+        return Mathf.Clamp((x + z) * WalkSprintSmoothnessFovInput, 0, 1);//Get the average of both speeds
     }
     void OnGUI()
     {

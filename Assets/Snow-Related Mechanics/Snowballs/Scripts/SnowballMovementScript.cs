@@ -23,7 +23,7 @@ public class SnowballMovementScript : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();//Sets the rigidbody to our own
         rigidBody.AddForce(rigidBody.transform.forward * Speed * _Speed);//Pushes the snowball in the direction it is currently heading. Multiply the speed by the _speed argument so we can change how fast we can throw it in the SnowballThrowingScript.cs script
         rigidBody.transform.eulerAngles = AngularVelocity;//Set rotation
-        rigidBody.angularVelocity = AngularVelocity;//Set angular velocity
+        rigidBody.AddTorque(AngularVelocity);//Add angular velocity force
         #endregion
     }
     //When we hit an object (Ex. : Player, Snowman, Ground)
