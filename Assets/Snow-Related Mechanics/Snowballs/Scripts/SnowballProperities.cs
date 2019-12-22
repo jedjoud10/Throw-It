@@ -8,20 +8,26 @@ public class SnowballProperities : MonoBehaviour
     public float Speed;//Speed force applied at start
     public float Size;//Size of snowball
     public int Damage;//Damage applied to someone/something when it collides with the snowball
+    [HideInInspector()]
+    public Vector3 AngularVelocity;//The angular velocity of the snowball at throw
     [Header("Randomness")]
     [Range(0, 2)]
-    public float Speed_Randomnes;//How much randomness to apply to speed
+    public float SpeedRandomness;//How much randomness to apply to speed
     [Range(0, 2)]
-    public float Size_Randomnes;//How much randomness to apply to speed
+    public float SizeRandomness;//How much randomness to apply to speed
     [Range(0, 2)]
-    public float Damage_Randomnes;//How much randomness to apply to speed
+    public float DamageRandomness;//How much randomness to apply to speed
+    [Range(0, 100)]
+    public float AngularVelocityRange; 
     //Randomizes the values
     private void RandomizeValues() 
     {
-        Speed += Random.Range(-Speed_Randomnes, Speed_Randomnes) * Speed;
-        Size += Random.Range(-Size_Randomnes, Size_Randomnes) * Size;
+        //Randomize
+        Speed += Random.Range(-SpeedRandomness, SpeedRandomness) * Speed;
+        Size += Random.Range(-SizeRandomness, SizeRandomness) * Size;
+        AngularVelocity = Random.insideUnitSphere * AngularVelocityRange;//Random vector for angular velocity
         //Round to int since damage is int
-        Damage += Mathf.RoundToInt(Random.Range(-Damage_Randomnes, Damage_Randomnes) * Damage);
+        Damage += Mathf.RoundToInt(Random.Range(-DamageRandomness, DamageRandomness) * Damage);
     }
     //Init snowball
     public void InitSnowball() //Called from other scripts to init some properities and change them in some way. Also calles other stuff other from properities
