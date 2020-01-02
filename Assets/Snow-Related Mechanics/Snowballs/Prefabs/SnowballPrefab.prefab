@@ -66,9 +66,9 @@ MonoBehaviour:
   Size: 0.5
   Damage: 10
   AngularVelocity: {x: 0, y: 0, z: 0}
-  SpeedRandomness: 0
-  SizeRandomness: 0
-  DamageRandomness: 0
+  SpeedRandomness: 0.1
+  SizeRandomness: 0.1
+  DamageRandomness: 0.1
   AngularVelocityRange: 10
 --- !u!114 &6734747142790766063
 MonoBehaviour:

@@ -1620,7 +1620,7 @@ MonoBehaviour:
   UseDebug: 0
   gizmoMode: 1
   MaxNumThread: 30
-  Resolution: 1
+  Resolution: 3
   endPoint: {fileID: 776076931}
   maxIterationReversePath: 800
   maxIterations: 800
