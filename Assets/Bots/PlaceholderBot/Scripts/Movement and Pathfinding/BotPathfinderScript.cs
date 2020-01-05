@@ -11,8 +11,7 @@ public class BotPathfinderScript : MonoBehaviour
     private List<Vector3> points = new List<Vector3>();//The points
     private int currentpointindex = 0;//The index of the point we are trying to reach
     private Vector3 currentpoint;//Our current point vector
-    public float pointthreshold = 0.1f;//The threshold of the distance from us to the reach point to change point index float
-    public float RefreshPathRate = 2.0f;//How much delay is there between each get path tests
+    public float pointThreshold = 0.1f;//The threshold of the distance from us to the reach point to change point index float
     private Vector3 MyPos;//The position of the bot
     private Vector3 EndPos;//The position of the things that we are going for
     // Start is called before the first frame update
@@ -43,7 +42,7 @@ public class BotPathfinderScript : MonoBehaviour
         #region Path points loops
         if (points.Count != 0)
         {
-            if (Vector3.Distance(transform.position, currentpoint) < pointthreshold)//Check distance and threshold
+            if (Vector3.Distance(transform.position, currentpoint) < pointThreshold)//Check distance and threshold
             {
                 if (currentpointindex < points.Count - 1)//Not to get error out of index
                 {
@@ -56,6 +55,7 @@ public class BotPathfinderScript : MonoBehaviour
         }
         #endregion
     }
+    //Only call (On each bot) when map has changed, and not repetedly so we can save on performence
     public void FindPath() //Method that can be called late so we are sure we called it after the calculations
     {        
         pathfinder.FindPathFloodFill(MyPos, EndPos, this);//Pathfind

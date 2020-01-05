@@ -28,8 +28,8 @@ public class BotMovementScript : MonoBehaviour
         #region Movement & Rotation
         #region Normalization of position & movement
         //We use the normalized value so when the bot gets closer to the position, it's speed stays constant and does not decrease
-        Movement.x = (transform.position - position).normalized.x * Time.deltaTime * Speed;//Delta movement of the position that we want to go in X axis
-        Movement.z = (transform.position - position).normalized.z * Time.deltaTime * Speed;//Delta movement of the position that we want to go in Z axis
+        Movement.x = (position - transform.position).normalized.x * Time.deltaTime * Speed;//Delta movement of the position that we want to go in X axis
+        Movement.z = (position - transform.position).normalized.z * Time.deltaTime * Speed;//Delta movement of the position that we want to go in Z axis
         #endregion
         if (Movement.x != 0 && Movement.z != 0)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
         {

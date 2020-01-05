@@ -9,7 +9,7 @@ public class GameConfigSaverLoader
     //Setup pathes fo config saver loader
     public void SetupPathes() 
     {
-        config_path = Application.dataPath + "/config.txt";
+        config_path = Application.persistentDataPath + "/config.txt";
     }
     //Save the string into config file
     public void SaveConfig(GameConfig gameConfig) 
@@ -26,7 +26,7 @@ public class GameConfigSaverLoader
         }
         else
         {
-            Debug.LogError("Config file does not exist !");
+            Debug.LogWarning("Config file does not exist !");
         }
         return null;
     }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2528547628184728751}
   - component: {fileID: 2528547628184728748}
   - component: {fileID: 5320872013909586124}
+  - component: {fileID: 7809379998080732962}
   m_Layer: 0
   m_Name: PlaceholderBot
   m_TagString: Untagged
@@ -64,7 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd8c7be4d1ec4941953706eca95c457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: -0.5
+  Speed: 1.5
   RotationSpeed: 0.98
 --- !u!114 &5320872013909586124
 MonoBehaviour:
@@ -80,6 +81,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 100
   Health: 0
+--- !u!114 &7809379998080732962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528547628184728755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0270affd646eff84eae94ad58dbfb7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointThreshold: 0.1
 --- !u!1001 &1121514172460544902
 PrefabInstance:
   m_ObjectHideFlags: 0
