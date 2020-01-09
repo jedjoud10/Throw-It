@@ -37,6 +37,8 @@ public class FloodFillPathfinder : MonoBehaviour
     public float gridScale;//The scale of the grid
     [Tooltip("The radius of the sphere to check collisions with other objects")]
     public float sphereRadiusBlockage;//The radius of the sphere to check collisions for
+    [Tooltip("Should we simplify the path of the bots ?")]
+    public bool simplifyPath;//Should we simplify the path of the bots
     #endregion
     [Header("Weighting")]
     #region Weighting Settings
@@ -313,7 +315,7 @@ public class FloodFillPathfinder : MonoBehaviour
             }
         }
         pathOfNodes.Add(endNode);//Add the end node since the while loop dosent add it itself
-        pathOfNodes = SimplifyPath(pathOfNodes);//Simplifying path !!
+        if( simplifyPath ) pathOfNodes = SimplifyPath(pathOfNodes);//Simplifying path !!
         return pathOfNodes;//Getting out the path!!
         #endregion
     }
