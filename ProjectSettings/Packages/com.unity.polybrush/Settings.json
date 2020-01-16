@@ -16,7 +16,7 @@
             {
                 "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "Scattering.ParentObjectsWithSurface",
-                "value": "{\"m_Value\":true}"
+                "value": "{\"m_Value\":false}"
             },
             {
                 "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
@@ -71,12 +71,12 @@
             {
                 "type": "UnityEditor.Polybrush.PrefabLoadout, Unity.Polybrush.Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ScatteringEditor.userLoadout",
-                "value": "{\"m_Value\":{\"infos\":[{\"palette\":{\"fileID\":11400000,\"guid\":\"116d561e0e7175b44a83c4b8db54bae8\",\"type\":2},\"prefab\":{\"fileID\":2475291462604367527,\"guid\":\"ea801d72d3253184e9ff5f66f32b1813\",\"type\":3}},{\"palette\":{\"fileID\":11400000,\"guid\":\"116d561e0e7175b44a83c4b8db54bae8\",\"type\":2},\"prefab\":{\"fileID\":624770681035929212,\"guid\":\"af9d4075b6d5b9e459697654a905d2b4\",\"type\":3}},{\"palette\":{\"fileID\":11400000,\"guid\":\"116d561e0e7175b44a83c4b8db54bae8\",\"type\":2},\"prefab\":{\"fileID\":5188787194358725487,\"guid\":\"d34f91dead8c8224a83d1fdefe9381c7\",\"type\":3}}]}}"
+                "value": "{\"m_Value\":{\"infos\":[{\"palette\":{\"fileID\":11400000,\"guid\":\"116d561e0e7175b44a83c4b8db54bae8\",\"type\":2},\"prefab\":{\"fileID\":624770681035929212,\"guid\":\"af9d4075b6d5b9e459697654a905d2b4\",\"type\":3}},{\"palette\":{\"fileID\":11400000,\"guid\":\"116d561e0e7175b44a83c4b8db54bae8\",\"type\":2},\"prefab\":{\"fileID\":5188787194358725487,\"guid\":\"d34f91dead8c8224a83d1fdefe9381c7\",\"type\":3}},{\"palette\":{\"fileID\":11400000,\"guid\":\"116d561e0e7175b44a83c4b8db54bae8\",\"type\":2},\"prefab\":{\"fileID\":2475291462604367527,\"guid\":\"ea801d72d3253184e9ff5f66f32b1813\",\"type\":3}}]}}"
             },
             {
                 "type": "System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "ScatteringEditor.PreviewThumSize",
-                "value": "{\"m_Value\":64}"
+                "value": "{\"m_Value\":62}"
             },
             {
                 "type": "System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
@@ -92,6 +92,11 @@
                 "type": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "RaiseLowerBrush.Strength",
                 "value": "{\"m_Value\":5.0}"
+            },
+            {
+                "type": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                "key": "Brush.VertexBillboardSize",
+                "value": "{\"m_Value\":2.0}"
             },
             {
                 "type": "UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
