@@ -33,7 +33,12 @@ public class SnowballMovementScript : MonoBehaviour
         GameObject otherobject = collision.gameObject;//The colision gameobject
                                                       //Enter collision code handling
 
-        if (otherobject.GetComponent<BotHealthScript>() != null) otherobject.GetComponent<BotHealthScript>().DamageBot( Damage );//Damage bot
+        if (otherobject.GetComponent<BotHealthScript>() != null) 
+        {
+            //Damage the hit bot
+            otherobject.GetComponent<BotHealthScript>().DamageBot(Damage);
+        }
+        
 
         Destroy(gameObject);//Destroys the snowball
     }

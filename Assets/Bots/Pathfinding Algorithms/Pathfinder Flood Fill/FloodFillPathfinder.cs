@@ -39,6 +39,8 @@ public class FloodFillPathfinder : MonoBehaviour
     public float sphereRadiusBlockage;//The radius of the sphere to check collisions for
     [Tooltip("Should we simplify the path of the bots ?")]
     public bool simplifyPath;//Should we simplify the path of the bots
+    [Tooltip("Is this walkable terrain ? (USE ONLY WHEN NOT USING WHEIGHTED POINTS)")]
+    public Collider terrainCollider;//Walkable terrain the ai can use
     #endregion
     [Header("Weighting")]
     #region Weighting Settings
@@ -180,11 +182,27 @@ public class FloodFillPathfinder : MonoBehaviour
         Vector3 pos;//Make a refference of position for later nodes
         nodes = new Node[gridsizeX, gridsizeY];//Resize the grid array
         float dist;//A float var if we ever use weights. We will use this var as mult for the weight, the more further away, the weights are less
+        RaycastHit hit;//A hit so we can check if we hit the terrain collider
         for (int x = 0; x < gridsizeX; x++)//Loop of X
         {
             for (int y = 0; y < gridsizeY; y++)//Loop of Y
             {
                 pos = new Vector3(gridScale * x + basePos.x, transform.position.y, gridScale * y + basePos.z);//Set the correct location for next line
+                if(terrainCollider != null) //Cast rays from above, if it is terrain then set y so it is walkable part, if not, set y to be not walkable part
+                {
+                    if(Physics.Raycast(pos, Vector3.down * 10000000, out hit)) //The raycast with the return hit data
+                    {
+                        if (hit.collider == terrainCollider)//We hit the terrain, make that node walkable
+                        {
+                            pos.y = hit.point.y + sphereRadiusBlockage * 1.2f;//Multiplied by 1.2 to make it slighty above the ai
+                        }
+                        else//We did not hit the terrain, make that node unwalkable 
+                        {
+                            pos.y = hit.point.y;//Exact point of collision. This could be more optimized to directly tell it that it has failed
+                        }
+                    }
+                }
+                
                 if (useDraggablePoints)//Lerp the current pos to the closest point, only in y axis for the moment
                 {
                     dist = Vector3.Distance(pos, PosOfClosest(GameobjectNodes, pos));

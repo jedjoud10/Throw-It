@@ -18,7 +18,7 @@ public class BotPathfinderScript : MonoBehaviour
     void Start()
     {
         pathfinder = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<FloodFillPathfinder>();//Search the whole scene for the gameobject that holds the pathfinder script and set it as our own pathfinder
-        Invoke("FindPath", 1.0f);//Try to get path after delay so we are sure to get it correctly
+        Invoke("FindPath", 3.0f);//Try to get path after delay so we are sure to get it correctly
         botMovementScript = GetComponent<BotMovementScript>();//Set movement script to our own
         #region Position setting
         /*
@@ -32,33 +32,36 @@ public class BotPathfinderScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        #region Position setting
-        /*
-         Setting the bot's position and the end point's position since we cannot call their position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
-        */
-        EndPos = pathfinder.endPoint.position;
-        MyPos = transform.position;
-        #endregion
-        #region Path points loops
-        if (points.Count != 0)
-        {
-            if (Vector3.Distance(transform.position, currentpoint) < pointThreshold)//Check distance and threshold
+        if(pathfinder != null) 
+        { 
+            #region Position setting
+            /*
+             Setting the bot's position and the end point's position since we cannot call their position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
+            */
+            EndPos = pathfinder.endPoint.position;
+            MyPos = transform.position;
+            #endregion
+            #region Path points loops
+            if (points.Count != 0)
             {
-                if (currentpointindex < points.Count - 1)//Not to get error out of index
+                if (Vector3.Distance(transform.position, currentpoint) < pointThreshold)//Check distance and threshold
                 {
-                    currentpointindex++;//Add one to index
+                    if (currentpointindex < points.Count - 1)//Not to get error out of index
+                    {
+                        currentpointindex++;//Add one to index
+                    }
+                    currentpoint = points[Mathf.Clamp(currentpointindex, 0, points.Count - 1)];//Clamping the value for no out of range errors
                 }
-                currentpoint = points[Mathf.Clamp(currentpointindex, 0, points.Count - 1)];//Clamping the value for no out of range errors
+                currentpoint.y = transform.position.y;
+                botMovementScript.MoveToPosition(currentpoint);//Move to position passed to the botmovementscript
             }
-            currentpoint.y = transform.position.y;
-            botMovementScript.MoveToPosition(currentpoint);//Move to position passed to the botmovementscript
+            #endregion
         }
-        #endregion
     }
     //Only call (On each bot) when map has changed, and not repetedly so we can save on performence
     public void FindPath() //Method that can be called late so we are sure we called it after the calculations
     {        
-        pathfinder.FindPathFloodFill(MyPos, EndPos, this);//Pathfind
+        if(pathfinder != null) pathfinder.FindPathFloodFill(MyPos, EndPos, this);//Pathfind
     }
     public void SetNewPoints(List<Vector3> _points) //Settings of new points called from the threaded method
     {

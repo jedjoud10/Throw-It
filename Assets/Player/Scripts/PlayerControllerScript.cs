@@ -82,7 +82,6 @@ public class PlayerControllerScript : MonoBehaviour
 
         //Clamp it just in case
         velocity = Mathf.Clamp(velocity, 0, 1);
-        Debug.Log(velocity);
         return velocity;
     }
     //Selects between normal addition fov or spriting addition fov
