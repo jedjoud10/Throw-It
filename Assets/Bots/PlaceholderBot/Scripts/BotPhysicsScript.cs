@@ -4,10 +4,12 @@ using UnityEngine;
 //Script for a physics part of bot. Gets yeeted when hit
 public class BotPhysicsScript : MonoBehaviour
 {
+    public BotMovementScript movement;//The movement of the bot
     public BotHealthScript healthScript;//Health script of bot
     public float decayTime;//Time before the part and bot gets destroyed
     private Joint joint;//The joint of this part to the bot
     private Rigidbody rb;//The rigidbody of this part
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,5 +24,6 @@ public class BotPhysicsScript : MonoBehaviour
         rb.AddForce(force);//Add force to our rigidbody to make it go  Y E E T
         healthScript.Death(decayTime);
         Destroy(gameObject, decayTime);
+        if(gameObject.name == "Head") movement.move = false;//Disable movement 
     }
 }

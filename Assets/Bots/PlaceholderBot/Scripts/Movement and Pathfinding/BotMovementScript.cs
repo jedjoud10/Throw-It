@@ -10,11 +10,12 @@ public class BotMovementScript : MonoBehaviour
     [Tooltip("How fast does the bot turn directions")]
     public float RotationSpeed = 1;
     const float Gravity = 0.1050505f;//How much gravity is applied to this bot
+    const float MoveSmoothness = 0.8f;//Smoothness when changing from idle to moving or vice versa
     private CharacterController cr;//The character controller of this bot
     private Vector3 position;//The chosen position to head to
     private Vector3 Movement;//The movement applied to the character controller
-    private float velRef;//A reference flaot for the SmoothDamp of the Movement vector
     private Quaternion Rotation;//The target rotation of the bot
+    public bool move = true;//Are we allowed to move ?
     // Start is called before the first frame update
     void Start()
     {
@@ -28,8 +29,12 @@ public class BotMovementScript : MonoBehaviour
         #region Movement & Rotation
         #region Normalization of position & movement
         //We use the normalized value so when the bot gets closer to the position, it's speed stays constant and does not decrease
-        Movement.x = (position - transform.position).normalized.x * Time.deltaTime * Speed;//Delta movement of the position that we want to go in X axis
-        Movement.z = (position - transform.position).normalized.z * Time.deltaTime * Speed;//Delta movement of the position that we want to go in Z axis
+        if (move)
+        {
+            Movement.x = (position - transform.position).normalized.x * Time.deltaTime * Speed;//Delta movement of the position that we want to go in X axis
+            Movement.z = (position - transform.position).normalized.z * Time.deltaTime * Speed;//Delta movement of the position that we want to go in Z axis
+        }
+        else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
         #endregion
         if (Movement.x != 0 && Movement.z != 0)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
         {
@@ -43,7 +48,6 @@ public class BotMovementScript : MonoBehaviour
         Debug.DrawRay(transform.position, Movement * 100);
         Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         cr.Move(Movement);//Apply gravity & position direction movement to charachter controller
-
         #endregion
     }
     public void MoveToPosition(Vector3 _position) 

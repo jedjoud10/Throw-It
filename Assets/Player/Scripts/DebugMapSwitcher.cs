@@ -16,5 +16,9 @@ public class DebugMapSwitcher : MonoBehaviour
         {
             SceneManager.LoadScene("Map2", LoadSceneMode.Single);
         }
+        if(Input.GetKeyDown(KeyCode.Alpha3))//Load map 3
+        {
+            SceneManager.LoadScene("world", LoadSceneMode.Single);
+        }
     }
 }

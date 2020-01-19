@@ -98,7 +98,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!138 &6344458753705223266
@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b980e87d030682b4ba0ea428e6792a22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movement: {fileID: 5509279324734041416}
   healthScript: {fileID: 2788950925942958376}
   decayTime: 15
 --- !u!135 &6233497694929229635
@@ -6228,6 +6229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 1.5
   RotationSpeed: 0.98
+  move: 1
 --- !u!114 &2788950925942958376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6266,7 +6268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f1631f8ab6ebe0449629b50eb7dcfdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwDelay: 0.2
+  throwDelay: 0.3
   isThrowing: 1
   pelletprefab: {fileID: 1227122033092753418, guid: e201ae30ff0c7ba46aa7d1f53a34532f,
     type: 3}
