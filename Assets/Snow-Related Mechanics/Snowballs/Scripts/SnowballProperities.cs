@@ -9,6 +9,7 @@ public class SnowballProperities : MonoBehaviour
     public float Size;//Size of snowball
     public int Damage;//Damage applied to someone/something when it collides with the snowball
     public float RigidbodyForce;//Force applied to every physics object when we hit it
+    public float LifeTime;//time the snowball is allowed to exist
     [HideInInspector()]
     public Vector3 AngularVelocity;//The angular velocity of the snowball at throw
     [Header("Randomness")]
@@ -38,6 +39,7 @@ public class SnowballProperities : MonoBehaviour
     {
         RandomizeValues();//Randomize snowball values
         SetSnowballWorldProperities();
+        Destroy(gameObject, LifeTime);//Destroy snowball if lifetime is excedeed
     }
     //Set snowball game values from variables (Ex : size for local size)
     private void SetSnowballWorldProperities() 

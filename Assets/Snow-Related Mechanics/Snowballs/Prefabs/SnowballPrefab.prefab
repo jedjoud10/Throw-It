@@ -64,8 +64,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 600
   Size: 0.5
-  Damage: 40
+  Damage: 20
   RigidbodyForce: 1000
+  LifeTime: 8
   AngularVelocity: {x: 0, y: 0, z: 0}
   SpeedRandomness: 0.1
   SizeRandomness: 0.1
