@@ -21,5 +21,6 @@ public class BotPhysicsScript : MonoBehaviour
         transform.parent = null;
         rb.AddForce(force);//Add force to our rigidbody to make it go  Y E E T
         healthScript.Death(decayTime);
+        Destroy(gameObject, decayTime);
     }
 }
