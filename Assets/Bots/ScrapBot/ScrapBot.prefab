@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1307412755963299600}
   - component: {fileID: 6344458753705223266}
   - component: {fileID: 4867080768787531281}
+  - component: {fileID: 6233497694929229635}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -128,6 +129,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthScript: {fileID: 2788950925942958376}
   decayTime: 15
+--- !u!135 &6233497694929229635
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 741693635067728846}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.0095595
+  m_Center: {x: -0.007290125, y: 0.00093710417, z: 0.0010969037}
 --- !u!1 &853154143090689123
 GameObject:
   m_ObjectHideFlags: 0
