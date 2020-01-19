@@ -14,6 +14,7 @@ public class BotMovementScript : MonoBehaviour
     private CharacterController cr;//The character controller of this bot
     private Vector3 position;//The chosen position to head to
     private Vector3 Movement;//The movement applied to the character controller
+    private Vector2 UnscaledMovement;//The movement unscaled from the time.deltaTime
     private Quaternion Rotation;//The target rotation of the bot
     public bool move = true;//Are we allowed to move ?
     // Start is called before the first frame update
@@ -48,6 +49,7 @@ public class BotMovementScript : MonoBehaviour
         Debug.DrawRay(transform.position, Movement * 100);
         Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         cr.Move(Movement);//Apply gravity & position direction movement to charachter controller
+        UnscaledMovement = new Vector2(cr.velocity.x, cr.velocity.z);//Unscaled movement from velocity 
         #endregion
     }
     public void MoveToPosition(Vector3 _position) 

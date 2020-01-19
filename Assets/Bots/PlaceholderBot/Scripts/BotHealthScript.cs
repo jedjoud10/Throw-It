@@ -28,6 +28,7 @@ public class BotHealthScript : MonoBehaviour
     //Death after time everyone
     public void Death(float time) 
     {
+        if (gameObject == null) return;
         Destroy(gameObject, time);//Fast and chunky way to destroy bot after delay
     }
 }
