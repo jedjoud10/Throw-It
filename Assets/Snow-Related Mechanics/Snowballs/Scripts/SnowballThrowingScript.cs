@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 //Snowball throwing for player
 public class SnowballThrowingScript : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class SnowballThrowingScript : MonoBehaviour
     public float ChargeIncement;//How fast does the charge rises ?
     public float ChargeTimeThreshold;//How much time before starting the charging of the snowball
     private float ChargeTime;//Variable taking track of the time the user held the mouse button
+    public Text ChargeText;//UI Text
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,7 @@ public class SnowballThrowingScript : MonoBehaviour
                 ChargePercent = ChargePercent + ChargeIncement * Time.deltaTime; //Charge the throw
                 ChargePercent = Mathf.Clamp(ChargePercent, 0.9f, 2);//Clamp the value so we stay between a 0 - 1 range
             }
+            ChargeText.text = "Charge : " + ChargePercent * 100.0;
         }
         else if (Input.GetMouseButtonUp(0))
         {

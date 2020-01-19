@@ -37,9 +37,9 @@ public class BotMovementScript : MonoBehaviour
         }
         else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
         #endregion
-        if (Movement.x != 0 && Movement.z != 0)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
+        if (new Vector3(Movement.x, 0, Movement.z) != Vector3.zero)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
         {
-            Rotation = Quaternion.LookRotation(new Vector3(Movement.x, 0, Movement.z));//Target rotation withoyt Y axis
+            Rotation = Quaternion.LookRotation(new Vector3(Movement.x, 0, Movement.z));//Target rotation without Y axis
         }
         transform.rotation = Quaternion.Slerp(Rotation, transform.rotation, RotationSpeed);//Smoothes the rotation
         if (cr.isGrounded)
