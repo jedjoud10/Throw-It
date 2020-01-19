@@ -17,7 +17,17 @@ public class BotHealthScript : MonoBehaviour
         Health -= damage;
         if(Health <= 0)//Bot is dead 
         {
-            Destroy(gameObject);//Fast and chunky way to destroy bot
+            Death();//Death time
         }
+    }
+    //Death time everyone
+    public void Death() 
+    {
+        Destroy(gameObject);//Fast and chunky way to destroy bot
+    }
+    //Death after time everyone
+    public void Death(float time) 
+    {
+        Destroy(gameObject, time);//Fast and chunky way to destroy bot after delay
     }
 }

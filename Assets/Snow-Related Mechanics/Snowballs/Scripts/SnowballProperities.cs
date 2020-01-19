@@ -8,6 +8,7 @@ public class SnowballProperities : MonoBehaviour
     public float Speed;//Speed force applied at start
     public float Size;//Size of snowball
     public int Damage;//Damage applied to someone/something when it collides with the snowball
+    public float RigidbodyForce;//Force applied to every physics object when we hit it
     [HideInInspector()]
     public Vector3 AngularVelocity;//The angular velocity of the snowball at throw
     [Header("Randomness")]
@@ -18,7 +19,9 @@ public class SnowballProperities : MonoBehaviour
     [Range(0, 2)]
     public float DamageRandomness;//How much randomness to apply to speed
     [Range(0, 100)]
-    public float AngularVelocityRange; 
+    public float AngularVelocityRange;//How much randomness to apply to angular velocity
+    [Range(0, 2)]
+    public float RigidbodyForceRange;//How much randomness to apply to rigidbody hit force
     //Randomizes the values
     private void RandomizeValues() 
     {
@@ -26,6 +29,7 @@ public class SnowballProperities : MonoBehaviour
         Speed += Random.Range(-SpeedRandomness, SpeedRandomness) * Speed;
         Size += Random.Range(-SizeRandomness, SizeRandomness) * Size;
         AngularVelocity = Random.insideUnitSphere * AngularVelocityRange;//Random vector for angular velocity
+        RigidbodyForce = Random.Range(-RigidbodyForceRange, RigidbodyForceRange) * RigidbodyForce;
         //Round to int since damage is int
         Damage += Mathf.RoundToInt(Random.Range(-DamageRandomness, DamageRandomness) * Damage);
     }

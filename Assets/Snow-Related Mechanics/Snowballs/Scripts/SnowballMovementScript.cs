@@ -6,6 +6,7 @@ using UnityEngine;
 public class SnowballMovementScript : MonoBehaviour
 {
     private int Damage;//The base damage the snowball can do
+    private float RigidbodyForce;//Force applied to every physics object when we hit it
     private Rigidbody rigidBody;//The rigidbody of the snowball
     // Start is called before the first frame update
     public void InitSnowball(float _Speed)//Multiply our base values by those arguments
@@ -17,6 +18,7 @@ public class SnowballMovementScript : MonoBehaviour
         float Speed = properities.Speed;//Use one time float since we wont reuse this float later on
         Vector3 AngularVelocity = properities.AngularVelocity;
         Damage = properities.Damage;
+        RigidbodyForce = properities.RigidbodyForce;
 
         #endregion
         #region Setup Rigidbody
@@ -30,14 +32,15 @@ public class SnowballMovementScript : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Damage *= Mathf.RoundToInt(rigidBody.velocity.magnitude);//Take account velocity to damage, so if the snowball is fast, it does more damage
-        GameObject otherobject = collision.gameObject;//The colision gameobject
-                                                      //Enter collision code handling
-
+        GameObject otherobject = collision.gameObject;//The colision gameobject  
+        Rigidbody rb = GetComponent<Rigidbody>();//The snowball's rigidbody
+        //Enter collision code handling
         if (otherobject.GetComponent<BotHealthScript>() != null) 
         {
             //Damage the hit bot
             otherobject.GetComponent<BotHealthScript>().DamageBot(Damage);
         }
+        if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint(rb.velocity * RigidbodyForce, rb.position);
         
 
         Destroy(gameObject);//Destroys the snowball

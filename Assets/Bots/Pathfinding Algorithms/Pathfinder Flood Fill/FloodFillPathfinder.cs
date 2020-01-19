@@ -19,6 +19,8 @@ public class FloodFillPathfinder : MonoBehaviour
     public int Resolution = 1;//How much detail can we allow
     [Tooltip("The object you are trying to reach")]
     public Transform endPoint;//The object you are trying to reach
+    [Tooltip("Pathfinder Offset")]
+    public Vector2 offset;//Offset in 2d direction
     [Tooltip("The max iterations that you are allowed while reverse pathfinding the path")]
     public int maxIterationReversePath;//The max iterations that you are allowed while reverse pathfinding the path
     [Tooltip("The max number of iterations that you are allowed")]
@@ -83,7 +85,7 @@ public class FloodFillPathfinder : MonoBehaviour
     {
         SetDirections(useDiagonals);
         pathes = new List<List<Node>>();//Reset pathes
-        basePos = endPoint.position - new Vector3(gridsizeX * gridScale, 0, gridsizeY * gridScale) / 2;//Setting base offset
+        basePos = endPoint.position - new Vector3(offset.x * gridScale, 0, offset.y*gridScale) - new Vector3(gridsizeX * gridScale, 0, gridsizeY * gridScale) / 2;//Setting base offset
         basePos -= new Vector3(gridScale, gridScale, gridScale) / 2;//Offset it one node so the end point is only one node and not in the middle of two nodes
         MakeGrid();//Make the grid of nodes
         endNode = NodeFromWorldPosition(endPoint.position);//Get end node from position of end object
@@ -243,14 +245,14 @@ public class FloodFillPathfinder : MonoBehaviour
     {
         if (gizmoMode == GizmoMode.Grid)
         {
-            Gizmos.DrawCube(endPoint.position - new Vector3(gridScale, 0, gridScale), new Vector3(gridsizeX * gridScale, 1f, gridsizeY * gridScale));//Draw area of pathfinder
+            Gizmos.DrawWireCube(endPoint.position - new Vector3(gridScale, 0, gridScale) - new Vector3(offset.x * gridScale, 0, offset.y * gridScale), new Vector3(gridsizeX * gridScale, 1f, gridsizeY * gridScale));//Draw area of pathfinder
             foreach (var node in nodes)
             {
                 if (node.IsWalkable)
                 {
                     //Handles.Label(node.WorldPosition, node.Iteration.ToString());//Shows the iteration number ontop of the node
                     Gizmos.color = new Color((float)node.Iteration / (float)BiggestNumNode, (float)node.Iteration / (float)BiggestNumNode, (float)node.Iteration / (float)BiggestNumNode);//Sets our grayscale color to represent out iteration count
-                    Gizmos.DrawSphere(node.WorldPosition, sphereRadiusBlockage);//Visualizing each node who is walkable
+                    Gizmos.DrawCube(node.WorldPosition, new Vector3(sphereRadiusBlockage, sphereRadiusBlockage, sphereRadiusBlockage));//Visualizing each node who is walkable
                 }
             }
         }
