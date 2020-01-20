@@ -125,6 +125,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3435280815435834230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4624739395982594014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90182f20f93cfb545af63e194b58161a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frequency: 2
+  amplitude: 0.5
 --- !u!54 &774763166746645402
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -190,11 +204,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2528547628184728754}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 87d9b4f70a16f2040b04c3b254865372,
-        type: 3}
-      propertyPath: m_Name
-      value: snowman
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 87d9b4f70a16f2040b04c3b254865372,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -264,6 +273,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 87d9b4f70a16f2040b04c3b254865372,
+        type: 3}
+      propertyPath: m_Name
+      value: snowman
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87d9b4f70a16f2040b04c3b254865372, type: 3}
