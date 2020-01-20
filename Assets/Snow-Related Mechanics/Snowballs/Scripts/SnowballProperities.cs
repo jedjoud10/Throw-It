@@ -30,7 +30,7 @@ public class SnowballProperities : MonoBehaviour
         Speed += Random.Range(-SpeedRandomness, SpeedRandomness) * Speed;
         Size += Random.Range(-SizeRandomness, SizeRandomness) * Size;
         AngularVelocity = Random.insideUnitSphere * AngularVelocityRange;//Random vector for angular velocity
-        RigidbodyForce = Random.Range(-RigidbodyForceRange, RigidbodyForceRange) * RigidbodyForce;
+        RigidbodyForce += Random.Range(-RigidbodyForceRange, RigidbodyForceRange) * RigidbodyForce;
         //Round to int since damage is int
         Damage += Mathf.RoundToInt(Random.Range(-DamageRandomness, DamageRandomness) * Damage);
     }

@@ -56,7 +56,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2404660213630964563}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.756, y: -0.431, z: 0}
+  m_LocalPosition: {x: -0.756, y: -0.491, z: 0}
   m_LocalScale: {x: 0.37197, y: 0.37197, z: 0.37197}
   m_Children: []
   m_Father: {fileID: 5509279324734041430}
@@ -2155,6 +2155,62 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+  LifetimeByEmitterSpeedModule:
+    enabled: 0
+    m_Curve:
+      serializedVersion: 2
+      minMaxState: 1
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: -0.8
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.2
+          inSlope: -0.8
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    m_Range: {x: 0, y: 1}
   ForceModule:
     enabled: 0
     x:
@@ -4736,6 +4792,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4778,6 +4835,8 @@ ParticleSystemRenderer:
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
+  m_FreeformStretching: 0
+  m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
   m_Mesh: {fileID: -5012079817539591344, guid: d329d29a0e1857b489fbbe0ac6e7f5d7, type: 3}
   m_Mesh1: {fileID: 0}
@@ -4813,6 +4872,20 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.0095595
   m_Center: {x: -0.007290067, y: 0.00093710434, z: 0.0010970248}
+--- !u!138 &7498337194283270256
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4648096805615299449}
+  m_ConnectedBody: {fileID: 8103825464374424785}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!114 &4066724145940139168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4828,20 +4901,6 @@ MonoBehaviour:
   movement: {fileID: 5509279324734041416}
   healthScript: {fileID: 2788950925942958376}
   decayTime: 15
---- !u!138 &7498337194283270256
-FixedJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4648096805615299449}
-  m_ConnectedBody: {fileID: 8103825464374424785}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
 --- !u!1 &4968454808057817523
 GameObject:
   m_ObjectHideFlags: 0
@@ -5529,11 +5588,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 11.577031
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 07a37729bfb33f34da69cf93fb415760,
-        type: 3}
-      propertyPath: m_Name
-      value: scrapbot
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 07a37729bfb33f34da69cf93fb415760,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5603,6 +5657,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.5441108
+      objectReference: {fileID: 0}
+    - target: {fileID: -2837182519754755032, guid: 07a37729bfb33f34da69cf93fb415760,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 07a37729bfb33f34da69cf93fb415760,
+        type: 3}
+      propertyPath: m_Name
+      value: scrapbot
       objectReference: {fileID: 0}
     - target: {fileID: 4695666576454475813, guid: 07a37729bfb33f34da69cf93fb415760,
         type: 3}
