@@ -9,6 +9,7 @@ public class BotPhysicsScript : MonoBehaviour
     public float decayTime;//Time before the part and bot gets destroyed
     private Joint joint;//The joint of this part to the bot
     private Rigidbody rb;//The rigidbody of this part
+    public BotBobbingScript botBobbingScript;//Bot bobbing script that makes the bot go up and down
 
     // Start is called before the first frame update
     void Start()
@@ -19,12 +20,23 @@ public class BotPhysicsScript : MonoBehaviour
     //Removes joint from this part
     public void RemoveJoint(Vector3 force, Vector3 position) 
     {
-        Destroy(joint);//remove the joint
-        transform.parent = null;
-        rb.AddForce(force);//Add force to our rigidbody to make it go  Y E E T
-        Debug.DrawRay(position, force, Color.black);
-        healthScript.Death(decayTime);
-        Destroy(gameObject, decayTime);
-        if(gameObject.name == "Head") movement.move = false;//Disable movement 
+        if (joint != null)
+        {
+            Destroy(joint);//remove the joint
+            transform.parent = null;
+            rb.AddForce(force);//Add force to our rigidbody to make it go  Y E E T
+            Debug.DrawRay(position, force, Color.black);
+            if (healthScript.gameObject != null)
+            {
+                healthScript.Death(decayTime);
+            }
+            Destroy(gameObject, decayTime);
+            //When the bot stops moving because its head got yeeted
+            if (gameObject.name == "Head")
+            {
+                movement.move = false; //Disable movement
+                botBobbingScript.applybobbing = false;//Disable bobbing
+            }
+        }
     }
 }

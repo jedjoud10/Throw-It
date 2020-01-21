@@ -4901,6 +4901,7 @@ MonoBehaviour:
   movement: {fileID: 5509279324734041416}
   healthScript: {fileID: 2788950925942958376}
   decayTime: 15
+  botBobbingScript: {fileID: 5520788041548390348}
 --- !u!1 &4968454808057817523
 GameObject:
   m_ObjectHideFlags: 0
@@ -5576,6 +5577,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5520788041548390348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775889569365662709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90182f20f93cfb545af63e194b58161a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frequency: 5
+  amplitude: 0.1
+  applybobbing: 1
 --- !u!1001 &4536649417950073461
 PrefabInstance:
   m_ObjectHideFlags: 0
