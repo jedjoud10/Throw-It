@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4786122137421786436}
+  - {fileID: 6179761139131595722}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,7 +51,7 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.05
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2528547628184728748
@@ -121,7 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ea7b22cdcd65f40969587f89b2c29b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 1, y: 1, z: 0}
+  offset: {fileID: 6179761139131595722}
+  distanceOffset: 0.13
 --- !u!54 &1348862828457477665
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -150,9 +152,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90182f20f93cfb545af63e194b58161a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frequency: 5
-  amplitude: 0.1
-  applybobbing: 0
+  frequency: 20
+  amplitude: 0.01
+  applybobbing: 1
+--- !u!1 &8125851294297525014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6179761139131595722}
+  m_Layer: 0
+  m_Name: TrackOffset
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6179761139131595722
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125851294297525014}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.428, z: 0.676}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2528547628184728754}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &774763166746645402
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -219,6 +251,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2528547628184728754}
     m_Modifications:
+    - target: {fileID: -4996687211566984633, guid: 87d9b4f70a16f2040b04c3b254865372,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 87d9b4f70a16f2040b04c3b254865372,
         type: 3}
       propertyPath: m_LocalPosition.x
