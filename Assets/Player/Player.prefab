@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 632253683242069308}
   - component: {fileID: 632253683242069287}
   - component: {fileID: 5470440655666955493}
+  - component: {fileID: 7129038014405697034}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -214,6 +215,25 @@ MonoBehaviour:
   MaxHealth: 100
   Health: 0
   HealthText: {fileID: 5591071598112922934}
+--- !u!114 &7129038014405697034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632253683242069309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 480a81ae5c0d83c4291b18b33f04cd24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 632253684259395821}
+  offset: {x: 0, y: 0.1, z: 0}
+  distance: 6
+  placeholderbot: {fileID: 2528547628184728755, guid: 4643138f893c1654f87c36a39c427c6c,
+    type: 3}
+  scrapbot: {fileID: 5509279324734041431, guid: 260a4c243b3706d43bd12e2b02edb412,
+    type: 3}
 --- !u!1 &632253684259395822
 GameObject:
   m_ObjectHideFlags: 0
