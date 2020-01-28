@@ -4,7 +4,6 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
-/Assets/Low Poly Modular Terrain Pack*
 
 # Visual Studio cache directory
 .vs/
@@ -35,5 +34,4 @@ sysinfo.txt
 
 # Builds
 *.apk
-*.unitypackage
 
