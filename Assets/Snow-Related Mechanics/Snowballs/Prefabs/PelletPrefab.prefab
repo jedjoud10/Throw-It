@@ -65,6 +65,7 @@ MonoBehaviour:
   Speed: 600
   Size: 1
   Damage: 5
+  DamageVelocityWeight: 0.125
   RigidbodyForce: 100
   LifeTime: 4
   AngularVelocity: {x: 0, y: 0, z: 0}

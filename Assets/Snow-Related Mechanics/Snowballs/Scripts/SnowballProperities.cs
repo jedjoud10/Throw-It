@@ -8,6 +8,7 @@ public class SnowballProperities : MonoBehaviour
     public float Speed;//Speed force applied at start
     public float Size;//Size of snowball
     public int Damage;//Damage applied to someone/something when it collides with the snowball
+    public float DamageVelocityWeight;//How muc the velocity changes the damage
     public float RigidbodyForce;//Force applied to every physics object when we hit it
     public float LifeTime;//time the snowball is allowed to exist
     [HideInInspector()]

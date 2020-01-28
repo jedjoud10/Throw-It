@@ -8,6 +8,7 @@ public class SnowballMovementScript : MonoBehaviour
     private int Damage;//The base damage the snowball can do
     private float RigidbodyForce;//Force applied to every physics object when we hit it
     private Rigidbody rigidBody;//The rigidbody of the snowball
+    private float DamageVelocityWeight = 1;//How muc the velocity changes the damage
     // Start is called before the first frame update
     public void InitSnowball(float _Speed)//Multiply our base values by those arguments
     {
@@ -16,9 +17,12 @@ public class SnowballMovementScript : MonoBehaviour
 
         properities.InitSnowball();//Init snowball properities
         float Speed = properities.Speed;//Use one time float since we wont reuse this float later on
+
+        //Setup variables from SnowballProperities script
         Vector3 AngularVelocity = properities.AngularVelocity;
         Damage = properities.Damage;
         RigidbodyForce = properities.RigidbodyForce;
+        DamageVelocityWeight = properities.DamageVelocityWeight;
 
         #endregion
         #region Setup Rigidbody
@@ -31,7 +35,7 @@ public class SnowballMovementScript : MonoBehaviour
     //When we hit an object (Ex. : Player, Snowman, Ground)
     private void OnCollisionEnter(Collision collision)
     {
-        Damage *= Mathf.RoundToInt(rigidBody.velocity.magnitude);//Take account velocity to damage, so if the snowball is fast, it does more damage
+        Damage *= Mathf.RoundToInt(rigidBody.velocity.magnitude * DamageVelocityWeight);//Take account velocity to damage, so if the snowball is fast, it does more damage
         GameObject otherobject = collision.gameObject;//The colision gameobject  
         Rigidbody rb = GetComponent<Rigidbody>();//The snowball's rigidbody
         //Enter collision code handling
