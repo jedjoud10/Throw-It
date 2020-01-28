@@ -44,6 +44,11 @@ public class SnowballMovementScript : MonoBehaviour
             //Damage the hit bot
             otherobject.GetComponent<BotHealthScript>().DamageBot(Damage);
         }
+        if(otherobject.GetComponent<HealthScript>() != null) 
+        {
+            //Damage player
+            otherobject.GetComponent<HealthScript>().Damage(Damage);
+        }
         if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint((rb.velocity) * RigidbodyForce, rb.position);
         
 

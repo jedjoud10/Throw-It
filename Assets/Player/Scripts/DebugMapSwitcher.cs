@@ -20,5 +20,9 @@ public class DebugMapSwitcher : MonoBehaviour
         {
             SceneManager.LoadScene("world", LoadSceneMode.Single);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha4))//Load dev map
+        {
+            SceneManager.LoadScene("TestMap", LoadSceneMode.Single);
+        }
     }
 }
