@@ -20,7 +20,7 @@ public class DebugBotSpawningScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Physics.Raycast(cam.position, cam.forward * distance, out hit)) 
+        if (Physics.Raycast(cam.position, cam.forward, out hit, distance)) 
         {
             point = hit.point;
         }

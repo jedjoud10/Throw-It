@@ -977,7 +977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UseDebug: 1
-  gizmoMode: 3
+  gizmoMode: 2
   MaxNumThread: 30
   Resolution: 1
   endPoint: {fileID: 2048878305}
@@ -1355,7 +1355,7 @@ PrefabInstance:
     - target: {fileID: 632253683242069280, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.5
+      value: 14.58
       objectReference: {fileID: 0}
     - target: {fileID: 632253683242069280, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
