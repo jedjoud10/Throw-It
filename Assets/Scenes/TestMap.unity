@@ -1988,6 +1988,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: walkingFactorSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: sprintingFactorSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: IdleFov
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: WalkingFov
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: SprintingFov
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 632253683242069309, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_Name
