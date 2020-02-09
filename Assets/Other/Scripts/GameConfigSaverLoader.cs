@@ -7,18 +7,18 @@ public class GameConfigSaverLoader
 {
     string config_path;//Path of config file
     //Setup pathes fo config saver loader
-    public void SetupPathes() 
+    public void SetupPathes()
     {
         config_path = Application.persistentDataPath + "/config.txt";
     }
     //Save the string into config file
-    public void SaveConfig(GameConfig gameConfig) 
+    public void SaveConfig(GameConfig gameConfig)
     {
         string content = JsonUtility.ToJson(gameConfig, true);//Transforms the gameConfig to json then string. Then save it
         File.WriteAllText(config_path, content);
     }
     //Load the string from config file
-    public GameConfig LoadConfig() 
+    public GameConfig LoadConfig()
     {
         if (File.Exists(config_path))
         {
@@ -32,7 +32,7 @@ public class GameConfigSaverLoader
     }
 }
 //Class that holds information about the game configuration
-public class GameConfig 
+public class GameConfig
 {
     #region QualitySettings
     //Rendering
@@ -42,6 +42,8 @@ public class GameConfig
     public int AntiAliasing;
     public bool SoftParticles;
     public bool RealtimeReflectionProbes;
+    public int ReflectionProbesResolution;
+    public int ReflectionProbesRefresh;
     public bool BillboardsFaceCameraPosition;
     public float ResolutionScalingFixedDPI;
     public bool TextureStreaming;
