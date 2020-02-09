@@ -1,9 +1,10 @@
 ﻿Shader "Custom/FlatSurfaceShaderNew" {
     Properties{
         _Color("Color", Color) = (1,1,1,1)
+        _Color2("Color 2", Color) = (1,1,1,1)
         _Glossiness("Gloss", Range(0.0, 1.0)) = 0.0
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
-        _MainTex("Albedo (RGB)", 2D) = "white" {}
+        _pow("Power", Range(1, 100)) = 0.0
         [KeywordEnum(Approximate, Exact)] _InverseMatrix("World To Tangent Matrix", Float) = 0.0
     }
         SubShader{
@@ -14,7 +15,6 @@
             #pragma target 3.0
             #pragma shader_feature _ _INVERSEMATRIX_EXACT
 
-            sampler2D _MainTex;
 
             struct Input {
                 float2 uv_MainTex;
@@ -26,6 +26,8 @@
             half _Glossiness;
             half _Metallic;
             fixed4 _Color;
+            fixed4 _Color2;
+            float _pow;
 
             // pass camera relative world position from vertex to fragment
             void vert(inout appdata_full v, out Input o)
@@ -36,8 +38,7 @@
 
             void surf(Input IN, inout SurfaceOutputStandard o) {
 
-                fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-                o.Albedo = c.rgb * _Color.rgb;
+
 
         #if !defined(UNITY_PASS_META)
                 // flat world normal from position derivatives
@@ -66,6 +67,10 @@
                 o.Normal = mul(w2tRotation, flatWorldNormal);
                 o.Metallic = _Metallic;
                 o.Smoothness = _Glossiness;
+                float4 c = _Color;
+                float4 c2 = _Color2;
+                float _finalBlend = pow(dot(flatWorldNormal, float3(0, 1, 0)), _pow);
+                o.Albedo = lerp(c.rgb, c2.rgb, _finalBlend); // vertex RGB
         #endif
             }
             ENDCG

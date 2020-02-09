@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 632253683242069281}
   - component: {fileID: 632253683242069282}
   - component: {fileID: 632253683242069283}
+  - component: {fileID: 248526503869241424}
   - component: {fileID: 632253683242069308}
   - component: {fileID: 632253683242069287}
   - component: {fileID: 5470440655666955493}
@@ -168,6 +169,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d843bfae0c5604f45a57b0cb385e16c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &248526503869241424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632253683242069309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4245aae8b2211441a2a7c98bb12f33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!143 &632253683242069308
@@ -299,7 +312,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 2
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
