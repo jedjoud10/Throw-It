@@ -28,7 +28,7 @@ Material:
     - _Metallic: 0
     - _blend: 2
     - _factor: 1
-    - _pow: 4.65
+    - _pow: 10
     m_Colors:
     - _Color: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 1}
     - _Color2: {r: 1, g: 1, b: 1, a: 1}

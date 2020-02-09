@@ -4,7 +4,8 @@
         _Color2("Color 2", Color) = (1,1,1,1)
         _Glossiness("Gloss", Range(0.0, 1.0)) = 0.0
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
-        _pow("Power", Range(1, 100)) = 0.0
+        _pow("Power", Range(1, 20)) = 0.0
+        _thres("Threshold", Range(0, 1)) = 0.0
         [KeywordEnum(Approximate, Exact)] _InverseMatrix("World To Tangent Matrix", Float) = 0.0
     }
         SubShader{
@@ -28,6 +29,7 @@
             fixed4 _Color;
             fixed4 _Color2;
             float _pow;
+            float _thres;
 
             // pass camera relative world position from vertex to fragment
             void vert(inout appdata_full v, out Input o)
@@ -70,6 +72,14 @@
                 float4 c = _Color;
                 float4 c2 = _Color2;
                 float _finalBlend = pow(dot(flatWorldNormal, float3(0, 1, 0)), _pow);
+                if (_finalBlend > _thres) 
+                {
+                    _finalBlend = 1; 
+                }
+                else 
+                {
+                    _finalBlend = 0;
+                }
                 o.Albedo = lerp(c.rgb, c2.rgb, _finalBlend); // vertex RGB
         #endif
             }

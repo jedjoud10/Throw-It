@@ -16,11 +16,15 @@ public class DebugMapSwitcher : MonoBehaviour
         {
             SceneManager.LoadScene("Map2", LoadSceneMode.Single);
         }
-        if(Input.GetKeyDown(KeyCode.Alpha3))//Load map 3
+        if (Input.GetKeyDown(KeyCode.Alpha3))//Load map 3
+        {
+            SceneManager.LoadScene("Map3", LoadSceneMode.Single);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))//Load map 4
         {
             SceneManager.LoadScene("world", LoadSceneMode.Single);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha4))//Load dev map
+        if (Input.GetKeyDown(KeyCode.Alpha5))//Load dev map
         {
             SceneManager.LoadScene("TestMap", LoadSceneMode.Single);
         }
