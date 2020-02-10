@@ -96,9 +96,7 @@ public class PlayerControllerScript : MonoBehaviour
     //Three value interpolation for idle, walking and sprinting fov values
     private float GetCameraFOV(float idle, float walk, float sprint, float walkfactor, float sprintfactor) 
     {
-        camFOV = Mathf.Lerp(idle, walk, walkfactor);
-        if (sprintfactor > 0) camFOV = Mathf.Lerp(walk, sprint, sprintfactor);
-        if(walkfactor == sprintfactor && walkfactor < 1 && sprintfactor < 1) camFOV = Mathf.Lerp(walk, sprint, sprintfactor);
+        camFOV = Mathf.Lerp(Mathf.Lerp(idle, walk, walkfactor), sprint, sprintfactor);//Lerp of lerp
         return camFOV;
     }
     /*

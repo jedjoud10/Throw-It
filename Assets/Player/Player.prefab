@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 632253683242069287}
   - component: {fileID: 5470440655666955493}
   - component: {fileID: 7129038014405697034}
+  - component: {fileID: 58833311903029485}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -134,13 +135,15 @@ MonoBehaviour:
   Camera: {fileID: 632253684259397395}
   MinRotationDown: -90
   MaxRotationUp: 90
-  WalkingFov: 60
+  IdleFov: 60
+  WalkingFov: 70
+  SprintingFov: 90
   WalkingSpeed: 5.5
-  WalkingFovAdd: 2
   SprintingSpeed: 7
-  SprintingFovAdd: 10
   Gravity: 0.1050505
   Jump: 0.042
+  walkingFactorSpeed: 6
+  sprintingFactorSpeed: 6
 --- !u!114 &632253683242069282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,6 +250,22 @@ MonoBehaviour:
     type: 3}
   scrapbot: {fileID: 5509279324734041431, guid: 260a4c243b3706d43bd12e2b02edb412,
     type: 3}
+--- !u!114 &58833311903029485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632253683242069309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1171ddc0775fcb9419ca6f0799d4539d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterColor: {r: 0, g: 0.46812057, b: 1, a: 0}
+  waterDensity: 0.1
+  waterHeight: 22
+  densityMultiplier: 1
 --- !u!1 &632253684259395822
 GameObject:
   m_ObjectHideFlags: 0
