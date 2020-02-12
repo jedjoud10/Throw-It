@@ -12,6 +12,7 @@ public class UnderwaterEffectScript : MonoBehaviour
     private float normalDensity;
     public float waterDensity;
     private float currentDensity;
+    public float baseDensity;//Density at the moment where you go underwater
 
     //Water settings
     public float waterHeight;
@@ -30,7 +31,7 @@ public class UnderwaterEffectScript : MonoBehaviour
         if (transform.position.y < waterHeight) //We are underwater (Not fully tho but still)
         {
             //Calculate density of water
-            currentDensity = waterDensity * (waterHeight - transform.position.y) * densityMultiplier;
+            currentDensity = waterDensity * Mathf.Pow(((waterHeight - transform.position.y)/waterHeight), densityMultiplier) + baseDensity;
             //Set underwater fog settings
             RenderSettings.fogColor = waterColor;
             RenderSettings.fogDensity = currentDensity;

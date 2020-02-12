@@ -263,8 +263,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterColor: {r: 0, g: 0.46812057, b: 1, a: 0}
-  waterDensity: 0.1
-  waterHeight: 22
+  waterDensity: 1
+  baseDensity: 0
+  waterHeight: 22.8
   densityMultiplier: 1
 --- !u!1 &632253684259395822
 GameObject:

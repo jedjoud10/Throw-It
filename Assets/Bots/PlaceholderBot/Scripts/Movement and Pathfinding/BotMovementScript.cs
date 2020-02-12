@@ -37,7 +37,7 @@ public class BotMovementScript : MonoBehaviour
         }
         else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
         #endregion
-        if (new Vector3(Movement.x, 0, Movement.z) != Vector3.zero)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
+        if (UnscaledMovement != Vector2.zero)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
         {
             Rotation = Quaternion.LookRotation(new Vector3(Movement.x, 0, Movement.z));//Target rotation without Y axis
         }
@@ -49,7 +49,7 @@ public class BotMovementScript : MonoBehaviour
         Debug.DrawRay(transform.position, Movement * 100);
         Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         cr.Move(Movement);//Apply gravity & position direction movement to charachter controller
-        UnscaledMovement = new Vector2(cr.velocity.x, cr.velocity.z);//Unscaled movement from velocity 
+        UnscaledMovement.x = cr.velocity.x; UnscaledMovement.y = cr.velocity.z;//Unscaled movement from velocity 
         #endregion
     }
     public void MoveToPosition(Vector3 _position) 

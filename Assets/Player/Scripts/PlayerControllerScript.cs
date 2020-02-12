@@ -22,6 +22,8 @@ public class PlayerControllerScript : MonoBehaviour
     private Vector3 Movement;//Vector3 that is applied to charachterController
     private Vector2 inputMovement;//Input data from keyboard WASD
     private float Speed;//The overall speed of the player (Smoothed between the walking speed and sprinting speed)
+    public float decelerationFactor;//How much you decelerate in general (Used for ice and other physics materials)
+    public float maxSpeed;//Max speed allowed to walk
     private bool isWalking;
     private bool isSprinting;
     private float walkingFactor;//Value used to lerp between fov when walking
@@ -55,6 +57,7 @@ public class PlayerControllerScript : MonoBehaviour
         Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, sprintingFactor);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
         Movement.x = inputMovement.x * Speed * Time.deltaTime;//Left/right movement
         Movement.z = inputMovement.y * Speed * Time.deltaTime;//Forward/backwawrd movement
+     
         #region Walking and Sprinting values
         isWalking = Mathf.Abs(inputMovement.magnitude) > 0;//Are we walking ?
         isSprinting = isWalking && Input.GetAxis("Sprint") > 0;
@@ -77,7 +80,7 @@ public class PlayerControllerScript : MonoBehaviour
             }
         }//Only allows us to jump when we are touching ground
         Movement.y -= Gravity * Time.deltaTime;//Applies gravity as acceleration
-        characterController.Move(Movement);//Moves the characterController by the Movement Vector
+        characterController.Move(Movement + (1-decelerationFactor) * new Vector3(Mathf.Clamp(characterController.velocity.x, -maxSpeed, maxSpeed), 0, Mathf.Clamp(characterController.velocity.z, -maxSpeed, maxSpeed)) * Time.deltaTime);//Moves the characterController by the Movement Vector
         #endregion
         if (Debug.isDebugBuild)
         {
