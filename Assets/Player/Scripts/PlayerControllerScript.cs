@@ -11,25 +11,31 @@ public class PlayerControllerScript : MonoBehaviour
     public float MaxRotationUp;//The maximum rotation when looking up
     private float CameraRotationXAxis;
     [Header("Player Movement")]
+    [Header("----------------")]
+    [Header("FOV Control")]
     public float IdleFov;//The FOV of the camera when the player is not moving (idle)
     public float WalkingFov;//The FOV of the camera when walking
     public float SprintingFov;//The FOV of the camera when sprinting
+    [Header("Speed")]
     public float WalkingSpeed; //The speed of movement of the player
     public float SprintingSpeed; //The sprinting speed of the movement of the player
+    public float walkingFactorSpeed;//How fast to make walking factor go to 1
+    public float sprintingFactorSpeed;//How fast to make sprinting factor go to 1
+    public float decelerationFactor;//Variable as base variable so we can always reset the decelerationFactor
+    [Header("Gravity")]
     public float Gravity;//How much gravity is applied to the player
     public float Jump;//How high we can jump
+
     private CharacterController characterController;//Variable for the charachter controller
     private Vector3 Movement;//Vector3 that is applied to charachterController
+    private Vector3 lastMovement;//Movement last fram
     private Vector2 inputMovement;//Input data from keyboard WASD
     private float Speed;//The overall speed of the player (Smoothed between the walking speed and sprinting speed)
-    public float decelerationFactor;//How much you decelerate in general (Used for ice and other physics materials)
-    public float maxSpeed;//Max speed allowed to walk
+    private float _decelerationFactor;//How much you decelerate in general (Used for ice and other physics materials)
     private bool isWalking;
     private bool isSprinting;
     private float walkingFactor;//Value used to lerp between fov when walking
-    public float walkingFactorSpeed;//How fast to make walking factor go to 1
     private float sprintingFactor;//Value used to lerp between fov when sprinting
-    public float sprintingFactorSpeed;//How fast to make sprinting factor go to 1
     private float camFOV;//Current camera fov
 
     // Start is called before the first frame update
@@ -40,6 +46,7 @@ public class PlayerControllerScript : MonoBehaviour
         Cursor.visible = false;//Make the cursor invisible
         #endregion
         characterController = GetComponent<CharacterController>();//Sets the CharachterController from the component
+        _decelerationFactor = decelerationFactor;//Setup decelerationFactor
     }
 
     // Update is called once per frame
@@ -78,9 +85,11 @@ public class PlayerControllerScript : MonoBehaviour
             {
                 Movement.y = Jump;
             }
-        }//Only allows us to jump when we are touching ground
+        }
         Movement.y -= Gravity * Time.deltaTime;//Applies gravity as acceleration
-        characterController.Move(Movement + (1-decelerationFactor) * new Vector3(Mathf.Clamp(characterController.velocity.x, -maxSpeed, maxSpeed), 0, Mathf.Clamp(characterController.velocity.z, -maxSpeed, maxSpeed)) * Time.deltaTime);//Moves the characterController by the Movement Vector
+        lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
+        lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
+        characterController.Move(lastMovement);//Moves the characterController by the Movement Vector and the deceleration
         #endregion
         if (Debug.isDebugBuild)
         {
@@ -124,5 +133,20 @@ public class PlayerControllerScript : MonoBehaviour
             SprintingFovAdd = float.Parse(GUI.TextField(new Rect(0, 150, 100, 30), SprintingFovAdd.ToString()));
         }
     }//Debugging GUI stuff*/
+
+    #region Collisions
+    //When collision happens
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        GameObject otherObject = hit.gameObject;
+        if (otherObject.GetComponent<PhysicsObjectScript>() != null) //Is physics object
+        {
+            _decelerationFactor = otherObject.gameObject.GetComponent<PhysicsObjectScript>().DecelerationFactor;//Set new deceleration factor
+        }
+        else 
+        { 
+            _decelerationFactor = decelerationFactor;//Reset the decelerationFactor to base
+        }
+    } 
+    #endregion
 }
- 

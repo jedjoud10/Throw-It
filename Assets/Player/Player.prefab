@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 5470440655666955493}
   - component: {fileID: 7129038014405697034}
   - component: {fileID: 58833311903029485}
+  - component: {fileID: 6231078546033701756}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -140,10 +141,11 @@ MonoBehaviour:
   SprintingFov: 90
   WalkingSpeed: 5.5
   SprintingSpeed: 7
-  Gravity: 0.1050505
-  Jump: 0.042
   walkingFactorSpeed: 6
   sprintingFactorSpeed: 6
+  decelerationFactor: 5
+  Gravity: 0.1050505
+  Jump: 0.042
 --- !u!114 &632253683242069282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +269,21 @@ MonoBehaviour:
   baseDensity: 0
   waterHeight: 22.8
   densityMultiplier: 1
+--- !u!114 &6231078546033701756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632253683242069309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bfa93549d40b9644bf1a289063ca752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heatDispersion: 0
+  targetTemperatureSpeed: 100
+  maxCrystalDistanceFalloff: 100
 --- !u!1 &632253684259395822
 GameObject:
   m_ObjectHideFlags: 0
