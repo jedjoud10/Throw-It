@@ -9,11 +9,7 @@ public class HeatEmmiterScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameObject.FindObjectOfType<TemperatureScript>().CheckHeatEmmiters();//Check heat emmiters since we were created
-    }
-    private void OnDestroy()
-    {
-        GameObject.FindObjectOfType<TemperatureScript>().CheckHeatEmmiters();//Check heat emmiters since we aer going to get destroyed
+    
     }
 
     // Update is called once per frame

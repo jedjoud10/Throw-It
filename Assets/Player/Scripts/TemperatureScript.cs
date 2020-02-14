@@ -16,13 +16,16 @@ public class TemperatureScript : MonoBehaviour
     private const float waterColdness = -50.0f;//How much temperature to remove from outsideTemperature when we are in water
     public float waterLevel;//The water level
     public float maxCrystalDistanceFalloff;//Name is pretty self-explanatory
-    private HeatEmmiterScript[] heatEmmiters;//Objects that emmit heat
+    private HeatEmmiterScript[] heatEmmiters = new HeatEmmiterScript[0];//Objects that emmit heat
     public Text temperatureText;//The text for showing temperature
+    public Slider temperatureBar;//Temperature bar
    // Start is called before the first frame update
     void Start()
     {
         crystal = GameObject.FindGameObjectWithTag("Objective").transform;//Get crystal from tag
+        heatEmmiters = new HeatEmmiterScript[0];
         CheckHeatEmmiters();
+        DelayedCheckHeatEmmiters(5.0f);
     }
 
     // Update is called once per frame
@@ -32,6 +35,7 @@ public class TemperatureScript : MonoBehaviour
         temperature = Mathf.Lerp(temperature, outsideTemperature, heatDispersion * Time.deltaTime);
         temperature = Mathf.Lerp(temperature, targetTemperature, targetTemperatureSpeed * Time.deltaTime);//Get closer to target temperature
         temperatureText.text = "Temperature : " + temperature.ToString("F2");
+        temperatureBar.value = Mathf.InverseLerp(minTemperature, targetTemperature, temperature);//set temperature bar
     }
     //Temperature relative to distance to crystal
     private float TemperatureCrystal() 
@@ -46,7 +50,7 @@ public class TemperatureScript : MonoBehaviour
         for(int i = 0; i < heatEmmiters.Length; i++) 
         {
             playerDist = Vector3.Distance(transform.position, heatEmmiters[i].transform.position);
-            TempHeatEmmiters += heatEmmiters[i].maxEmmisionDistance - playerDist;//Add temperature of all close heating objects
+            TempHeatEmmiters += Mathf.Max((heatEmmiters[i].maxEmmisionDistance - playerDist) / heatEmmiters[i].maxEmmisionDistance * heatEmmiters[i].heatEmmision, 0.0f);//Add temperature of all close heating objects
         }
         return TempHeatEmmiters;
     }
@@ -59,5 +63,10 @@ public class TemperatureScript : MonoBehaviour
     public void CheckHeatEmmiters() 
     {
         heatEmmiters = GameObject.FindObjectsOfType<HeatEmmiterScript>();//Set new array of heat emmiters
+    }
+    //Delayed check heat emmiters
+    public void DelayedCheckHeatEmmiters(float delay) 
+    {
+        Invoke("CheckHeatEmmiters", delay);
     }
 }
