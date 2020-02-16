@@ -37,9 +37,8 @@ public class BotPathfinderScript : MonoBehaviour
             #region Position setting
             /*
              Setting the bot's position and the end point's position since we cannot call their position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
-            */
-            EndPos = pathfinder.endPoint.position;
-            MyPos = transform.position;
+            */            
+
             #endregion
             #region Path points loops
             if (points.Count != 0)
@@ -60,8 +59,13 @@ public class BotPathfinderScript : MonoBehaviour
     }
     //Only call (On each bot) when map has changed, and not repetedly so we can save on performence
     public void FindPath() //Method that can be called late so we are sure we called it after the calculations
-    {        
-        if(pathfinder != null) pathfinder.FindPathFloodFill(MyPos, EndPos, this);//Pathfind
+    {
+        if (pathfinder != null)
+        {
+            MyPos = transform.position;
+            EndPos = pathfinder.endPoint.position;
+            pathfinder.FindPathFloodFill(MyPos, EndPos, this);//Pathfind
+        }
     }
     public void SetNewPoints(List<Vector3> _points) //Settings of new points called from the threaded method
     {

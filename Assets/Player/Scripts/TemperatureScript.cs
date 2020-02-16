@@ -10,6 +10,9 @@ public class TemperatureScript : MonoBehaviour
     public float heatDispersion;//How much the outside temperature influences our own body temperature
     private const float targetTemperature = 37.0f;//The temperature that we want to come close to
     private const float minTemperature = 35.5f;//Minimum temperature before we start getting damage
+    private const int damageHyporthermia = 10;//Damage you receive when your temperature is below minTemperature (Hyporthermia)
+    private float timeInHypothermia = 0;//Our current time in hyporthermia. Will reset if value exceeds hypothermiaRese
+    private const float hypothermiaReset = 1.0f;//If our timeInHypothermia is larger then this, then reset timeInHypothermia to 0
     public float targetTemperatureSpeed;//The speed at how much were going to get at targetTemperature from current temperature
     private Transform crystal;//De crystale
     private const float crystalTemperature = 37.0f;//The temperature that the crystal emmits at 0 distance
@@ -19,10 +22,17 @@ public class TemperatureScript : MonoBehaviour
     private HeatEmmiterScript[] heatEmmiters = new HeatEmmiterScript[0];//Objects that emmit heat
     public Text temperatureText;//The text for showing temperature
     public Slider temperatureBar;//Temperature bar
+
+    private HealthScript healthScript;//health script of player
    // Start is called before the first frame update
     void Start()
     {
+        //Set temperatures at normal level since we dont want to die in the first seconds of the game
+        temperature = targetTemperature;
+        outsideTemperature = targetTemperature;
+
         crystal = GameObject.FindGameObjectWithTag("Objective").transform;//Get crystal from tag
+        healthScript = GetComponent<HealthScript>();//Init health script
         heatEmmiters = new HeatEmmiterScript[0];
         CheckHeatEmmiters();
         DelayedCheckHeatEmmiters(5.0f);
@@ -36,6 +46,15 @@ public class TemperatureScript : MonoBehaviour
         temperature = Mathf.Lerp(temperature, targetTemperature, targetTemperatureSpeed * Time.deltaTime);//Get closer to target temperature
         temperatureText.text = "Temperature : " + temperature.ToString("F2");
         temperatureBar.value = Mathf.InverseLerp(minTemperature, targetTemperature, temperature);//set temperature bar
+        if(temperature < minTemperature) //Hypothermia
+        {
+            timeInHypothermia += Time.deltaTime;//Update timeInHyperthermia
+            if(timeInHypothermia > hypothermiaReset)//Reset timeInHypothermia
+            {
+                timeInHypothermia = 0;
+                healthScript.Damage(damageHyporthermia);//Deal damage at this precice interval
+            }            
+        }
     }
     //Temperature relative to distance to crystal
     private float TemperatureCrystal() 

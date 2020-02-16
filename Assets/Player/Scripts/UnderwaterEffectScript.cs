@@ -17,6 +17,8 @@ public class UnderwaterEffectScript : MonoBehaviour
     //Water settings
     public float waterHeight;
     public float densityMultiplier;
+
+    private bool changedFog = false;//Used to make do-once function
     // Start is called before the first frame update
     void Start()
     {
@@ -35,12 +37,17 @@ public class UnderwaterEffectScript : MonoBehaviour
             //Set underwater fog settings
             RenderSettings.fogColor = waterColor;
             RenderSettings.fogDensity = currentDensity;
+            changedFog = true;
         }
         else 
         {
-            //Set normal fog settings
-            RenderSettings.fogColor = normalColor;
-            RenderSettings.fogDensity = normalDensity;
+            if (changedFog) 
+            {
+                changedFog = false;//Do-once
+                //Set normal fog settings
+                RenderSettings.fogColor = normalColor;
+                RenderSettings.fogDensity = normalDensity;
+            }
         }
     }
 }

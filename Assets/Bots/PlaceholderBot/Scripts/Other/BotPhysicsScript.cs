@@ -25,7 +25,7 @@ public class BotPhysicsScript : MonoBehaviour
             Destroy(joint);//remove the joint
             transform.parent = null;
             rb.AddForce(force);//Add force to our rigidbody to make it go  Y E E T
-            Debug.DrawRay(position, force, Color.black);
+            Debug.DrawRay(position, force, Color.black, 5.0f);
             if (healthScript.gameObject != null)
             {
                 healthScript.Death(decayTime);

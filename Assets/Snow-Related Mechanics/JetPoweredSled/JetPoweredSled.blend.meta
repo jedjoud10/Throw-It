@@ -1,8 +1,11 @@
 fileFormatVersion: 2
-guid: 07a37729bfb33f34da69cf93fb415760
+guid: 712ebeb1f205a9945804d617ccd05ce3
 ModelImporter:
   serializedVersion: 20100
   internalIDToNameTable:
+  - first:
+      74: -623603649343465320
+    second: Idle
   - first:
       74: -623603649343465320
     second: Idle
@@ -39,7 +42,7 @@ ModelImporter:
       takeName: Scene
       internalID: 0
       firstFrame: 1
-      lastFrame: 250
+      lastFrame: 100
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -62,7 +65,7 @@ ModelImporter:
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 1
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -90,7 +93,7 @@ ModelImporter:
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
-    secondaryUVMarginMethod: 0
+    secondaryUVMarginMethod: 1
     secondaryUVMinLightmapResolution: 40
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
