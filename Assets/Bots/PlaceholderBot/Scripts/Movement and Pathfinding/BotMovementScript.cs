@@ -15,6 +15,7 @@ public class BotMovementScript : MonoBehaviour
     const float MoveSmoothness = 0.8f;//Smoothness when changing from idle to moving or vice versa
     private CharacterController cr;//The character controller of this bot
     private Vector3 position;//The chosen position to head to
+    private Vector3 currentPosition;//The current position of the bot
     private Vector3 Movement;//The movement applied to the character controller
     private Vector2 UnscaledMovement;//The movement unscaled from the time.deltaTime
     private Vector3 HeadingMovement = Vector3.zero;//The x and z movement in a vector 2d
@@ -34,11 +35,12 @@ public class BotMovementScript : MonoBehaviour
     {
         #region Movement & Rotation
         #region Normalization of position & movement
+        currentPosition = transform.position;//Save to variable to save on performence
         //We use the normalized value so when the bot gets closer to the position, it's speed stays constant and does not decrease
         if (move)
         {
-            Movement.x = (position - transform.position).normalized.x * Time.deltaTime * Speed;//Delta movement of the position that we want to go in X axis
-            Movement.z = (position - transform.position).normalized.z * Time.deltaTime * Speed;//Delta movement of the position that we want to go in Z axis
+            Movement.x = (position - currentPosition).normalized.x * Time.deltaTime * Speed;//Delta movement of the position that we want to go in X axis
+            Movement.z = (position - currentPosition).normalized.z * Time.deltaTime * Speed;//Delta movement of the position that we want to go in Z axis
         }
         else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
         #endregion
@@ -53,7 +55,7 @@ public class BotMovementScript : MonoBehaviour
         {
             Movement.y = 0;//Dont apply gravity if already in ground
         }
-        Debug.DrawRay(transform.position, Movement * 100);
+        Debug.DrawRay(currentPosition, Movement * 100);
         Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
