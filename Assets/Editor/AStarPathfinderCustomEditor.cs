@@ -1,0 +1,23 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+//Our own custom inspector for the flood fill class !!
+[CustomEditor(typeof(AStarPathfinder))]
+public class AStarPathfinderCustomEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        AStarPathfinder pathfinder = (AStarPathfinder)target;
+        if (GUILayout.Button("Recalculate grid"))
+        {
+            pathfinder.MakeGrid();//Recalculate map with button
+        }
+        if (GUILayout.Button("Test path from origin"))
+        {
+            pathfinder.Pathfind(Vector3.zero);//Recalculate map with button
+        }
+    }
+}
