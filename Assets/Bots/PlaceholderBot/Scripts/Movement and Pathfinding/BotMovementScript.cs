@@ -55,6 +55,10 @@ public class BotMovementScript : MonoBehaviour
         {
             Movement.y = 0;//Dont apply gravity if already in ground
         }
+        else 
+        {
+            Movement.x = 0; Movement.z = 0;//Cannot move while in air
+        }
         Debug.DrawRay(currentPosition, Movement * 100);
         Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities

@@ -14,11 +14,11 @@ public class AStarPathfinder : MonoBehaviour
 
     [Header("Grid settings")]
     [Tooltip("The max number of nodes in the X direction")]
-    public int gridsizeX = 0;//The max number of nodes in the X direction
+    public int _gridsizeX = 0;//The max number of nodes in the X direction
     [Tooltip("The max number of nodes in the Y direction (Z direction in WorldPosition)")]
-    public int gridsizeY = 0;//The max number of nodes in the Y direction
+    public int _gridsizeY = 0;//The max number of nodes in the Y direction
     [Tooltip("The scale of the grid")]
-    public float gridScale;//The scale of the grid
+    public float _gridScale;//The scale of the grid
     [Tooltip("Pathfinder Offset")]
     public Vector2 offset;//Offset in 2d direction
     [Range(1, 10)]
@@ -38,6 +38,8 @@ public class AStarPathfinder : MonoBehaviour
     private List<Vector2Int> directions = new List<Vector2Int>();//Allowed directions to search for neighbours
     private List<List<AStarNode>> overallPaths = new List<List<AStarNode>>(0);//All pathes that we calculated
     private List<AStarNode> exploredNodes = new List<AStarNode>(0);
+    private int gridsizeX, gridsizeY;//Private gridsize
+    private float gridScale;//Private gridscale
 
     private Vector3 basePos;//Some base offset variable
     public enum GizmoMode
@@ -47,30 +49,39 @@ public class AStarPathfinder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gridsizeX *= Resolution;//Make more nodes in X
-        gridsizeY *= Resolution;//Make more nodes int Y
-        gridScale /= Resolution;//Make scale less
-
-        //Make grid of points at start of game
-        MakeGrid();
+        gridsizeX = _gridsizeX * Resolution;//Make more nodes in X
+        gridsizeY = _gridsizeY * Resolution;//Make more nodes int Y
+        gridScale = _gridScale / Resolution;//Make scale less
         //Init directions for neighbour node search
-        MakeDirections();
+        overallPaths.Clear();
     }
     //Generate directions
     public void MakeDirections() 
     {
         directions.Clear();
 
-        //Only 4 directions (Straight lines)
+        //Straight lines cost us only 1 GCost
         directions.Add(new Vector2Int(0, 1));
         directions.Add(new Vector2Int(0, -1));
         directions.Add(new Vector2Int(-1, 0));
         directions.Add(new Vector2Int(1, 0));
+        //Diagonals cost us 2 GCosts
+        
+        directions.Add(new Vector2Int(1, 1));
+        directions.Add(new Vector2Int(1, -1));
+        directions.Add(new Vector2Int(-1, 1));
+        directions.Add(new Vector2Int(1, -1));
+        
     }
+    
     //Generate nodes and make properly the grid
     public void MakeGrid() 
     {
         MakeDirections();
+        exploredNodes.Clear();//Reset debug
+        gridsizeX = _gridsizeX * Resolution;//Make more nodes in X
+        gridsizeY = _gridsizeY * Resolution;//Make more nodes int Y
+        gridScale = _gridScale / Resolution;//Make scale less
         basePos = new Vector3(offset.x * gridScale, 0, offset.y * gridScale) - new Vector3(gridScale * (gridsizeX-1) / 2, 0, gridScale * (gridsizeY-1) / 2);//Setting base offset
         Vector3 pos;//Make a refference of position for later nodes
         nodes = new AStarNode[gridsizeX, gridsizeY];//Resize the grid array
@@ -118,37 +129,10 @@ public class AStarPathfinder : MonoBehaviour
         y = Mathf.Clamp(y, 0, gridsizeY - 1);
         return nodes[x, y];
     }
-    //Get neighbour with lowest FCost by calculating costs
-    private AStarNode GetMostPerfomentNode(AStarNode node, AStarNode startNode, AStarNode endNode, List<AStarNode> visitedNodes, List<AStarNode> nodesToBeVisited) 
-    {
-        int smallestFCost = int.MaxValue;//Smallest possible FCost for current neighbours
-        int smallestHCost = int.MaxValue;//Smallest possible HCost when we have two best nodes with low FCosts
-        AStarNode bestNode = nodesToBeVisited[0]; //The best node out of all neighbours (Node with lowest FCost)
-        AStarNode currentNode;
-        for (int i = 0; i < nodesToBeVisited.Count; i++)//Get neighbour in each direction
-        {
-            currentNode = nodesToBeVisited[i];//Get node to check lowest FCost with
-
-            if(visitedNodes.Contains(currentNode)) continue;//Skip this neighbour since we already explored it           
-            if(!currentNode.IsWalkable) continue;//Skip this neighbour since it is not a walkable node  
-            //Calculate costs
-            currentNode.GCost = ManhattanDistance(currentNode, startNode);
-            currentNode.HCost = ManhattanDistance(currentNode, endNode);
-            currentNode.FCost = currentNode.GCost + currentNode.HCost;
-
-            if(currentNode.FCost < smallestFCost)//Select best node wich has lowest FCost
-            {
-                smallestFCost = currentNode.FCost;//Set the new FCost as the smallest FCost to make filter
-                bestNode = currentNode;//Use node with lowest FCost value
-            }
-        }
-        exploredNodes.Add(bestNode);
-        return bestNode;
-    }
     //Get manhattan distance from node A to node B
     private int ManhattanDistance(AStarNode a, AStarNode b) 
     {
-        return (Mathf.Abs(a.X - b.X) + Mathf.Abs(a.Y - b.Y))*10;//Manhattan distance between two points
+        return (Mathf.Abs(a.X - b.X) + Mathf.Abs(a.Y - b.Y));//Manhattan distance between two points
     }
     //Get euclidean distance from node A to node B using pythagorean theorem
     private int EuclideanDistance(AStarNode a, AStarNode b) 
@@ -156,50 +140,92 @@ public class AStarPathfinder : MonoBehaviour
         return Mathf.RoundToInt(Mathf.Sqrt(Mathf.Pow(a.X - b.X, 2) + Mathf.Pow(a.Y - b.Y, 2))*10);//Euclidean distance between two points
     }
     //Get path for bot
-    public List<AStarNode> Pathfind(Vector3 botPosition) 
+    public List<Vector3> Pathfind(Vector3 botPosition) 
     {
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();//Using a stopwatch to get how much time did we spent calculating path
         stopwatch.Start();
+        MakeGrid();
         AStarNode startNode = NodeFromWorldPosition(botPosition);//Start node / bot position node
         List<AStarNode> visitedNodes = new List<AStarNode>(0);//Vistied nodes
         List<AStarNode> nodesToVisit = new List<AStarNode>(0);//Nodes to be visited
         AStarNode currentNode = startNode;//Current node we are visiting
+        currentNode.GCost = 0;//Init GCost
+        startNode.parent = null;
         List<AStarNode> path = new List<AStarNode>(0);//The output path
+        int lowestFCost = int.MaxValue;//Lowest fcost when looping over nodes
+        int lowestHCost = int.MaxValue;//Lowest hcost when looping over best nodes with same FCost
+        int GCostMovePenalty = 1;//How much do we add GCost to the current node to calculate the neighbour's GCost
 
-        //Init lists
-        nodesToVisit.Add(startNode);
-        visitedNodes.Add(startNode);
-
+        AStarNode currentNeighbour;//The current neighbour node
         //First part of pathfinder. Get visited nodes with nodes FCosts
         //Debug.Log("PART 1 A* PATHFINDER");
+        visitedNodes.Add(currentNode);//Add start node so we dont pass by it again
         for (int i = 0; i < maxIterations; i++)
         {
             if(currentNode != endNode) 
             {
-                for(int d = 0; d < directions.Count; d++) 
+                lowestFCost = int.MaxValue;//Reset lowest FCost so we can do node filtering
+                lowestHCost = int.MaxValue;//Reset lowest HCost so we can do second node filtering
+                for (int d = 0; d < directions.Count; d++) //Each direction
                 {
-                    nodesToVisit.Add(GetNeighbour(currentNode, directions[i]));
+                    //Set GCost penalty to be 2 if we are in a diagonal direction and to be only 1 if we are in a straight direction
+                    if (d > 3) GCostMovePenalty = 2;
+                    else GCostMovePenalty = 1;                   
+                    currentNeighbour = GetNeighbour(currentNode, directions[d]);//Get neighbour for this node iteration with direction
+                    if (visitedNodes.Contains(currentNeighbour)) continue;//Skip to next neighbour because we already visited the curernt one and we already passed by it
+                    if (!currentNeighbour.IsWalkable) continue;//Skip to next neighbour since we cannot walk on this one
+                    if(nodesToVisit.Contains(currentNeighbour)) //If this node is already going to be visited
+                    {
+                        //If the path that this node will take if it passes by our current node is shorter, then take that route
+                        if (currentNode.GCost + GCostMovePenalty < currentNeighbour.GCost)
+                        {
+                            currentNeighbour.parent = currentNode;
+                            //Recalculate costs
+                            currentNeighbour.GCost = currentNode.GCost + GCostMovePenalty;//Calculate path legnth/GCost
+                            currentNeighbour.HCost = ManhattanDistance(currentNeighbour, endNode);//Calculate Heuristic Cost
+                            currentNeighbour.FCost = currentNeighbour.GCost + currentNeighbour.HCost;//Calculate FCost
+                        }
+                    }
+                    else
+                    {
+                        currentNeighbour.parent = currentNode;
+                        currentNeighbour.GCost = currentNode.GCost + GCostMovePenalty;//Calculate path legnth/GCost
+                        currentNeighbour.HCost = ManhattanDistance(currentNeighbour, endNode);//Calculate Heuristic Cost
+                        currentNeighbour.FCost = currentNeighbour.GCost + currentNeighbour.HCost;//Calculate FCost
+                        nodesToVisit.Add(currentNeighbour);                        
+                    }
                 }
-                currentNode = GetMostPerfomentNode(currentNode, startNode, endNode, visitedNodes, nodesToVisit);//Recurse to get path
-                //Debug.Log("Node : " + i + "  FCost : " + currentNode.FCost + " Position : " + "X : " + currentNode.X + "  Y : " + currentNode.Y);
-                //Add current node so when we try to get neighbours we dont pass by this one twice
-                visitedNodes.Add(currentNode);
-                nodesToVisit.Clear();
+                
+                for(int n = 0; n < nodesToVisit.Count; n++) //Loop over all nodes to find one with lowest fcost to visit
+                {
+                    if(nodesToVisit[n].FCost < lowestFCost)//Filter out node with lowest FCost
+                    {
+                        lowestFCost = nodesToVisit[n].FCost;
+                        lowestHCost = nodesToVisit[n].HCost;
+                        currentNode = nodesToVisit[n];//Lowest FCost node saved to variable for next iteration
+                    }
+                    else if(nodesToVisit[n].FCost == lowestFCost) 
+                    {
+                        //Getting lowest HCost if two or more nodes have the same FCost
+                        lowestHCost = nodesToVisit[n].HCost;
+                        currentNode = nodesToVisit[n];//Lowest HCost node saved to variable for next iteration
+                    }
+                }
+                //Do modifications after the loop because that loop is used just to get the best node, and not to change the properities of each node
+                if (!exploredNodes.Contains(currentNode)) exploredNodes.Add(currentNode);
+                visitedNodes.Add(currentNode);//Add the best node to visitedNodes so we dont pass by it again
+                nodesToVisit.Remove(currentNode);//We are not going to revisit the best node
             }
         }
 
         currentNode = endNode;//Start from end
-        startNode = NodeFromWorldPosition(botPosition);
-        visitedNodes.Clear();//Reset visisted nodes since we will be using it
         //Second part of pathfinder. Reversepath from endNode to get path using the neighbouring lowest FCost node
         //Debug.Log("PART 2 A* PATHFINDER");
         for (int i = 0; i < maxIterations; i++)
         {
-            if (currentNode != startNode)
+            if (currentNode.parent != null)
             {
-                currentNode = currentNode.parent;
-                //Debug.Log("Node : " + i + "  FCost : " + currentNode.FCost + " Position : " + "X : " + currentNode.X + "  Y : " + currentNode.Y);
-
+                currentNode = currentNode.parent;                
                 //Add current node to path
                 path.Add(currentNode);
             }
@@ -207,7 +233,18 @@ public class AStarPathfinder : MonoBehaviour
         overallPaths.Add(path);//We calculated one more path
         stopwatch.Stop();
         Debug.Log("Took " + stopwatch.ElapsedMilliseconds/1000.0f + " seconds to calculate a " + gridsizeX + "*" + gridsizeY + " map");
-        return path;
+        return transformPathToPoints(path);
+    }
+    //Transforms a path to 3D vector points
+    private List<Vector3> transformPathToPoints(List<AStarNode> path) 
+    {
+        List<Vector3> points = new List<Vector3>(0);//The 3D vector points
+        for(int i = 0; i < path.Count; i++)
+        {
+            points.Add(path[i].WorldPosition);//Get world position of path nodes
+        }
+        points.Reverse();
+        return points;
     }
     private void OnDrawGizmos()
     {
@@ -218,7 +255,6 @@ public class AStarPathfinder : MonoBehaviour
             {
                 if (node.IsWalkable)
                 {
-                    Handles.Label(node.WorldPosition, node.FCost.ToString());//Shows the iteration number ontop of the node
                     Gizmos.DrawCube(node.WorldPosition, new Vector3(sphereRadiusBlockage, sphereRadiusBlockage, sphereRadiusBlockage));//Visualizing each node who is walkable
                 }
             }
@@ -241,7 +277,11 @@ public class AStarPathfinder : MonoBehaviour
                     {
                         Debug.DrawLine(path2[i].WorldPosition, path2[i + 1].WorldPosition, Color.green);
                         Gizmos.DrawSphere(path2[i].WorldPosition, sphereRadiusBlockage);
+                        Gizmos.DrawSphere(path2[0].WorldPosition, sphereRadiusBlockage+0.1f);
                         Handles.Label(path2[i].WorldPosition, path2[i].FCost.ToString());//Shows the iteration number ontop of the node
+                        Handles.Label(path2[i].WorldPosition + Vector3.up*0.5f, path2[i].HCost.ToString());//Shows the iteration number ontop of the node
+                        Handles.Label(path2[i].WorldPosition + Vector3.up, path2[i].GCost.ToString());//Shows the iteration number ontop of the node
+
                     }
                 }
 
@@ -253,6 +293,9 @@ public class AStarPathfinder : MonoBehaviour
             {
                 //Gizmos.DrawSphere(node.WorldPosition, sphereRadiusBlockage);
                 Handles.Label(node.WorldPosition, node.FCost.ToString());//Shows the iteration number ontop of the node
+                Gizmos.DrawSphere(node.WorldPosition, sphereRadiusBlockage);
+                Handles.Label(node.WorldPosition + Vector3.up * 0.5f, node.HCost.ToString());//Shows the iteration number ontop of the node
+                Handles.Label(node.WorldPosition + Vector3.up, node.GCost.ToString());//Shows the iteration number ontop of the node
             }
         }
     }
