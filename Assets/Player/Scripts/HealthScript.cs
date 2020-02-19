@@ -9,6 +9,7 @@ public class HealthScript : MonoBehaviour
     public int MaxHealth;//Maximum health of player
     public int Health;//Current health
     public Text HealthText;//Text showing current health
+    public Slider HealthBar;//The health bar
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +27,8 @@ public class HealthScript : MonoBehaviour
     {
         Health -= damage;//Apply damage to health
         HealthText.text = "Health : " + Health;//Update health text
-        if(Health < 0) 
+        HealthBar.value = (float)Health / (float)MaxHealth;//Update health bar
+        if (Health < 0) 
         {            
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);//Reloads current scene
         }

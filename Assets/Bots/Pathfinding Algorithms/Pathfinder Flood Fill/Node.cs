@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//Node for flood fill pathfinder
 public class Node
 {
     public bool IsWalkable;//Is this node walkable ?
