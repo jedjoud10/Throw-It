@@ -166,6 +166,8 @@ public class AStarPathfinder : MonoBehaviour
             {
                 lowestFCost = int.MaxValue;//Reset lowest FCost so we can do node filtering
                 lowestHCost = int.MaxValue;//Reset lowest HCost so we can do second node filtering
+
+                //Get neighbours of current node
                 for (int d = 0; d < directions.Count; d++) //Each direction
                 {
                     //Set GCost penalty to be 2 if we are in a diagonal direction and to be only 1 if we are in a straight direction
@@ -182,7 +184,6 @@ public class AStarPathfinder : MonoBehaviour
                             currentNeighbour.parent = currentNode;
                             //Recalculate costs
                             currentNeighbour.GCost = currentNode.GCost + GCostMovePenalty;//Calculate path legnth/GCost
-                            currentNeighbour.HCost = ManhattanDistance(currentNeighbour, endNode);//Calculate Heuristic Cost
                             currentNeighbour.FCost = currentNeighbour.GCost + currentNeighbour.HCost;//Calculate FCost
                         }
                     }
@@ -196,6 +197,7 @@ public class AStarPathfinder : MonoBehaviour
                     }
                 }
                 
+                //Get best node
                 for(int n = 0; n < nodesToVisit.Count; n++) //Loop over all nodes to find one with lowest fcost to visit
                 {
                     if(nodesToVisit[n].FCost < lowestFCost)//Filter out node with lowest FCost
@@ -204,13 +206,14 @@ public class AStarPathfinder : MonoBehaviour
                         lowestHCost = nodesToVisit[n].HCost;
                         currentNode = nodesToVisit[n];//Lowest FCost node saved to variable for next iteration
                     }
-                    else if(nodesToVisit[n].FCost == lowestFCost) 
+                    else if(nodesToVisit[n].FCost == lowestFCost && nodesToVisit[n].HCost < lowestHCost) 
                     {
                         //Getting lowest HCost if two or more nodes have the same FCost
                         lowestHCost = nodesToVisit[n].HCost;
                         currentNode = nodesToVisit[n];//Lowest HCost node saved to variable for next iteration
                     }
                 }
+
                 //Do modifications after the loop because that loop is used just to get the best node, and not to change the properities of each node
                 if (!exploredNodes.Contains(currentNode)) exploredNodes.Add(currentNode);
                 visitedNodes.Add(currentNode);//Add the best node to visitedNodes so we dont pass by it again
