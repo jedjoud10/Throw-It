@@ -86,6 +86,7 @@ public class AStarPathfinder : MonoBehaviour
         Vector3 pos;//Make a refference of position for later nodes
         nodes = new AStarNode[gridsizeX, gridsizeY];//Resize the grid array
         RaycastHit hit;//A hit so we can check if we hit the terrain collider
+        bool hitTerrain = false;//If we hit the terrain collider or not
         for (int x = 0; x < gridsizeX; x++)//Loop of X
         {
             for (int y = 0; y < gridsizeY; y++)//Loop of Y
@@ -93,20 +94,21 @@ public class AStarPathfinder : MonoBehaviour
                 pos = new Vector3(gridScale * x + basePos.x, transform.position.y, gridScale * y + basePos.z);//Set the correct location for next line
                 if (terrainCollider != null) //Cast rays from above, if it is terrain then set y so it is walkable part, if not, set y to be not walkable part
                 {
-                    if (Physics.Raycast(pos, Vector3.down * 10000000, out hit)) //The raycast with the return hit data
+                    if (Physics.SphereCast(pos, sphereRadiusBlockage, Vector3.down * 10000000, out hit)) //The raycast with the return hit data
                     {
                         if (hit.collider == terrainCollider)//We hit the terrain, make that node walkable
                         {
-                            pos.y = hit.point.y + sphereRadiusBlockage * 1.2f;//Multiplied by 1.2 to make it slighty above the ai
+                            pos.y = hit.point.y + sphereRadiusBlockage * 1.2f;//Multiplied by 1.2 to make it slighty above the bots
+                            hitTerrain = true;//We did hit the terrain
                         }
                         else//We did not hit the terrain, make that node unwalkable 
                         {
-                            pos.y = hit.point.y;//Exact point of collision. This could be more optimized to directly tell it that it has failed
+                            hitTerrain = false;//Exact point of collision. This could be more optimized to directly tell it that it has failed
                         }
                     }
                 }
 
-                nodes[x, y] = new AStarNode(!Physics.CheckSphere(pos, sphereRadiusBlockage), pos, x, y);//Set the node at (X, Y) to the coresponding location
+                nodes[x, y] = new AStarNode(hitTerrain, pos, x, y);//Set the node at (X, Y) to the coresponding location
             }
         }
         endNode = NodeFromWorldPosition(endPoint.position);//Init end node after grid generation
