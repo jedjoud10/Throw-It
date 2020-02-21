@@ -45,6 +45,7 @@ public class AStarPathfinder : MonoBehaviour
     private int gridsizeX, gridsizeY;//Private gridsize
     private float gridScale;//Private gridscale
     private List<Thread> botThreads = new List<Thread>();//Threads so we can call bots to repathfind if map has changed
+    private List<BotPathfinderScript> botPathfinders = new List<BotPathfinderScript>();//List of bots's pathfinders so we can call them when map has changed
     private Vector2 offset;//Private offset so we can change it without getting weird results
 
     private Vector3 basePos;//Some base offset variable
@@ -55,7 +56,6 @@ public class AStarPathfinder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {        
-        MakeTerrainGrid();
         overallPaths.Clear();
     }
     #region Grid & Base
@@ -106,8 +106,8 @@ public class AStarPathfinder : MonoBehaviour
         }
         endNode = NodeFromWorldPosition(endPoint.position, _terrainNodes);
     }
-    //Generate this using our own collision handling and multithreading
-    private void MakeGrid(PathfindObstacle[] objects) 
+    //The terrain obstacles have changed, so recalculate grid and repathfind every bot
+    public void MakeGrid(PathfindObstacle[] objects) 
     {
         float distanceThreshold = 5.0f;
         _nodes = _terrainNodes;//Init nodes
@@ -182,14 +182,32 @@ public class AStarPathfinder : MonoBehaviour
     //Called by external scripts and start mutlithreaded method
     public void Pathfind(Vector3 botPosition, BotPathfinderScript bot)
     {
-        MakeGrid(FindObjectsOfType<PathfindObstacle>());//Recalculate map
-        Thread thread = new Thread(() => PathfindThread(botPosition, bot, _nodes));
-        thread.Start();//Start the new thread
-        botThreads.Add(thread);
+        if (botPathfinders.Contains(bot))
+        {
+            Debug.Log("Does contain");
+            botThreads[botPathfinders.IndexOf(bot)].Abort();//Stop thread
+            botThreads[botPathfinders.IndexOf(bot)] = new Thread(() => PathfindThread(botPosition, bot));
+            botThreads[botPathfinders.IndexOf(bot)].Start();//Repathfind
+        }
+        else
+        {
+            Thread thread = new Thread(() => PathfindThread(botPosition, bot));
+            thread.Start();//Start the new thread
+            botThreads.Add(thread);
+            botPathfinders.Add(bot);
+        }
+    }  
+    //Removes bot pathfidner from list since the bot is dead
+    public void RemoveFromQueue(BotPathfinderScript bot) 
+    {
+        botThreads[botPathfinders.IndexOf(bot)].Abort();
+        botThreads.RemoveAt(botPathfinders.IndexOf(bot));
+        botPathfinders.Remove(bot);//de remov    
     }
     //Get path for bot. This is multithreaded
-    private void PathfindThread(Vector3 botPosition, BotPathfinderScript bot, AStarNode[,] nodes) 
-    {        
+    private void PathfindThread(Vector3 botPosition, BotPathfinderScript bot) 
+    {
+        AStarNode[,] nodes = _nodes;
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();//Using a stopwatch to get how much time did we spent calculating path
         stopwatch.Start();
         AStarNode startNode = NodeFromWorldPosition(botPosition, nodes);//Start node / bot position node
@@ -265,10 +283,10 @@ public class AStarPathfinder : MonoBehaviour
                 if (!exploredNodes.Contains(currentNode)) exploredNodes.Add(currentNode);
                 visitedNodes.Add(currentNode);//Add the best node to visitedNodes so we dont pass by it again
                 nodesToVisit.Remove(currentNode);//We are not going to revisit the best node
-                Debug.Log(i);
             }
             else 
             {
+                Debug.Log("Final iteration is " + i);
                 break;
             }
         }
@@ -287,7 +305,6 @@ public class AStarPathfinder : MonoBehaviour
             }
             else 
             {
-                Debug.Log(i);
                 break;
             }
         }

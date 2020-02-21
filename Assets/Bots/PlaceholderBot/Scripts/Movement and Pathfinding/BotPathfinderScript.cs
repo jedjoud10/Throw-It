@@ -54,6 +54,11 @@ public class BotPathfinderScript : MonoBehaviour
                 currentpoint.y = transform.position.y;
                 botMovementScript.MoveToPosition(currentpoint);//Move to position passed to the botmovementscript
             }
+            if (points.Count == 1 && Time.frameCount % 300 == 0)//Do not run this every frame 
+            {
+                FindPath();
+            }
+            MyPos = transform.position;
             #endregion
         }
     }
@@ -61,22 +66,14 @@ public class BotPathfinderScript : MonoBehaviour
     public void FindPath() //Find path using the A* pathfinder
     {
         if (pathfinder != null)
-        {
-            MyPos = transform.position;
+        {            
             pathfinder.Pathfind(MyPos, this);//Pathfind
         }
     }
     public void SetNewPoints(List<Vector3> _points) //Settings of new points called from the threaded method
     {
         points = _points;//Sets new points
-        if (points.Count == 0)//Repeat pathfinding until calculations are done
-        {           
-
-        }
-        else
-        {
-            currentpoint = points[0];//Set the base pos
-            currentpointindex = 0;//Reset index since we found new path
-        }
+        currentpoint = points[0];//Set the base pos
+        currentpointindex = 0;//Reset index since we found new path        
     }
 }
