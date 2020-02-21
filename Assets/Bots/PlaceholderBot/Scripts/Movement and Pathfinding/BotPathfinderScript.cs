@@ -63,15 +63,15 @@ public class BotPathfinderScript : MonoBehaviour
         if (pathfinder != null)
         {
             MyPos = transform.position;
-            SetNewPoints(pathfinder.Pathfind(MyPos));//Pathfind
+            pathfinder.Pathfind(MyPos, this);//Pathfind
         }
     }
     public void SetNewPoints(List<Vector3> _points) //Settings of new points called from the threaded method
     {
         points = _points;//Sets new points
         if (points.Count == 0)//Repeat pathfinding until calculations are done
-        {
-            //Invoke("FindPath", RefreshPathRate);//Repeat with the refresh rate
+        {           
+
         }
         else
         {

@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 using UnityEditor;
-//A pathfinder that uses the A* pathfinding algorithm
+//A pathfinder that uses the A* pathfinding algorithm and it is multithreaded
 public class AStarPathfinder : MonoBehaviour
 {
-    private AStarNode[,] nodes = new AStarNode[0,0];//Nodes
     [Header("Main settings")]
     [Tooltip("The object you are trying to reach")]
     public Transform endPoint;//The object you are trying to reach
@@ -20,7 +20,7 @@ public class AStarPathfinder : MonoBehaviour
     [Tooltip("The scale of the grid")]
     public float _gridScale;//The scale of the grid
     [Tooltip("Pathfinder Offset")]
-    public Vector2 offset;//Offset in 2d direction
+    public Vector2 _offset;//Offset in 2d direction
     [Range(1, 10)]
     [Tooltip("How much detail can we allow")]
     public int Resolution = 1;//How much detail can we allow
@@ -28,8 +28,10 @@ public class AStarPathfinder : MonoBehaviour
     [Header("Collisions")]
     [Tooltip("The radius of the sphere to check collisions with other objects")]
     public float sphereRadiusBlockage;//The radius of the sphere to check collisions for
-    [Tooltip("Is this walkable terrain ? (USE ONLY WHEN NOT USING WHEIGHTED POINTS)")]
+    [Tooltip("Is this walkable terrain ?")]
     public Collider terrainCollider;//Walkable terrain the ai can use
+    [Tooltip("The water height for masking walkable nodes")]
+    public float waterHeight;//Walkable terrain the ai can use
 
     [Tooltip("How to use gizmos")]
     public GizmoMode gizmoMode;//How to use gizmos
@@ -38,8 +40,11 @@ public class AStarPathfinder : MonoBehaviour
     private List<Vector2Int> directions = new List<Vector2Int>();//Allowed directions to search for neighbours
     private List<List<AStarNode>> overallPaths = new List<List<AStarNode>>(0);//All pathes that we calculated
     private List<AStarNode> exploredNodes = new List<AStarNode>(0);
+    private AStarNode[,] _nodes;//Nodes that are gong to be fed to Threaded functions
     private int gridsizeX, gridsizeY;//Private gridsize
     private float gridScale;//Private gridscale
+    private List<Thread> botThreads = new List<Thread>();//Threads so we can call bots to repathfind if map has changed
+    private Vector2 offset;//Private offset so we can change it without getting weird results
 
     private Vector3 basePos;//Some base offset variable
     public enum GizmoMode
@@ -53,13 +58,12 @@ public class AStarPathfinder : MonoBehaviour
         gridsizeY = _gridsizeY * Resolution;//Make more nodes int Y
         gridScale = _gridScale / Resolution;//Make scale less
         //Init directions for neighbour node search
-        overallPaths.Clear();
+        overallPaths.Clear();        
     }
+    #region Grid & Base
     //Generate directions
     public void MakeDirections() 
     {
-        directions.Clear();
-
         //Straight lines cost us only 1 GCost
         directions.Add(new Vector2Int(0, 1));
         directions.Add(new Vector2Int(0, -1));
@@ -70,55 +74,50 @@ public class AStarPathfinder : MonoBehaviour
         directions.Add(new Vector2Int(1, 1));
         directions.Add(new Vector2Int(1, -1));
         directions.Add(new Vector2Int(-1, 1));
-        directions.Add(new Vector2Int(1, -1));
-        
-    }
-    
-    //Generate nodes and make properly the grid
+        directions.Add(new Vector2Int(1, -1));        
+    }    
+    //Generate nodes based off terrain to mbe able to use it later
+    //Only run this at start of game
     public void MakeGrid() 
-    {
+    {        
         MakeDirections();
+        _nodes = new AStarNode[gridsizeX, gridsizeY];//Nodes we are going to give to the new threaded function
         exploredNodes.Clear();//Reset debug
         gridsizeX = _gridsizeX * Resolution;//Make more nodes in X
         gridsizeY = _gridsizeY * Resolution;//Make more nodes int Y
         gridScale = _gridScale / Resolution;//Make scale less
+        offset = _offset * Resolution;//Update offset
         basePos = new Vector3(offset.x * gridScale, 0, offset.y * gridScale) - new Vector3(gridScale * (gridsizeX-1) / 2, 0, gridScale * (gridsizeY-1) / 2);//Setting base offset
         Vector3 pos;//Make a refference of position for later nodes
-        nodes = new AStarNode[gridsizeX, gridsizeY];//Resize the grid array
         RaycastHit hit;//A hit so we can check if we hit the terrain collider
-        bool hitTerrain = false;//If we hit the terrain collider or not
+        bool walkable = false;//Is the current node walkable
+        _nodes = new AStarNode[gridsizeX, gridsizeY];
         for (int x = 0; x < gridsizeX; x++)//Loop of X
         {
             for (int y = 0; y < gridsizeY; y++)//Loop of Y
             {
-                pos = new Vector3(gridScale * x + basePos.x, transform.position.y, gridScale * y + basePos.z);//Set the correct location for next line
-                if (terrainCollider != null) //Cast rays from above, if it is terrain then set y so it is walkable part, if not, set y to be not walkable part
-                {
-                    if (Physics.SphereCast(pos, sphereRadiusBlockage, Vector3.down * 10000000, out hit)) //The raycast with the return hit data
-                    {
-                        if (hit.collider == terrainCollider)//We hit the terrain, make that node walkable
-                        {
-                            pos.y = hit.point.y + sphereRadiusBlockage * 1.2f;//Multiplied by 1.2 to make it slighty above the bots
-                            hitTerrain = true;//We did hit the terrain
-                        }
-                        else//We did not hit the terrain, make that node unwalkable 
-                        {
-                            hitTerrain = false;//Exact point of collision. This could be more optimized to directly tell it that it has failed
-                        }
-                    }
+                pos.x = gridScale * x + basePos.x;
+                pos.z = gridScale * y + basePos.z;
+                pos.y = 100;
+                if (Physics.Raycast(pos, Vector3.down * 10000000, out hit)) //The raycast with the return hit data
+                {                    
+                    pos = hit.point + Vector3.up * sphereRadiusBlockage * 1.01f;//Set new node position
+                    walkable = !Physics.CheckSphere(pos, sphereRadiusBlockage) && pos.y > waterHeight;                    
                 }
-
-                nodes[x, y] = new AStarNode(hitTerrain, pos, x, y);//Set the node at (X, Y) to the coresponding location
+                _nodes[x, y] = new AStarNode(walkable, pos, x, y);//Set the node at (X, Y) to the coresponding location
             }
         }
-        endNode = NodeFromWorldPosition(endPoint.position);//Init end node after grid generation
+        endNode = NodeFromWorldPosition(endPoint.position, _nodes);
     }
+    #endregion
+
+    #region Pathfinding
     //Get neighbouring node
-    private AStarNode GetNeighbour(AStarNode a, Vector2Int direction) 
+    private AStarNode GetNeighbour(AStarNode a, Vector2Int direction, AStarNode[,] nodes) 
     {
         return nodes[Mathf.Clamp(a.X + direction.x, 0, gridsizeX - 1), Mathf.Clamp(a.Y + direction.y, 0, gridsizeY - 1)];
     }
-    private AStarNode NodeFromWorldPosition(Vector3 pos)//Getting a node from grid from world position 
+    private AStarNode NodeFromWorldPosition(Vector3 pos, AStarNode[,] nodes)//Getting a node from grid from world position 
     {
         pos -= basePos;//Remove the base pos so we have correct mesurements with correct offset
         #region Snapping to grid
@@ -128,7 +127,7 @@ public class AStarPathfinder : MonoBehaviour
         int y = Mathf.RoundToInt(pos.z);
         #endregion
         x = Mathf.Clamp(x, 0, gridsizeX - 1);//Clamping so the value cant be out of index
-        y = Mathf.Clamp(y, 0, gridsizeY - 1);
+        y = Mathf.Clamp(y, 0, gridsizeY - 1);        
         return nodes[x, y];
     }
     //Get manhattan distance from node A to node B
@@ -141,13 +140,20 @@ public class AStarPathfinder : MonoBehaviour
     {
         return Mathf.RoundToInt(Mathf.Sqrt(Mathf.Pow(a.X - b.X, 2) + Mathf.Pow(a.Y - b.Y, 2))*10);//Euclidean distance between two points
     }
-    //Get path for bot
-    public List<Vector3> Pathfind(Vector3 botPosition) 
+    //Called by external scripts and start mutlithreaded method
+    public void Pathfind(Vector3 botPosition, BotPathfinderScript bot)
     {
+        MakeGrid();//Recalculate map
+        Thread thread = new Thread(() => PathfindThread(botPosition, bot, _nodes));
+        thread.Start();//Start the new thread
+        botThreads.Add(thread);
+    }
+    //Get path for bot. This is multithreaded
+    private void PathfindThread(Vector3 botPosition, BotPathfinderScript bot, AStarNode[,] nodes) 
+    {        
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();//Using a stopwatch to get how much time did we spent calculating path
         stopwatch.Start();
-        MakeGrid();
-        AStarNode startNode = NodeFromWorldPosition(botPosition);//Start node / bot position node
+        AStarNode startNode = NodeFromWorldPosition(botPosition, nodes);//Start node / bot position node
         List<AStarNode> visitedNodes = new List<AStarNode>(0);//Vistied nodes
         List<AStarNode> nodesToVisit = new List<AStarNode>(0);//Nodes to be visited
         AStarNode currentNode = startNode;//Current node we are visiting
@@ -175,7 +181,7 @@ public class AStarPathfinder : MonoBehaviour
                     //Set GCost penalty to be 2 if we are in a diagonal direction and to be only 1 if we are in a straight direction
                     if (d > 3) GCostMovePenalty = 2;
                     else GCostMovePenalty = 1;                   
-                    currentNeighbour = GetNeighbour(currentNode, directions[d]);//Get neighbour for this node iteration with direction
+                    currentNeighbour = GetNeighbour(currentNode, directions[d], nodes);//Get neighbour for this node iteration with direction
                     if (visitedNodes.Contains(currentNeighbour)) continue;//Skip to next neighbour because we already visited the curernt one and we already passed by it
                     if (!currentNeighbour.IsWalkable) continue;//Skip to next neighbour since we cannot walk on this one
                     if(nodesToVisit.Contains(currentNeighbour)) //If this node is already going to be visited
@@ -238,7 +244,7 @@ public class AStarPathfinder : MonoBehaviour
         overallPaths.Add(path);//We calculated one more path
         stopwatch.Stop();
         Debug.Log("Took " + stopwatch.ElapsedMilliseconds/1000.0f + " seconds to calculate a " + gridsizeX + "*" + gridsizeY + " map");
-        return transformPathToPoints(path);
+        bot.SetNewPoints(transformPathToPoints(path));
     }
     //Transforms a path to 3D vector points
     private List<Vector3> transformPathToPoints(List<AStarNode> path) 
@@ -251,56 +257,25 @@ public class AStarPathfinder : MonoBehaviour
         points.Reverse();
         return points;
     }
+    #endregion
+
     private void OnDrawGizmos()
     {
+        gridsizeX = _gridsizeX * Resolution;//Make more nodes in X
+        gridsizeY = _gridsizeY * Resolution;//Make more nodes int Y
+        gridScale = _gridScale / Resolution;//Make scale less
+        offset = _offset * Resolution;//Update offset
         if (gizmoMode == GizmoMode.Grid)
         {
-            Gizmos.DrawWireCube(new Vector3(offset.x * gridScale, 0, offset.y * gridScale), new Vector3(gridsizeX * gridScale, 1f, gridsizeY * gridScale));//Draw area of pathfinder
-            foreach (var node in nodes)
+            Gizmos.DrawWireCube(new Vector3(offset.x * gridScale, transform.position.y, offset.y * gridScale), new Vector3(gridsizeX * gridScale, 1f, gridsizeY * gridScale));//Draw area of pathfinder
+            if (_nodes == null) return;
+            foreach (var node in _nodes)
             {
                 if (node.IsWalkable)
                 {
+                    //Handles.Label(node.WorldPosition, node.Iteration.ToString());//Shows the iteration number ontop of the node
                     Gizmos.DrawCube(node.WorldPosition, new Vector3(sphereRadiusBlockage, sphereRadiusBlockage, sphereRadiusBlockage));//Visualizing each node who is walkable
                 }
-            }
-        }
-        if (endNode != null)
-        {
-            Gizmos.DrawWireSphere(endNode.WorldPosition, sphereRadiusBlockage);//Visualizing each node who is walkable
-        }
-        if (gizmoMode == GizmoMode.Path)
-        {
-            foreach (var path2 in overallPaths)
-            {
-                if (path2.Count == 0)
-                {
-                    return;
-                }
-                for (int i = 0; i < path2.Count; i++)
-                {
-                    if (i < path2.Count - 1)
-                    {
-                        Debug.DrawLine(path2[i].WorldPosition, path2[i + 1].WorldPosition, Color.green);
-                        Gizmos.DrawSphere(path2[i].WorldPosition, sphereRadiusBlockage);
-                        Gizmos.DrawSphere(path2[0].WorldPosition, sphereRadiusBlockage+0.1f);
-                        Handles.Label(path2[i].WorldPosition, path2[i].FCost.ToString());//Shows the iteration number ontop of the node
-                        Handles.Label(path2[i].WorldPosition + Vector3.up*0.5f, path2[i].HCost.ToString());//Shows the iteration number ontop of the node
-                        Handles.Label(path2[i].WorldPosition + Vector3.up, path2[i].GCost.ToString());//Shows the iteration number ontop of the node
-
-                    }
-                }
-
-            }
-        }
-        if (gizmoMode == GizmoMode.ExploredNodes)
-        {
-            foreach (var node in exploredNodes)
-            {
-                //Gizmos.DrawSphere(node.WorldPosition, sphereRadiusBlockage);
-                Handles.Label(node.WorldPosition, node.FCost.ToString());//Shows the iteration number ontop of the node
-                Gizmos.DrawSphere(node.WorldPosition, sphereRadiusBlockage);
-                Handles.Label(node.WorldPosition + Vector3.up * 0.5f, node.HCost.ToString());//Shows the iteration number ontop of the node
-                Handles.Label(node.WorldPosition + Vector3.up, node.GCost.ToString());//Shows the iteration number ontop of the node
             }
         }
     }

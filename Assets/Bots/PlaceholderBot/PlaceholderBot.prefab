@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2528547628184728748}
   - component: {fileID: 5320872013909586124}
   - component: {fileID: 7809379998080732962}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PlaceholderBot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
