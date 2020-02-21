@@ -13,7 +13,7 @@ public class AStarPathfinderCustomEditor : Editor
         AStarPathfinder pathfinder = (AStarPathfinder)target;
         if (GUILayout.Button("Calculate grid"))
         {
-            pathfinder.MakeGrid();//Recalculate map with button
+            pathfinder.MakeTerrainGrid();//Recalculate map with button
         }
     }
 }

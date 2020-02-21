@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2892159755462595598}
   - component: {fileID: 1515768650172325593}
+  - component: {fileID: 8810473027197562160}
   m_Layer: 0
   m_Name: Tree2
   m_TagString: Untagged
@@ -45,6 +46,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 5, z: 0.8}
   m_Center: {x: 0, y: 1.56, z: 0}
+--- !u!114 &8810473027197562160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624770681035929212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4358f88f638a264bbe2df390c54d765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Position: {x: 0, y: 0, z: 0}
+  Bounds: {x: 2, y: 7, z: 2}
+  Offset: {x: 0, y: 2.37, z: 0}
 --- !u!1001 &636467945591429624
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -166,18 +182,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LODs.Array.data[1].renderers.Array.data[1].renderer
       value: 
-      objectReference: {fileID: 7674215329168228220}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1c7cc8b796a3254fa51853f601a339c, type: 3}
 --- !u!4 &5597839062237967074 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: d1c7cc8b796a3254fa51853f601a339c,
-    type: 3}
-  m_PrefabInstance: {fileID: 636467945591429624}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &7674215329168228220 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -2137668205440948604, guid: d1c7cc8b796a3254fa51853f601a339c,
     type: 3}
   m_PrefabInstance: {fileID: 636467945591429624}
   m_PrefabAsset: {fileID: 0}
