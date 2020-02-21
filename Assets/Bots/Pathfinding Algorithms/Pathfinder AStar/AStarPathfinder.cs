@@ -128,6 +128,7 @@ public class AStarPathfinder : MonoBehaviour
                 } 
             }
         }
+        endNode = NodeFromWorldPosition(endPoint.position, _nodes);
     }
     //Distance to closest point on 3d box
     private float sdBox(Vector3 p, Vector3 t, Vector3 b)
@@ -264,21 +265,33 @@ public class AStarPathfinder : MonoBehaviour
                 if (!exploredNodes.Contains(currentNode)) exploredNodes.Add(currentNode);
                 visitedNodes.Add(currentNode);//Add the best node to visitedNodes so we dont pass by it again
                 nodesToVisit.Remove(currentNode);//We are not going to revisit the best node
+                Debug.Log(i);
+            }
+            else 
+            {
+                break;
             }
         }
 
         currentNode = endNode;//Start from end
         //Second part of pathfinder. Reversepath from endNode to get path using the neighbouring lowest FCost node
         //Debug.Log("PART 2 A* PATHFINDER");
+        path.Add(endNode);
         for (int i = 0; i < maxIterations; i++)
         {
             if (currentNode.parent != null)
             {
-                currentNode = currentNode.parent;                
+                currentNode = currentNode.parent;
                 //Add current node to path
                 path.Add(currentNode);
             }
+            else 
+            {
+                Debug.Log(i);
+                break;
+            }
         }
+        
         overallPaths.Add(path);//We calculated one more path
         stopwatch.Stop();
         Debug.Log("Took " + stopwatch.ElapsedMilliseconds/1000.0f + " seconds to calculate a " + gridsizeX + "*" + gridsizeY + " map");
@@ -303,8 +316,9 @@ public class AStarPathfinder : MonoBehaviour
         gridsizeY = _gridsizeY * Resolution;//Make more nodes int Y
         gridScale = _gridScale / Resolution;//Make scale less
         offset = _offset * Resolution;//Update offset
-        if (gizmoMode == GizmoMode.Grid)
+        if (gizmoMode == GizmoMode.Grid && endNode != null)
         {
+            Gizmos.DrawWireSphere(endNode.WorldPosition, 1.0f);
             Gizmos.DrawWireCube(new Vector3(offset.x * gridScale, transform.position.y, offset.y * gridScale), new Vector3(gridsizeX * gridScale, 1f, gridsizeY * gridScale));//Draw area of pathfinder
             if (_nodes == null) return;
             foreach (var node in _nodes)
@@ -314,6 +328,13 @@ public class AStarPathfinder : MonoBehaviour
                     //Handles.Label(node.WorldPosition, node.Iteration.ToString());//Shows the iteration number ontop of the node
                     Gizmos.DrawCube(node.WorldPosition, new Vector3(sphereRadiusBlockage, sphereRadiusBlockage, sphereRadiusBlockage));//Visualizing each node who is walkable
                 }
+            }
+        }
+        if (gizmoMode == GizmoMode.ExploredNodes && exploredNodes != null) 
+        {
+            foreach(AStarNode a in exploredNodes) 
+            {
+                Gizmos.DrawSphere(a.WorldPosition, 1.0f);
             }
         }
     }
