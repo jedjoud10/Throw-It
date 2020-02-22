@@ -31,7 +31,11 @@ public class AStarPathfinder : MonoBehaviour
     [Tooltip("Is this walkable terrain ?")]
     public Collider terrainCollider;//Walkable terrain the ai can use
     [Tooltip("The water height for masking walkable nodes")]
-    public float waterHeight;//Walkable terrain the ai can use
+    public float waterHeight;//Water height
+    [Tooltip("Radius to add to avoid more obstacles")]
+    public float ObstacleAvoindanceRadius;//Radius to add to avoid more obstacles
+    [Tooltip("The maximum height difference between nodes to be considered a walkable node")]
+    public float MaxSlope;//Radius to add to avoid more obstacles
 
     [Tooltip("How to use gizmos")]
     public GizmoMode gizmoMode;//How to use gizmos
@@ -41,7 +45,6 @@ public class AStarPathfinder : MonoBehaviour
     private List<List<AStarNode>> overallPaths = new List<List<AStarNode>>(0);//All pathes that we calculated
     private List<AStarNode> exploredNodes = new List<AStarNode>(0);
     private AStarNode[,] _nodes;//Nodes that are gong to be fed to Threaded functions
-    private AStarNode[,] _terrainNodes;//Nodes that are created from start of game from terrain
     private int gridsizeX, gridsizeY;//Private gridsize
     private float gridScale;//Private gridscale
     private List<Thread> botThreads = new List<Thread>();//Threads so we can call bots to repathfind if map has changed
@@ -88,7 +91,7 @@ public class AStarPathfinder : MonoBehaviour
         Vector3 pos;//Make a refference of position for later nodes
         RaycastHit hit;//A hit so we can check if we hit the terrain collider
         bool walkable = false;//Is the current node walkable
-        _terrainNodes = new AStarNode[gridsizeX, gridsizeY];//Nodes we are going to give to the new threaded function
+        _nodes = new AStarNode[gridsizeX, gridsizeY];//Nodes we are going to give to the new threaded function
         for (int x = 0; x < gridsizeX; x++)//Loop of X
         {
             for (int y = 0; y < gridsizeY; y++)//Loop of Y
@@ -98,29 +101,30 @@ public class AStarPathfinder : MonoBehaviour
                 pos.y = 100;
                 if (Physics.Raycast(pos, Vector3.down * 10000000, out hit)) //The raycast with the return hit data
                 {                    
-                    pos = hit.point + Vector3.up * sphereRadiusBlockage * 1.01f;//Set new node position
-                    walkable = !Physics.CheckSphere(pos, sphereRadiusBlockage) && pos.y > waterHeight;                    
+                    pos = hit.point + Vector3.up * sphereRadiusBlockage;//Set new node position                   
                 }
-                _terrainNodes[x, y] = new AStarNode(walkable, pos, x, y);//Set the node at (X, Y) to the coresponding location
+                _nodes[x, y] = new AStarNode(walkable, pos, x, y);//Set the node at (X, Y) to the coresponding location
             }
         }
-        endNode = NodeFromWorldPosition(endPoint.position, _terrainNodes);
+        endNode = NodeFromWorldPosition(endPoint.position, _nodes);
     }
-    //The terrain obstacles have changed, so recalculate grid and repathfind every bot
-    public void MakeGrid(PathfindObstacle[] objects) 
+    //The terrain obstacles have changed, so recalculate grid using multithreading
+    private void MakeGridThread(PathfindObstacle[] objects) 
     {
-        float distanceThreshold = 5.0f;
-        _nodes = _terrainNodes;//Init nodes
         for (int x = 0; x < gridsizeX; x++)
         {
             for (int y = 0; y < gridsizeY; y++)
             {
                 //Check if this node is walkable
-                if (!_nodes[x, y].IsWalkable) continue;//Node has been set already to not be walkable, keep it that way
+                if (_nodes[x, y].WorldPosition.y < waterHeight) 
+                {
+                    _nodes[x, y].IsWalkable = false;//cannot walk on water
+                    continue;//Node has been set already to not be walkable, keep it that way
+                }
                 _nodes[x, y].IsWalkable = true;//Init state since we are doing another loop, so we must have a like a rest/reset state
                 for (int o = 0; o < objects.Length; o++) 
                 {
-                    if(sdBox(_nodes[x, y].WorldPosition, objects[o].Position + objects[o].Offset, objects[o].Bounds) < distanceThreshold) 
+                    if(Vector3.Distance(_nodes[x, y].WorldPosition, objects[o].Position) < objects[o].ObstacleRadius + ObstacleAvoindanceRadius) 
                     {
                         _nodes[x, y].IsWalkable = false;
                         break;//We finished the task early since we found an obstacle already. No need to continue
@@ -128,25 +132,14 @@ public class AStarPathfinder : MonoBehaviour
                 } 
             }
         }
+    }
+    //Called from outside scripts to recalulate the grid using multithreading
+    public void MakeGrid() 
+    {
         endNode = NodeFromWorldPosition(endPoint.position, _nodes);
-    }
-    //Distance to closest point on 3d box
-    private float sdBox(Vector3 p, Vector3 t, Vector3 b)
-    {
-        Vector3 q = abs(p - t) - b;
-        return (max(q, 0.0f)).magnitude + Mathf.Min(Mathf.Max(q.x, q.z), 0.0f);
-    }
-    private Vector3 abs(Vector3 a) 
-    {
-        return new Vector3(Mathf.Abs(a.x), Mathf.Abs(a.y), Mathf.Abs(a.z));
-    }
-    private Vector2 abs(Vector2 a) 
-    {
-        return new Vector2(Mathf.Abs(a.x), Mathf.Abs(a.y));
-    }
-    private Vector3 max(Vector3 a, float b)
-    {
-        return new Vector3(Mathf.Max(a.x, b), Mathf.Max(a.y, b), Mathf.Max(a.z, b));
+        PathfindObstacle[] obstacles = FindObjectsOfType<PathfindObstacle>();
+        Thread gridThread = new Thread(() => MakeGridThread(obstacles));
+        gridThread.Start();
     }
     #endregion
 
@@ -184,10 +177,7 @@ public class AStarPathfinder : MonoBehaviour
     {
         if (botPathfinders.Contains(bot))
         {
-            Debug.Log("Does contain");
-            botThreads[botPathfinders.IndexOf(bot)].Abort();//Stop thread
-            botThreads[botPathfinders.IndexOf(bot)] = new Thread(() => PathfindThread(botPosition, bot));
-            botThreads[botPathfinders.IndexOf(bot)].Start();//Repathfind
+            RemoveFromQueue(bot);
         }
         else
         {
@@ -286,7 +276,7 @@ public class AStarPathfinder : MonoBehaviour
             }
             else 
             {
-                Debug.Log("Final iteration is " + i);
+                //Debug.Log("Final iteration is " + i);
                 break;
             }
         }

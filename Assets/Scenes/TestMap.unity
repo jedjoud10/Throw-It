@@ -138,7 +138,7 @@ PrefabInstance:
     - target: {fileID: 8508197849190694249, guid: 8301183741fb9284d8b16a7547239d23,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 402.65918
+      value: 427.71
       objectReference: {fileID: 0}
     - target: {fileID: 8508197849190694249, guid: 8301183741fb9284d8b16a7547239d23,
         type: 3}
@@ -148,7 +148,7 @@ PrefabInstance:
     - target: {fileID: 8508197849190694249, guid: 8301183741fb9284d8b16a7547239d23,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 412.94446
+      value: 421.26
       objectReference: {fileID: 0}
     - target: {fileID: 8508197849190694249, guid: 8301183741fb9284d8b16a7547239d23,
         type: 3}
@@ -292,6 +292,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 68160074}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &163711241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 163711240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0604b31d95964da3f40c015d29a51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heatEmmision: 40
+  maxEmmisionDistance: 17.6
+  minHeat: 0
 --- !u!114 &163711242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,8 +320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0, z: 0}
-  Bounds: {x: 3.79, y: 2.9, z: 7.1}
-  Offset: {x: 0, y: 0, z: 0}
+  ObstacleRadius: 4
 --- !u!1 &199666501
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,16 +796,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endPoint: {fileID: 1302312015}
-  maxIterations: 30
+  maxIterations: 300
   _gridsizeX: 30
   _gridsizeY: 30
   _gridScale: 30
   _offset: {x: 17, y: 17}
   Resolution: 6
-  sphereRadiusBlockage: 2
+  sphereRadiusBlockage: 0.5
   terrainCollider: {fileID: 199666502}
   waterHeight: 22
-  gizmoMode: 0
+  ObstacleAvoindanceRadius: 3
+  MaxSlope: 0
+  gizmoMode: 3
 --- !u!4 &712236400
 Transform:
   m_ObjectHideFlags: 0
@@ -806,26 +822,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &729308393 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 4fb516bdb779fed4ca9fe52bbb11907b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1488674504}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &729308395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 729308393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0604b31d95964da3f40c015d29a51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  heatEmmision: 37
-  maxEmmisionDistance: 10
 --- !u!1001 &788619541
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1390,6 +1386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1302312015}
+  - component: {fileID: 1302312016}
   m_Layer: 0
   m_Name: EndPoint
   m_TagString: Objective
@@ -1412,6 +1409,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1302312016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302312014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0604b31d95964da3f40c015d29a51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heatEmmision: 37
+  maxEmmisionDistance: 212
+  minHeat: -100
 --- !u!1001 &1326445495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1790,8 +1802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0, z: 0}
-  Bounds: {x: 28.4, y: 2.2, z: 13.7}
-  Offset: {x: 0, y: 0, z: 0}
+  ObstacleRadius: 14.59
 --- !u!1 &1523023369
 GameObject:
   m_ObjectHideFlags: 0

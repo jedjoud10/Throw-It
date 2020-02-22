@@ -59,8 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0, z: 0}
-  Bounds: {x: 3, y: 7, z: 3}
-  Offset: {x: 0, y: 2.61, z: 0}
+  ObstacleRadius: 3
 --- !u!1001 &4672614492762729233
 PrefabInstance:
   m_ObjectHideFlags: 0

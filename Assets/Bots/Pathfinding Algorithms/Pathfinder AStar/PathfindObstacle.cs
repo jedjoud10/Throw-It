@@ -6,8 +6,7 @@ public class PathfindObstacle : MonoBehaviour
 {
     [HideInInspector]
     public Vector3 Position;//The position of this gameObject transform
-    public Vector3 Bounds;//Bounds of the box
-    public Vector3 Offset;//The offset of the bounds
+    public float ObstacleRadius = 0.0f;//Radius to avoid this obstalce
     // Start is called before the first frame update
     void Start()
     {
@@ -17,10 +16,10 @@ public class PathfindObstacle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position + Offset, Bounds);
+        Gizmos.DrawWireSphere(transform.position, ObstacleRadius);
     }
 }

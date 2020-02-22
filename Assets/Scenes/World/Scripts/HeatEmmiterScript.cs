@@ -5,7 +5,8 @@ using UnityEngine;
 public class HeatEmmiterScript : MonoBehaviour
 {
     public float heatEmmision;//How much heat this object emmits
-    public float maxEmmisionDistance;//Max distance that we can emmit heat to
+    public float maxEmmisionDistance;//Minimum distance that we emmit heat to
+    public float minHeat;//Minimum heat at any point in space
     // Start is called before the first frame update
     void Start()
     {
@@ -16,5 +17,11 @@ public class HeatEmmiterScript : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, maxEmmisionDistance);
     }
 }

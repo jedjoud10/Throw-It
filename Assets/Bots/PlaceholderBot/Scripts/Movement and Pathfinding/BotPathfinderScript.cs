@@ -57,8 +57,7 @@ public class BotPathfinderScript : MonoBehaviour
             if (points.Count == 1 && Time.frameCount % 300 == 0)//Do not run this every frame 
             {
                 FindPath();
-            }
-            MyPos = transform.position;
+            }            
             #endregion
         }
     }
@@ -66,7 +65,8 @@ public class BotPathfinderScript : MonoBehaviour
     public void FindPath() //Find path using the A* pathfinder
     {
         if (pathfinder != null)
-        {            
+        {
+            MyPos = transform.position;
             pathfinder.Pathfind(MyPos, this);//Pathfind
         }
     }

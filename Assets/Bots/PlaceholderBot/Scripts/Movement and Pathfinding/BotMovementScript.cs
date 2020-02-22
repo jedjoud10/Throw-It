@@ -58,9 +58,9 @@ public class BotMovementScript : MonoBehaviour
         else 
         {
             Movement.x = 0; Movement.z = 0;//Cannot move while in air
+            Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         }
         Debug.DrawRay(currentPosition, Movement * 100);
-        Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
         cr.Move(lastMovement);//Apply gravity & position direction movement to charachter controller. Also with deceleration
