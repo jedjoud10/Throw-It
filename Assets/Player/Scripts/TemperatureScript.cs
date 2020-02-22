@@ -15,7 +15,7 @@ public class TemperatureScript : MonoBehaviour
     private float timeInHypothermia = 0;//Our current time in hyporthermia. Will reset if value exceeds hypothermiaRese
     private const float hypothermiaReset = 1.0f;//If our timeInHypothermia is larger then this, then reset timeInHypothermia to 0 and apply damage
     private Transform crystal;//De crystale
-    private const float waterTemperature = -50.0f;//How much temperature to remove from outsideTemperature when we are in water
+    private const float waterTemperature = -100.0f;//How much temperature to remove from outsideTemperature when we are in water
     public float waterLevel;//The water level
     private HeatEmmiterScript[] heatEmmiters = new HeatEmmiterScript[0];//Objects that emmit heat
     public Text temperatureText;//The text for showing temperature

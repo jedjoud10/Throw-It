@@ -62,8 +62,8 @@ public class PlayerControllerScript : MonoBehaviour
         #region Player Movement Control
         inputMovement.x = Input.GetAxis("LeftRight"); inputMovement.y = Input.GetAxis("ForwardBackward");//Set input movement values
         Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, sprintingFactor);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
-        Movement.x = inputMovement.x * Speed * Time.deltaTime;//Left/right movement
-        Movement.z = inputMovement.y * Speed * Time.deltaTime;//Forward/backwawrd movement
+        Movement.x = inputMovement.x * Speed;//Left/right movement
+        Movement.z = inputMovement.y * Speed;//Forward/backwawrd movement
      
         #region Walking and Sprinting values
         isWalking = Mathf.Abs(inputMovement.magnitude) > 0;//Are we walking ?
@@ -90,7 +90,7 @@ public class PlayerControllerScript : MonoBehaviour
         Movement.y -= Gravity * Time.deltaTime;//Applies gravity as acceleration        
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
-        characterController.Move(lastMovement);//Moves the characterController by the Movement Vector and the deceleration
+        characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController by the Movement Vector and the deceleration
         #endregion
         if (Debug.isDebugBuild)
         {
