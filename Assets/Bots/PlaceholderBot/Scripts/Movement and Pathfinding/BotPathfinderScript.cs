@@ -12,18 +12,16 @@ public class BotPathfinderScript : MonoBehaviour
     private Vector3 currentpoint;//Our current point vector
     public float pointThreshold = 0.1f;//The threshold of the distance from us to the reach point to change point index float
     private Vector3 MyPos;//The position of the bot
-    private Vector3 EndPos;//The position of the things that we are going for
     // Start is called before the first frame update
     void Start()
     {
         pathfinder = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<AStarPathfinder>();//Search the whole scene for the gameobject that holds the pathfinder script and set it as our own pathfinder
-        FindPath();
         botMovementScript = GetComponent<BotMovementScript>();//Set movement script to our own
+        Invoke("FindPath", 1.0f);
         #region Position setting
         /*
-         Setting the bot's position and the end point's position since we cannot call their position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
+         Setting the bot's position since we cannot call the position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
         */
-        EndPos = pathfinder.endPoint.position;
         MyPos = transform.position;
         #endregion
     }
@@ -50,14 +48,9 @@ public class BotPathfinderScript : MonoBehaviour
                     }
                     currentpoint = points[Mathf.Clamp(currentpointindex, 0, points.Count - 1)];//Clamping the value for no out of range errors
                 }
-                Debug.DrawLine(transform.position, currentpoint, Color.red);
                 currentpoint.y = transform.position.y;
                 botMovementScript.MoveToPosition(currentpoint);//Move to position passed to the botmovementscript
-            }
-            if (points.Count == 1 && Time.frameCount % 300 == 0)//Do not run this every frame 
-            {
-                FindPath();
-            }            
+            }    
             #endregion
         }
     }
@@ -66,6 +59,7 @@ public class BotPathfinderScript : MonoBehaviour
     {
         if (pathfinder != null)
         {
+            Debug.Log("Pathfind call for bot " + gameObject.name);
             MyPos = transform.position;
             pathfinder.Pathfind(MyPos, this);//Pathfind
         }
@@ -75,5 +69,13 @@ public class BotPathfinderScript : MonoBehaviour
         points = _points;//Sets new points
         currentpoint = points[0];//Set the base pos
         currentpointindex = 0;//Reset index since we found new path        
+    }
+    //Since the bot is going to be destroyed, remove it from queue so we dont call it again when map changes and when we do recalculations
+    private void OnDestroy()
+    {
+        if (pathfinder != null)
+        {
+            pathfinder.RemoveFromQueue(this);
+        }
     }
 }

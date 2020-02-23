@@ -179,17 +179,15 @@ public class AStarPathfinder : MonoBehaviour
         {
             RemoveFromQueue(bot);
         }
-        else
-        {
-            Thread thread = new Thread(() => PathfindThread(botPosition, bot));
-            thread.Start();//Start the new thread
-            botThreads.Add(thread);
-            botPathfinders.Add(bot);
-        }
+        Thread thread = new Thread(() => PathfindThread(botPosition, bot));
+        thread.Start();//Start the new thread
+        botThreads.Add(thread);
+        botPathfinders.Add(bot);        
     }  
     //Removes bot pathfidner from list since the bot is dead
     public void RemoveFromQueue(BotPathfinderScript bot) 
     {
+        if (!botPathfinders.Contains(bot)) return;
         botThreads[botPathfinders.IndexOf(bot)].Abort();
         botThreads.RemoveAt(botPathfinders.IndexOf(bot));
         botPathfinders.Remove(bot);//de remov    
@@ -276,7 +274,7 @@ public class AStarPathfinder : MonoBehaviour
             }
             else 
             {
-                //Debug.Log("Final iteration is " + i);
+                Debug.Log("Final iteration is " + i);
                 break;
             }
         }
@@ -295,6 +293,7 @@ public class AStarPathfinder : MonoBehaviour
             }
             else 
             {
+                Debug.Log("Final reverse iteration is " + i);
                 break;
             }
         }
@@ -337,7 +336,7 @@ public class AStarPathfinder : MonoBehaviour
                 }
             }
         }
-        if (gizmoMode == GizmoMode.ExploredNodes && exploredNodes != null) 
+        if (gizmoMode == GizmoMode.ExploredNodes && exploredNodes != null && exploredNodes.Count != 0) 
         {
             foreach(AStarNode a in exploredNodes) 
             {

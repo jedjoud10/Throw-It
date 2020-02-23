@@ -230,10 +230,13 @@ MonoBehaviour:
   _gridsizeX: 20
   _gridsizeY: 20
   _gridScale: 0.1
-  offset: {x: 0, y: 0}
+  _offset: {x: 0, y: 0}
   Resolution: 1
   sphereRadiusBlockage: 0.8
   terrainCollider: {fileID: 1600973206}
+  waterHeight: 0
+  ObstacleAvoindanceRadius: 0
+  MaxSlope: 0
   gizmoMode: 0
 --- !u!4 &905567183
 Transform:

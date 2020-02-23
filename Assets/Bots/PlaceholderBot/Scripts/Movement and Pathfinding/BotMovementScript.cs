@@ -44,7 +44,7 @@ public class BotMovementScript : MonoBehaviour
         }
         else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
         #endregion
-        if (Movement.x != 0 && Movement.y != 0)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
+        if (Movement.x != 0 && Movement.z != 0)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
         {
             HeadingMovement.x = Movement.x;
             HeadingMovement.z = Movement.z;
@@ -60,7 +60,8 @@ public class BotMovementScript : MonoBehaviour
             Movement.x = 0; Movement.z = 0;//Cannot move while in air
             Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         }
-        Debug.DrawRay(currentPosition, Movement * 100);
+        Debug.DrawRay(currentPosition, Movement.normalized * 2);
+        Debug.DrawLine(currentPosition, position, Color.red);
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
         cr.Move(lastMovement * Time.deltaTime);//Apply gravity & position direction movement to charachter controller. Also with deceleration
@@ -73,7 +74,7 @@ public class BotMovementScript : MonoBehaviour
     }
     #region Collisions
     //When collision happens
-    /*
+    
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         GameObject otherObject = hit.gameObject;
@@ -85,6 +86,6 @@ public class BotMovementScript : MonoBehaviour
         {
             _decelerationFactor = decelerationFactor;//Reset the decelerationFactor to base
         }
-    }*/
+    }
     #endregion
 }

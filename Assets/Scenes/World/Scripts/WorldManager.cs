@@ -8,7 +8,7 @@ public class WorldManager : MonoBehaviour
     void Start()
     {
         FindObjectOfType<AStarPathfinder>().MakeTerrainGrid();//Init base terrain
-        Invoke("WorldUpdate", 0.5f);
+        StartCoroutine("WorldUpdate");
     }
 
     // Update is called once per frame
@@ -17,16 +17,18 @@ public class WorldManager : MonoBehaviour
 
     }
     //Called when map has changed
-    public void WorldUpdate() 
+    public IEnumerator WorldUpdate() 
     {
+        #region Bots path calculations/recalculations
         //Recalculates every bots's path and updates pathfinding grid
         BotPathfinderScript[] pathfinders = FindObjectsOfType<BotPathfinderScript>();
         FindObjectOfType<AStarPathfinder>().MakeGrid();//Recalculate grid
+        yield return new WaitForSecondsRealtime(1.0f);
         for (int i = 0; i < pathfinders.Length; i++)
-        {            
+        {
+            yield return new WaitForSecondsRealtime(1.0f);
             pathfinders[i].FindPath();
         }
-
-
+        #endregion
     }
 }
