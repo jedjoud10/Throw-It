@@ -116,10 +116,17 @@ public class AStarPathfinder : MonoBehaviour
             for (int y = 0; y < gridsizeY; y++)
             {
                 //Check if this node is walkable
+                //If is it water ?
                 if (_nodes[x, y].WorldPosition.y < waterHeight) 
                 {
                     _nodes[x, y].IsWalkable = false;//cannot walk on water
-                    continue;//Node has been set already to not be walkable, keep it that way
+                    continue;//Skiping since it is already not walkable
+                }
+                //Is it too steep ?
+                if (getSlope(_nodes[x, y], _nodes) > MaxSlope) 
+                {
+                    _nodes[x, y].IsWalkable = false;//cannot walk since the node is too steep
+                    continue;//Skiping since it is already not walkable
                 }
                 _nodes[x, y].IsWalkable = true;//Init state since we are doing another loop, so we must have a like a rest/reset state
                 for (int o = 0; o < objects.Length; o++) 
@@ -132,6 +139,24 @@ public class AStarPathfinder : MonoBehaviour
                 } 
             }
         }
+        Debug.Log("Finished recalculating grid thread");
+    }
+    //Gets slope of specific node on grid based off y position value
+    private float getSlope(AStarNode node, AStarNode[,] nodes) 
+    {
+        float posY = node.WorldPosition.y;//Init slope output
+        float maxposY = 0.0f;
+        float minposY = 0.0f;
+        List<float> heights = new List<float>();
+        heights.Add(nodes[Mathf.Clamp(node.X + 0, 0, gridsizeX - 1), Mathf.Clamp(node.Y + 1, 0, gridsizeY - 1)].WorldPosition.y);
+        heights.Add(nodes[Mathf.Clamp(node.X + 0, 0, gridsizeX - 1), Mathf.Clamp(node.Y + -1, 0, gridsizeY - 1)].WorldPosition.y);
+        heights.Add(nodes[Mathf.Clamp(node.X + 1, 0, gridsizeX - 1), Mathf.Clamp(node.Y + 0, 0, gridsizeY - 1)].WorldPosition.y);
+        heights.Add(nodes[Mathf.Clamp(node.X + -1, 0, gridsizeX - 1), Mathf.Clamp(node.Y + 0, 0, gridsizeY - 1)].WorldPosition.y);
+        //Calculate max and min points from 4 neighbouring nodes
+        maxposY = Mathf.Max(heights.ToArray());
+        minposY = Mathf.Min(heights.ToArray());
+
+        return maxposY - minposY;//Calculate change in altitude between highest point and lowest point and use that as slope value
     }
     //Called from outside scripts to recalulate the grid using multithreading
     public void MakeGrid() 
@@ -350,7 +375,6 @@ public class AStarPathfinder : MonoBehaviour
         {
             currentDirection = points[i] - lastPoint;//Calculate current direction
             currentDirection.y = 0.0f;
-            Debug.Log(Vector3.Distance(lastDirection, currentDirection));
             if (Vector3.Distance(lastDirection, currentDirection) > 0.2f) outPoints.Add(lastPoint);//Add last point to final points
             lastDirection = currentDirection;//Init value for next iteration
             lastPoint = points[i];//Init last point for next iteration
