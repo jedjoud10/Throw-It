@@ -349,11 +349,13 @@ public class AStarPathfinder : MonoBehaviour
         for(int i = 0; i < points.Count; i++) 
         {
             currentDirection = points[i] - lastPoint;//Calculate current direction
-            if (currentDirection != lastDirection) outPoints.Add(lastPoint);//Add last point to final points
+            currentDirection.y = 0.0f;
+            Debug.Log(Vector3.Distance(lastDirection, currentDirection));
+            if (Vector3.Distance(lastDirection, currentDirection) > 0.2f) outPoints.Add(lastPoint);//Add last point to final points
             lastDirection = currentDirection;//Init value for next iteration
             lastPoint = points[i];//Init last point for next iteration
         }
-
+        outPoints.Add(points[points.Count - 1]);
         return outPoints;
     }
     #endregion

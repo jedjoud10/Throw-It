@@ -78,4 +78,18 @@ public class BotPathfinderScript : MonoBehaviour
             pathfinder.RemoveFromQueue(this);
         }
     }
+    private void OnDrawGizmos()
+    {
+        if (points != null && points.Count != 0)
+        {
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (i < points.Count - 1)
+                {
+                    Debug.DrawLine(points[i], points[i + 1], Color.green);
+                    Gizmos.DrawSphere(points[i], 0.5f);
+                }
+            }
+        }
+    }
 }
