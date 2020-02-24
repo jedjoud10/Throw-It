@@ -124,7 +124,7 @@ public class AStarPathfinder : MonoBehaviour
                 _nodes[x, y].IsWalkable = true;//Init state since we are doing another loop, so we must have a like a rest/reset state
                 for (int o = 0; o < objects.Length; o++) 
                 {
-                    if(Vector3.Distance(_nodes[x, y].WorldPosition, objects[o].Position) < objects[o].ObstacleRadius + ObstacleAvoindanceRadius) 
+                    if(distanceBox(_nodes[x, y].WorldPosition, objects[o].Bounds, objects[o].Position, ObstacleAvoindanceRadius)) 
                     {
                         _nodes[x, y].IsWalkable = false;
                         break;//We finished the task early since we found an obstacle already. No need to continue
@@ -140,6 +140,26 @@ public class AStarPathfinder : MonoBehaviour
         PathfindObstacle[] obstacles = FindObjectsOfType<PathfindObstacle>();
         Thread gridThread = new Thread(() => MakeGridThread(obstacles));
         gridThread.Start();
+    }
+    //Get if point is inside box with bounds. boxBounds is full length of a side
+    private bool insideBox(Vector2 pointPos, Vector2 boxBounds, Vector2 boxPos) 
+    {
+        bool isInsideBox = false;//Init value
+
+        pointPos -= boxPos;//Make origin at (0, 0)
+
+        //Edges
+        //Divide by 2.0 to get teh extent and not full length
+        bool a = Mathf.Abs(pointPos.x) < boxBounds.x / 2.0f;
+        bool b = Mathf.Abs(pointPos.y) < boxBounds.y / 2.0f;
+
+        isInsideBox = a && b;
+        return isInsideBox;
+    }
+    //If we are inside box in 3D but the actual function is in 2D
+    private bool distanceBox(Vector3 pointPos, Vector2 boxBounds, Vector3 boxPos, float obstacleAvoindanceDistance) 
+    {
+        return insideBox(new Vector2(pointPos.x, pointPos.z), boxBounds + new Vector2(obstacleAvoindanceDistance, obstacleAvoindanceDistance), new Vector2(boxPos.x, boxPos.z));
     }
     #endregion
 
