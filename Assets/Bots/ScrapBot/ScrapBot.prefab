@@ -5531,6 +5531,8 @@ MonoBehaviour:
   Speed: 1.5
   RotationSpeed: 0.98
   decelerationFactor: 5
+  airControlDecelerationFactor: 2
+  airControllSpeedLoss: 5
 --- !u!114 &2788950925942958376
 MonoBehaviour:
   m_ObjectHideFlags: 0

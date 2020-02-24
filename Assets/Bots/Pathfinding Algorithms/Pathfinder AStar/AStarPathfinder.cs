@@ -321,7 +321,7 @@ public class AStarPathfinder : MonoBehaviour
         overallPaths.Add(path);//We calculated one more path
         stopwatch.Stop();
         Debug.Log("Took " + stopwatch.ElapsedMilliseconds/1000.0f + " seconds to calculate a " + gridsizeX + "*" + gridsizeY + " map");
-        bot.SetNewPoints(transformPathToPoints(path));
+        bot.SetNewPoints(optimizePath(transformPathToPoints(path)));
     }
     //Transforms a path to 3D vector points
     private List<Vector3> transformPathToPoints(List<AStarNode> path) 
@@ -333,6 +333,28 @@ public class AStarPathfinder : MonoBehaviour
         }
         points.Reverse();
         return points;
+    }
+    //Optimizes path
+    private List<Vector3> optimizePath(List<Vector3> points) 
+    {
+        //Method used :
+        //Loop over all nodes, check current direction from last node to current,
+        //and dedect if we changed directions, if we did, then add that current node
+        //to the outPoints list
+        List<Vector3> outPoints = new List<Vector3>();//Init output value
+        Vector3 currentDirection;//Current direction from last point to current point
+        Vector3 lastDirection = Vector3.zero;//Direction at the last iteration
+        Vector3 lastPoint = points[0];//Point at last iteration to get direction from
+
+        for(int i = 0; i < points.Count; i++) 
+        {
+            currentDirection = points[i] - lastPoint;//Calculate current direction
+            if (currentDirection != lastDirection) outPoints.Add(lastPoint);//Add last point to final points
+            lastDirection = currentDirection;//Init value for next iteration
+            lastPoint = points[i];//Init last point for next iteration
+        }
+
+        return outPoints;
     }
     #endregion
 

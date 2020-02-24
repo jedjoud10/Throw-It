@@ -218,6 +218,8 @@ MonoBehaviour:
   walkingFactorSpeed: 6
   sprintingFactorSpeed: 6
   decelerationFactor: 5
+  airControlDecelerationFactor: 2
+  airControllSpeedLoss: 3
   Gravity: 4
   Jump: 2
 --- !u!114 &632253683242069282

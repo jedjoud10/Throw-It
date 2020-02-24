@@ -11,6 +11,8 @@ public class BotMovementScript : MonoBehaviour
     public float RotationSpeed = 1;//How fast does the bot turn directions
     const float Gravity = 4.0f;//How much gravity is applied to this bot
     public float decelerationFactor;//Variable as base variable so we can always reset the decelerationFactor
+    public float airControlDecelerationFactor;//The deceleration factor in air
+    public float airControllSpeedLoss;//How fast we loose control (smaller decelerationFactor) when we are in air
 
     const float MoveSmoothness = 0.8f;//Smoothness when changing from idle to moving or vice versa
     private CharacterController cr;//The character controller of this bot
@@ -54,10 +56,11 @@ public class BotMovementScript : MonoBehaviour
         if (cr.isGrounded)
         {
             Movement.y = 0;//Dont apply gravity if already in ground
+            _decelerationFactor = decelerationFactor;
         }
         else 
         {
-            Movement.x = 0; Movement.z = 0;//Cannot move while in air
+            _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss * Time.deltaTime);
             Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         }
         Debug.DrawRay(currentPosition, Movement.normalized * 2);
@@ -77,6 +80,7 @@ public class BotMovementScript : MonoBehaviour
     
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        if (hit.normal.y < 0.9f) return;//If object we hit isnt underground us, then discard the collision
         GameObject otherObject = hit.gameObject;
         if (otherObject.GetComponent<PhysicsObjectScript>() != null) //Is physics object
         {
