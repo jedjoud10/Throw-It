@@ -11,13 +11,9 @@ public class AStarPathfinderCustomEditor : Editor
         DrawDefaultInspector();
 
         AStarPathfinder pathfinder = (AStarPathfinder)target;
-        if (GUILayout.Button("Recalculate grid"))
+        if (GUILayout.Button("Calculate grid"))
         {
-            pathfinder.MakeGrid();//Recalculate map with button
-        }
-        if (GUILayout.Button("Test path from origin"))
-        {
-            pathfinder.Pathfind(Vector3.zero);//Recalculate map with button
+            pathfinder.MakeTerrainGrid();//Recalculate map with button
         }
     }
 }

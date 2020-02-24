@@ -9,7 +9,7 @@ public class BotMovementScript : MonoBehaviour
     public bool move = true;//Are we allowed to move ?
     public float Speed = 1;//How fast does the bot move
     public float RotationSpeed = 1;//How fast does the bot turn directions
-    const float Gravity = 0.1050505f;//How much gravity is applied to this bot
+    const float Gravity = 4.0f;//How much gravity is applied to this bot
     public float decelerationFactor;//Variable as base variable so we can always reset the decelerationFactor
 
     const float MoveSmoothness = 0.8f;//Smoothness when changing from idle to moving or vice versa
@@ -39,15 +39,15 @@ public class BotMovementScript : MonoBehaviour
         //We use the normalized value so when the bot gets closer to the position, it's speed stays constant and does not decrease
         if (move)
         {
-            Movement.x = (position - currentPosition).normalized.x * Time.deltaTime * Speed;//Delta movement of the position that we want to go in X axis
-            Movement.z = (position - currentPosition).normalized.z * Time.deltaTime * Speed;//Delta movement of the position that we want to go in Z axis
+            Movement.x = (position - currentPosition).normalized.x * Speed;//Delta movement of the position that we want to go in X axis
+            Movement.z = (position - currentPosition).normalized.z * Speed;//Delta movement of the position that we want to go in Z axis
         }
         else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
         #endregion
-        if (UnscaledMovement != Vector2.zero)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
+        if (Movement.x != 0 && Movement.z != 0)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
         {
             HeadingMovement.x = Movement.x;
-            HeadingMovement.z = Movement.z;            
+            HeadingMovement.z = Movement.z;
             Rotation = Quaternion.LookRotation(HeadingMovement);//Target rotation without Y axis
         }
         transform.rotation = Quaternion.Slerp(Rotation, transform.rotation, RotationSpeed);//Smoothes the rotation
@@ -58,12 +58,13 @@ public class BotMovementScript : MonoBehaviour
         else 
         {
             Movement.x = 0; Movement.z = 0;//Cannot move while in air
+            Movement.y -= Gravity * Time.deltaTime;//Apply gravity
         }
-        Debug.DrawRay(currentPosition, Movement * 100);
-        Movement.y -= Gravity * Time.deltaTime;//Apply gravity
+        Debug.DrawRay(currentPosition, Movement.normalized * 2);
+        Debug.DrawLine(currentPosition, position, Color.red);
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
-        cr.Move(lastMovement);//Apply gravity & position direction movement to charachter controller. Also with deceleration
+        cr.Move(lastMovement * Time.deltaTime);//Apply gravity & position direction movement to charachter controller. Also with deceleration
         UnscaledMovement.x = cr.velocity.x; UnscaledMovement.y = cr.velocity.z;//Unscaled movement from velocity 
         #endregion
     }
@@ -73,7 +74,7 @@ public class BotMovementScript : MonoBehaviour
     }
     #region Collisions
     //When collision happens
-    /*
+    
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         GameObject otherObject = hit.gameObject;
@@ -85,6 +86,6 @@ public class BotMovementScript : MonoBehaviour
         {
             _decelerationFactor = decelerationFactor;//Reset the decelerationFactor to base
         }
-    }*/
+    }
     #endregion
 }

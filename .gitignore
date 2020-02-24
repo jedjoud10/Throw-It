@@ -23,6 +23,9 @@ ExportedObj/
 *.svd
 *.pdb
 *.opendb
+*.blend1
+*.blend2
+*.blend3
 
 
 # Unity3D Generated File On Crash Reports

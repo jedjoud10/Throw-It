@@ -218,8 +218,8 @@ MonoBehaviour:
   walkingFactorSpeed: 6
   sprintingFactorSpeed: 6
   decelerationFactor: 5
-  Gravity: 0.1050505
-  Jump: 0.042
+  Gravity: 4
+  Jump: 2
 --- !u!114 &632253683242069282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +360,6 @@ MonoBehaviour:
   heatDispersion: 0.01
   targetTemperatureSpeed: 1
   waterLevel: 22.8
-  maxCrystalDistanceFalloff: 100
   temperatureText: {fileID: 1904807591899911719}
   temperatureBar: {fileID: 2770141070961467530}
 --- !u!1 &632253684259395822
