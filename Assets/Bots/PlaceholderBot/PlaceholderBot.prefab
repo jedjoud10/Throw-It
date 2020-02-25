@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2528547628184728748}
   - component: {fileID: 5320872013909586124}
   - component: {fileID: 7809379998080732962}
+  - component: {fileID: 521999159713424166}
   m_Layer: 2
   m_Name: PlaceholderBot
   m_TagString: Untagged
@@ -72,6 +73,7 @@ MonoBehaviour:
   decelerationFactor: 5
   airControlDecelerationFactor: 2
   airControllSpeedLoss: 5
+  TiltPositionY: 0
 --- !u!114 &5320872013909586124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +101,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointThreshold: 0.3
+--- !u!114 &521999159713424166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528547628184728755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e8f21c5998bedc4d979cda48c1e00ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementScript: {fileID: 2528547628184728748}
+  bobbingScript: {fileID: 3435280815435834230}
+  healthScript: {fileID: 5320872013909586124}
 --- !u!64 &7892802492207933913
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -243,10 +260,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b980e87d030682b4ba0ea428e6792a22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {fileID: 2528547628184728748}
-  healthScript: {fileID: 5320872013909586124}
+  botscript: {fileID: 521999159713424166}
   decayTime: 15
-  botBobbingScript: {fileID: 3435280815435834230}
 --- !u!1001 &509201939673712222
 PrefabInstance:
   m_ObjectHideFlags: 0

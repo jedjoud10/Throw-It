@@ -7,8 +7,6 @@ using UnityEditor;
 public class AStarPathfinder : MonoBehaviour
 {
     [Header("Main settings")]
-    [Tooltip("The object you are trying to reach")]
-    public Transform endPoint;//The object you are trying to reach
     [Tooltip("The max number of iterations that you are allowed")]
     public int maxIterations;//The max number of iterations that you are allowed
 
@@ -106,7 +104,6 @@ public class AStarPathfinder : MonoBehaviour
                 _nodes[x, y] = new AStarNode(walkable, pos, x, y);//Set the node at (X, Y) to the coresponding location
             }
         }
-        endNode = NodeFromWorldPosition(endPoint.position, _nodes);
     }
     //The terrain obstacles have changed, so recalculate grid using multithreading
     private void MakeGridThread(PathfindObstacle[] objects) 
@@ -161,7 +158,6 @@ public class AStarPathfinder : MonoBehaviour
     //Called from outside scripts to recalulate the grid using multithreading
     public void MakeGrid() 
     {
-        endNode = NodeFromWorldPosition(endPoint.position, _nodes);
         PathfindObstacle[] obstacles = FindObjectsOfType<PathfindObstacle>();
         Thread gridThread = new Thread(() => MakeGridThread(obstacles));
         gridThread.Start();
@@ -218,13 +214,13 @@ public class AStarPathfinder : MonoBehaviour
         return Mathf.RoundToInt(Mathf.Sqrt(Mathf.Pow(a.X - b.X, 2) + Mathf.Pow(a.Y - b.Y, 2))*10);//Euclidean distance between two points
     }
     //Called by external scripts and start mutlithreaded method
-    public void Pathfind(Vector3 botPosition, BotPathfinderScript bot)
+    public void Pathfind(Vector3 botPosition, Vector3 endPostition, BotPathfinderScript bot)
     {
         if (botPathfinders.Contains(bot))
         {
             RemoveFromQueue(bot);
         }
-        Thread thread = new Thread(() => PathfindThread(botPosition, bot));
+        Thread thread = new Thread(() => PathfindThread(botPosition, endPostition, bot));
         thread.Start();//Start the new thread
         botThreads.Add(thread);
         botPathfinders.Add(bot);        
@@ -238,9 +234,10 @@ public class AStarPathfinder : MonoBehaviour
         botPathfinders.Remove(bot);//de remov    
     }
     //Get path for bot. This is multithreaded
-    private void PathfindThread(Vector3 botPosition, BotPathfinderScript bot) 
+    private void PathfindThread(Vector3 botPosition, Vector3 endPostition, BotPathfinderScript bot) 
     {
         AStarNode[,] nodes = _nodes;
+        endNode = NodeFromWorldPosition(endPostition, nodes);
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();//Using a stopwatch to get how much time did we spent calculating path
         stopwatch.Start();
         AStarNode startNode = NodeFromWorldPosition(botPosition, nodes);//Start node / bot position node

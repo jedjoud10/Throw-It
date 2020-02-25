@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(BotMovementScript))]
-//A scripts that handles communication with a certain type of pathfinder and the bot movement script
+//A scripts that handles communication with a certain type of pathfinders and the bot movement script
 public class BotPathfinderScript : MonoBehaviour
 {
     private BotMovementScript botMovementScript;//The script that handles gravity and movement
@@ -12,12 +12,16 @@ public class BotPathfinderScript : MonoBehaviour
     private Vector3 currentpoint;//Our current point vector
     public float pointThreshold = 0.1f;//The threshold of the distance from us to the reach point to change point index float
     private Vector3 MyPos;//The position of the bot
+    private Vector3 EndPos;//The position we are going to get to
     // Start is called before the first frame update
     void Start()
     {
         pathfinder = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<AStarPathfinder>();//Search the whole scene for the gameobject that holds the pathfinder script and set it as our own pathfinder
         botMovementScript = GetComponent<BotMovementScript>();//Set movement script to our own
         Invoke("FindPath", 1.0f);
+
+        SetEndPosition(GameObject.FindGameObjectWithTag("Objective").transform.position);//Just a placeholder
+
         #region Position setting
         /*
          Setting the bot's position since we cannot call the position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
@@ -54,6 +58,11 @@ public class BotPathfinderScript : MonoBehaviour
             #endregion
         }
     }
+    //Sets the position we want to get to
+    public void SetEndPosition(Vector3 _endPos) 
+    {
+        EndPos = _endPos;
+    }
     //Only call (On each bot) when map has changed, and not repetedly so we can save on performence
     public void FindPath() //Find path using the A* pathfinder
     {
@@ -61,7 +70,7 @@ public class BotPathfinderScript : MonoBehaviour
         {
             Debug.Log("Pathfind call for bot " + gameObject.name);
             MyPos = transform.position;
-            pathfinder.Pathfind(MyPos, this);//Pathfind
+            pathfinder.Pathfind(MyPos, EndPos, this);//Pathfind
         }
     }
     public void SetNewPoints(List<Vector3> _points) //Settings of new points called from the threaded method

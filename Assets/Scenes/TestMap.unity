@@ -795,7 +795,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec603ed80ddea27478e63b6dc2bcc52b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endPoint: {fileID: 1302312015}
   maxIterations: 300
   _gridsizeX: 30
   _gridsizeY: 30
@@ -806,8 +805,8 @@ MonoBehaviour:
   terrainCollider: {fileID: 199666502}
   waterHeight: 22
   ObstacleAvoindanceRadius: 3
-  MaxSlope: 0
-  gizmoMode: 0
+  MaxSlope: 2
+  gizmoMode: 3
 --- !u!4 &712236400
 Transform:
   m_ObjectHideFlags: 0

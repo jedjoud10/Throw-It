@@ -21,6 +21,7 @@ public class BotMovementScript : MonoBehaviour
     private Vector3 Movement;//The movement applied to the character controller
     private Vector2 UnscaledMovement;//The movement unscaled from the time.deltaTime
     private Vector3 HeadingMovement = Vector3.zero;//The x and z movement in a vector 2d
+    public float TiltPositionY;//how much the bot is currently tilting
     private Quaternion Rotation;//The target rotation of the bot
     private float _decelerationFactor;//How much you decelerate in general (Used for ice and other physics materials)
     private Vector3 lastMovement;//Movement last fram
@@ -46,12 +47,11 @@ public class BotMovementScript : MonoBehaviour
         }
         else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
         #endregion
-        if (Movement.x != 0 && Movement.z != 0)//Checks if the movement is higher than 0 in x and z axis so we dont get an error when we try to look at rotation
-        {
-            HeadingMovement.x = Movement.x;
-            HeadingMovement.z = Movement.z;
-            Rotation = Quaternion.LookRotation(HeadingMovement);//Target rotation without Y axis
-        }
+        HeadingMovement.x = Movement.x;
+        HeadingMovement.z = Movement.z;
+        HeadingMovement.y = TiltPositionY;
+        Rotation = Quaternion.LookRotation(HeadingMovement);//Target rotation with Y axis
+        
         transform.rotation = Quaternion.Slerp(Rotation, transform.rotation, RotationSpeed);//Smoothes the rotation
         if (cr.isGrounded)
         {
