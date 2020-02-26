@@ -42,15 +42,20 @@ public class BotMovementScript : MonoBehaviour
         //We use the normalized value so when the bot gets closer to the position, it's speed stays constant and does not decrease
         if (move)
         {
-            Movement.x = (position - currentPosition).normalized.x * Speed;//Delta movement of the position that we want to go in X axis
-            Movement.z = (position - currentPosition).normalized.z * Speed;//Delta movement of the position that we want to go in Z axis
+            Vector3 posNorm = new Vector2((position - currentPosition).normalized.x, (position - currentPosition).normalized.z);
+            Movement.x = posNorm.normalized.x * Speed;//Delta movement of the position that we want to go in X axis
+            Movement.z = posNorm.normalized.y * Speed;//Delta movement of the position that we want to go in Z axis
         }
         else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
         #endregion
         HeadingMovement.x = Movement.x;
         HeadingMovement.z = Movement.z;
         HeadingMovement.y = TiltPositionY;
-        Rotation = Quaternion.LookRotation(HeadingMovement);//Target rotation with Y axis
+        Debug.DrawRay(transform.position, HeadingMovement*5.0f, Color.gray);
+        if(HeadingMovement.normalized != Vector3.zero) 
+        {
+            Rotation = Quaternion.LookRotation(HeadingMovement.normalized);//Target rotation with Y axis
+        }
         
         transform.rotation = Quaternion.Slerp(Rotation, transform.rotation, RotationSpeed);//Smoothes the rotation
         if (cr.isGrounded)

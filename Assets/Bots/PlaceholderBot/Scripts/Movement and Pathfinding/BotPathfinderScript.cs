@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(BotMovementScript))]
+[RequireComponent(typeof(BotScript))]
 //A scripts that handles communication with a certain type of pathfinders and the bot movement script
 public class BotPathfinderScript : MonoBehaviour
 {
-    private BotMovementScript botMovementScript;//The script that handles gravity and movement
+    private BotScript botScript;//The script that handles bots
     private AStarPathfinder pathfinder;//Our trusty flood fill pathfinder
     private List<Vector3> points = new List<Vector3>();//The points
     private int currentpointindex = 0;//The index of the point we are trying to reach
@@ -17,7 +17,7 @@ public class BotPathfinderScript : MonoBehaviour
     void Start()
     {
         pathfinder = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<AStarPathfinder>();//Search the whole scene for the gameobject that holds the pathfinder script and set it as our own pathfinder
-        botMovementScript = GetComponent<BotMovementScript>();//Set movement script to our own
+        botScript = GetComponent<BotScript>();//Set movement script to our own
         Invoke("FindPath", 1.0f);
 
         SetEndPosition(GameObject.FindGameObjectWithTag("Objective").transform.position);//Just a placeholder
@@ -53,7 +53,7 @@ public class BotPathfinderScript : MonoBehaviour
                     currentpoint = points[Mathf.Clamp(currentpointindex, 0, points.Count - 1)];//Clamping the value for no out of range errors
                 }
                 currentpoint.y = transform.position.y;
-                botMovementScript.MoveToPosition(currentpoint);//Move to position passed to the botmovementscript
+                botScript.movementScript.MoveToPosition(currentpoint);//Move to position passed to the botmovementscript
             }    
             #endregion
         }
