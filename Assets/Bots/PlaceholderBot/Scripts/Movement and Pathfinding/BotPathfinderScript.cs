@@ -1,23 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(BotMovementScript))]
-//A scripts that handles communication with a certain type of pathfinder and the bot movement script
+[RequireComponent(typeof(BotScript))]
+//A scripts that handles communication with a certain type of pathfinders and the bot movement script
 public class BotPathfinderScript : MonoBehaviour
 {
-    private BotMovementScript botMovementScript;//The script that handles gravity and movement
+    private BotScript botScript;//The script that handles bots
     private AStarPathfinder pathfinder;//Our trusty flood fill pathfinder
     private List<Vector3> points = new List<Vector3>();//The points
     private int currentpointindex = 0;//The index of the point we are trying to reach
     private Vector3 currentpoint;//Our current point vector
     public float pointThreshold = 0.1f;//The threshold of the distance from us to the reach point to change point index float
     private Vector3 MyPos;//The position of the bot
+    private Vector3 EndPos;//The position we are going to get to
     // Start is called before the first frame update
     void Start()
     {
         pathfinder = GameObject.FindGameObjectWithTag("Pathfinder").GetComponent<AStarPathfinder>();//Search the whole scene for the gameobject that holds the pathfinder script and set it as our own pathfinder
-        botMovementScript = GetComponent<BotMovementScript>();//Set movement script to our own
+        botScript = GetComponent<BotScript>();//Set movement script to our own
         Invoke("FindPath", 1.0f);
+
+        SetEndPosition(GameObject.FindGameObjectWithTag("Objective").transform.position);//Just a placeholder
+
         #region Position setting
         /*
          Setting the bot's position since we cannot call the position from other threads, and since the pathfinder might recall us to repathfind, we might get some errors. So that is why we put some variables holding some positions
@@ -49,10 +53,15 @@ public class BotPathfinderScript : MonoBehaviour
                     currentpoint = points[Mathf.Clamp(currentpointindex, 0, points.Count - 1)];//Clamping the value for no out of range errors
                 }
                 currentpoint.y = transform.position.y;
-                botMovementScript.MoveToPosition(currentpoint);//Move to position passed to the botmovementscript
+                botScript.movementScript.MoveToPosition(currentpoint);//Move to position passed to the botmovementscript
             }    
             #endregion
         }
+    }
+    //Sets the position we want to get to
+    public void SetEndPosition(Vector3 _endPos) 
+    {
+        EndPos = _endPos;
     }
     //Only call (On each bot) when map has changed, and not repetedly so we can save on performence
     public void FindPath() //Find path using the A* pathfinder
@@ -61,7 +70,7 @@ public class BotPathfinderScript : MonoBehaviour
         {
             Debug.Log("Pathfind call for bot " + gameObject.name);
             MyPos = transform.position;
-            pathfinder.Pathfind(MyPos, this);//Pathfind
+            pathfinder.Pathfind(MyPos, EndPos, this);//Pathfind
         }
     }
     public void SetNewPoints(List<Vector3> _points) //Settings of new points called from the threaded method
@@ -76,6 +85,20 @@ public class BotPathfinderScript : MonoBehaviour
         if (pathfinder != null)
         {
             pathfinder.RemoveFromQueue(this);
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        if (points != null && points.Count != 0)
+        {
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (i < points.Count - 1)
+                {
+                    Debug.DrawLine(points[i], points[i + 1], Color.green);
+                    Gizmos.DrawSphere(points[i], 0.5f);
+                }
+            }
         }
     }
 }

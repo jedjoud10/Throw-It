@@ -22,6 +22,8 @@ public class PlayerControllerScript : MonoBehaviour
     public float walkingFactorSpeed;//How fast to make walking factor go to 1
     public float sprintingFactorSpeed;//How fast to make sprinting factor go to 1
     public float decelerationFactor;//Variable as base variable so we can always reset the decelerationFactor
+    public float airControlDecelerationFactor;//The deceleration factor in air
+    public float airControllSpeedLoss;//How fast we loose control (smaller decelerationFactor) when we are in air
     [Header("Gravity")]
     public float Gravity;//How much gravity is applied to the player
     public float Jump;//How high we can jump
@@ -87,6 +89,10 @@ public class PlayerControllerScript : MonoBehaviour
                 Movement.y = Jump;
             }
         }
+        else 
+        {
+            _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss *  Time.deltaTime);
+        }
         Movement.y -= Gravity * Time.deltaTime;//Applies gravity as acceleration        
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
@@ -138,6 +144,7 @@ public class PlayerControllerScript : MonoBehaviour
     //When collision happens
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        if (hit.normal.y < 0.9f) return;//If object we hit isnt underground us, then discard the collision
         GameObject otherObject = hit.gameObject;
         if (otherObject.GetComponent<PhysicsObjectScript>() != null) //Is physics object
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 //A handler script that handles information flow between GameConfigSaverLoader class and the game config itself
 public class GameConfigHandlerScript : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class GameConfigHandlerScript : MonoBehaviour
     private GameConfig SaveConfig()
     {
         GameConfig outconfig = new GameConfig();
+        outconfig.usePostProcessing = true;
         outconfig.PixelLightCount = QualitySettings.pixelLightCount;
         outconfig.TextureQuality = QualitySettings.masterTextureLimit;
         outconfig.AnisotropicTextures = QualitySettings.anisotropicFiltering.ToString();
@@ -43,6 +45,7 @@ public class GameConfigHandlerScript : MonoBehaviour
     //Turn GameConfig class into current game config
     private void LoadConfig(GameConfig inconfig)
     {
+        SetPostProcessing(inconfig.usePostProcessing);
         QualitySettings.pixelLightCount = inconfig.PixelLightCount;
         QualitySettings.masterTextureLimit = inconfig.TextureQuality;
         QualitySettings.anisotropicFiltering = (AnisotropicFiltering)System.Enum.Parse(typeof(AnisotropicFiltering), inconfig.AnisotropicTextures);
@@ -86,5 +89,11 @@ public class GameConfigHandlerScript : MonoBehaviour
             if (type == 1)
                 probes[i].refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.EveryFrame;//Lower quality and static reflection only
         }
+    }
+    //Changes if we use post-processing or not
+    private void SetPostProcessing(bool use) 
+    {
+        PostProcessLayer layer = GameObject.FindObjectOfType<PostProcessLayer>();//Get the camera post-processing
+        layer.enabled = use;//If we are 
     }
 }

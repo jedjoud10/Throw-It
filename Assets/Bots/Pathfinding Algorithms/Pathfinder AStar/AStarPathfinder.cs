@@ -7,8 +7,6 @@ using UnityEditor;
 public class AStarPathfinder : MonoBehaviour
 {
     [Header("Main settings")]
-    [Tooltip("The object you are trying to reach")]
-    public Transform endPoint;//The object you are trying to reach
     [Tooltip("The max number of iterations that you are allowed")]
     public int maxIterations;//The max number of iterations that you are allowed
 
@@ -106,7 +104,6 @@ public class AStarPathfinder : MonoBehaviour
                 _nodes[x, y] = new AStarNode(walkable, pos, x, y);//Set the node at (X, Y) to the coresponding location
             }
         }
-        endNode = NodeFromWorldPosition(endPoint.position, _nodes);
     }
     //The terrain obstacles have changed, so recalculate grid using multithreading
     private void MakeGridThread(PathfindObstacle[] objects) 
@@ -116,15 +113,22 @@ public class AStarPathfinder : MonoBehaviour
             for (int y = 0; y < gridsizeY; y++)
             {
                 //Check if this node is walkable
+                //If is it water ?
                 if (_nodes[x, y].WorldPosition.y < waterHeight) 
                 {
                     _nodes[x, y].IsWalkable = false;//cannot walk on water
-                    continue;//Node has been set already to not be walkable, keep it that way
+                    continue;//Skiping since it is already not walkable
+                }
+                //Is it too steep ?
+                if (getSlope(_nodes[x, y], _nodes) > MaxSlope) 
+                {
+                    _nodes[x, y].IsWalkable = false;//cannot walk since the node is too steep
+                    continue;//Skiping since it is already not walkable
                 }
                 _nodes[x, y].IsWalkable = true;//Init state since we are doing another loop, so we must have a like a rest/reset state
                 for (int o = 0; o < objects.Length; o++) 
                 {
-                    if(Vector3.Distance(_nodes[x, y].WorldPosition, objects[o].Position) < objects[o].ObstacleRadius + ObstacleAvoindanceRadius) 
+                    if(distanceBox(_nodes[x, y].WorldPosition, objects[o].Bounds, objects[o].Position, ObstacleAvoindanceRadius)) 
                     {
                         _nodes[x, y].IsWalkable = false;
                         break;//We finished the task early since we found an obstacle already. No need to continue
@@ -132,14 +136,51 @@ public class AStarPathfinder : MonoBehaviour
                 } 
             }
         }
+        Debug.Log("Finished recalculating grid thread");
+    }
+    //Gets slope of specific node on grid based off y position value
+    private float getSlope(AStarNode node, AStarNode[,] nodes) 
+    {
+        float posY = node.WorldPosition.y;//Init slope output
+        float maxposY = 0.0f;
+        float minposY = 0.0f;
+        List<float> heights = new List<float>();
+        heights.Add(nodes[Mathf.Clamp(node.X + 0, 0, gridsizeX - 1), Mathf.Clamp(node.Y + 1, 0, gridsizeY - 1)].WorldPosition.y);
+        heights.Add(nodes[Mathf.Clamp(node.X + 0, 0, gridsizeX - 1), Mathf.Clamp(node.Y + -1, 0, gridsizeY - 1)].WorldPosition.y);
+        heights.Add(nodes[Mathf.Clamp(node.X + 1, 0, gridsizeX - 1), Mathf.Clamp(node.Y + 0, 0, gridsizeY - 1)].WorldPosition.y);
+        heights.Add(nodes[Mathf.Clamp(node.X + -1, 0, gridsizeX - 1), Mathf.Clamp(node.Y + 0, 0, gridsizeY - 1)].WorldPosition.y);
+        //Calculate max and min points from 4 neighbouring nodes
+        maxposY = Mathf.Max(heights.ToArray());
+        minposY = Mathf.Min(heights.ToArray());
+
+        return maxposY - minposY;//Calculate change in altitude between highest point and lowest point and use that as slope value
     }
     //Called from outside scripts to recalulate the grid using multithreading
     public void MakeGrid() 
     {
-        endNode = NodeFromWorldPosition(endPoint.position, _nodes);
         PathfindObstacle[] obstacles = FindObjectsOfType<PathfindObstacle>();
         Thread gridThread = new Thread(() => MakeGridThread(obstacles));
         gridThread.Start();
+    }
+    //Get if point is inside box with bounds. boxBounds is full length of a side
+    private bool insideBox(Vector2 pointPos, Vector2 boxBounds, Vector2 boxPos) 
+    {
+        bool isInsideBox = false;//Init value
+
+        pointPos -= boxPos;//Make origin at (0, 0)
+
+        //Edges
+        //Divide by 2.0 to get teh extent and not full length
+        bool a = Mathf.Abs(pointPos.x) < boxBounds.x / 2.0f;
+        bool b = Mathf.Abs(pointPos.y) < boxBounds.y / 2.0f;
+
+        isInsideBox = a && b;
+        return isInsideBox;
+    }
+    //If we are inside box in 3D but the actual function is in 2D
+    private bool distanceBox(Vector3 pointPos, Vector2 boxBounds, Vector3 boxPos, float obstacleAvoindanceDistance) 
+    {
+        return insideBox(new Vector2(pointPos.x, pointPos.z), boxBounds + new Vector2(obstacleAvoindanceDistance, obstacleAvoindanceDistance), new Vector2(boxPos.x, boxPos.z));
     }
     #endregion
 
@@ -173,13 +214,13 @@ public class AStarPathfinder : MonoBehaviour
         return Mathf.RoundToInt(Mathf.Sqrt(Mathf.Pow(a.X - b.X, 2) + Mathf.Pow(a.Y - b.Y, 2))*10);//Euclidean distance between two points
     }
     //Called by external scripts and start mutlithreaded method
-    public void Pathfind(Vector3 botPosition, BotPathfinderScript bot)
+    public void Pathfind(Vector3 botPosition, Vector3 endPostition, BotPathfinderScript bot)
     {
         if (botPathfinders.Contains(bot))
         {
             RemoveFromQueue(bot);
         }
-        Thread thread = new Thread(() => PathfindThread(botPosition, bot));
+        Thread thread = new Thread(() => PathfindThread(botPosition, endPostition, bot));
         thread.Start();//Start the new thread
         botThreads.Add(thread);
         botPathfinders.Add(bot);        
@@ -193,9 +234,10 @@ public class AStarPathfinder : MonoBehaviour
         botPathfinders.Remove(bot);//de remov    
     }
     //Get path for bot. This is multithreaded
-    private void PathfindThread(Vector3 botPosition, BotPathfinderScript bot) 
+    private void PathfindThread(Vector3 botPosition, Vector3 endPostition, BotPathfinderScript bot) 
     {
         AStarNode[,] nodes = _nodes;
+        endNode = NodeFromWorldPosition(endPostition, nodes);
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();//Using a stopwatch to get how much time did we spent calculating path
         stopwatch.Start();
         AStarNode startNode = NodeFromWorldPosition(botPosition, nodes);//Start node / bot position node
@@ -301,7 +343,7 @@ public class AStarPathfinder : MonoBehaviour
         overallPaths.Add(path);//We calculated one more path
         stopwatch.Stop();
         Debug.Log("Took " + stopwatch.ElapsedMilliseconds/1000.0f + " seconds to calculate a " + gridsizeX + "*" + gridsizeY + " map");
-        bot.SetNewPoints(transformPathToPoints(path));
+        bot.SetNewPoints(optimizePath(transformPathToPoints(path)));
     }
     //Transforms a path to 3D vector points
     private List<Vector3> transformPathToPoints(List<AStarNode> path) 
@@ -313,6 +355,29 @@ public class AStarPathfinder : MonoBehaviour
         }
         points.Reverse();
         return points;
+    }
+    //Optimizes path
+    private List<Vector3> optimizePath(List<Vector3> points) 
+    {
+        //Method used :
+        //Loop over all nodes, check current direction from last node to current,
+        //and dedect if we changed directions, if we did, then add that current node
+        //to the outPoints list
+        List<Vector3> outPoints = new List<Vector3>();//Init output value
+        Vector3 currentDirection;//Current direction from last point to current point
+        Vector3 lastDirection = Vector3.zero;//Direction at the last iteration
+        Vector3 lastPoint = points[0];//Point at last iteration to get direction from
+
+        for(int i = 0; i < points.Count; i++) 
+        {
+            currentDirection = points[i] - lastPoint;//Calculate current direction
+            currentDirection.y = 0.0f;
+            if (Vector3.Distance(lastDirection, currentDirection) > 0.2f) outPoints.Add(lastPoint);//Add last point to final points
+            lastDirection = currentDirection;//Init value for next iteration
+            lastPoint = points[i];//Init last point for next iteration
+        }
+        outPoints.Add(points[points.Count - 1]);
+        return outPoints;
     }
     #endregion
 

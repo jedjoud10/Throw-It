@@ -36,6 +36,7 @@ public class GameConfig
 {
     #region QualitySettings
     //Rendering
+    public bool usePostProcessing;
     public int PixelLightCount;
     public int TextureQuality;
     public string AnisotropicTextures;
