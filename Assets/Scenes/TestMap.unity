@@ -2424,6 +2424,16 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: finalBlitToCameraTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: antialiasingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9018726255866149212, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_AnchorMax.x

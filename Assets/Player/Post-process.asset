@@ -1,5 +1,27 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5737203684731309374
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94fcd11afffcb142908bfcb1e261fba, type: 3}
+  m_Name: MotionBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  shutterAngle:
+    overrideState: 0
+    value: 360
+  sampleCount:
+    overrideState: 0
+    value: 10
 --- !u!114 &-4179722883832990435
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -37,7 +59,7 @@ MonoBehaviour:
   speedDown:
     overrideState: 0
     value: 1
---- !u!114 &-2357754443433209311
+--- !u!114 &-2649429402698505546
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -82,32 +104,10 @@ MonoBehaviour:
     value: 0
   radius:
     overrideState: 0
-    value: 0.1
+    value: 0.5
   quality:
-    overrideState: 1
-    value: 0
---- !u!114 &-2316804818799517171
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b94fcd11afffcb142908bfcb1e261fba, type: 3}
-  m_Name: MotionBlur
-  m_EditorClassIdentifier: 
-  active: 1
-  enabled:
-    overrideState: 1
-    value: 1
-  shutterAngle:
     overrideState: 0
-    value: 270
-  sampleCount:
-    overrideState: 0
-    value: 10
+    value: 4
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,11 +124,10 @@ MonoBehaviour:
   - {fileID: 3563417530070225023}
   - {fileID: 2344709166024919900}
   - {fileID: 77332074366157020}
-  - {fileID: -2357754443433209311}
   - {fileID: 4102000586106128664}
   - {fileID: -4179722883832990435}
-  - {fileID: -2316804818799517171}
-  - {fileID: 3866357567677862286}
+  - {fileID: -5737203684731309374}
+  - {fileID: -2649429402698505546}
 --- !u!114 &77332074366157020
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -167,8 +166,8 @@ MonoBehaviour:
     overrideState: 0
     value: {r: 1, g: 1, b: 1, a: 1}
   fastMode:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 1
   dirtTexture:
     overrideState: 0
     value: {fileID: 0}
@@ -1513,34 +1512,6 @@ MonoBehaviour:
       - 0.5
       - 0.5
       - 0.5
---- !u!114 &3866357567677862286
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 556797029e73b2347956b6579e77e05b, type: 3}
-  m_Name: DepthOfField
-  m_EditorClassIdentifier: 
-  active: 1
-  enabled:
-    overrideState: 1
-    value: 1
-  focusDistance:
-    overrideState: 1
-    value: 3.7
-  aperture:
-    overrideState: 0
-    value: 5.6
-  focalLength:
-    overrideState: 0
-    value: 50
-  kernelSize:
-    overrideState: 0
-    value: 1
 --- !u!114 &4102000586106128664
 MonoBehaviour:
   m_ObjectHideFlags: 3
