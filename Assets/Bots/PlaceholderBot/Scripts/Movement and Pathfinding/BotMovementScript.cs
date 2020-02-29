@@ -50,7 +50,8 @@ public class BotMovementScript : MonoBehaviour
         #endregion
         HeadingMovement.x = Movement.x;
         HeadingMovement.z = Movement.z;
-        HeadingMovement.y = TiltPositionY;
+        if(move) HeadingMovement.y = TiltPositionY;
+        else HeadingMovement.y = 0.0f;//So the bot doesnt flip 90 degrees when it has stopped moving
         Debug.DrawRay(transform.position, HeadingMovement*5.0f, Color.gray);
         if(HeadingMovement.normalized != Vector3.zero) 
         {
