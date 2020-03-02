@@ -86,7 +86,7 @@ public class TemperatureScript : MonoBehaviour
         if (Debug.isDebugBuild)
         {
             float space = 15;
-            float offset = space * 13;
+            float offset = space * 16;
             GUI.Box(new Rect(0, offset, 250, space * 10), "");
             GUI.Label(new Rect(0, offset, 500, 100), "TemperatureScript : ");
             GUI.Label(new Rect(10, offset + space * 1, 500, 100), "Temperatures : ");

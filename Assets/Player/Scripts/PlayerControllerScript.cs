@@ -49,6 +49,7 @@ public class PlayerControllerScript : MonoBehaviour
         #endregion
         characterController = GetComponent<CharacterController>();//Sets the CharachterController from the component
         _decelerationFactor = decelerationFactor;//Setup decelerationFactor
+        InvokeRepeating("updateFPS", 0.0f, 0.1f);//Update FPS counter each 1/10 a second
     }
 
     // Update is called once per frame
@@ -118,13 +119,20 @@ public class PlayerControllerScript : MonoBehaviour
         camFOV = Mathf.Lerp(Mathf.Lerp(idle, walk, walkfactor), sprint, sprintfactor);//Lerp of lerp
         return camFOV;
     }
-    
+    float fps;//Frames per second
+    float deltatime;//Delay in seconds between each frame
+    //Updates the fps counter with smoothed values
+    private void updateFPS() 
+    {
+        fps = Mathf.Lerp(fps, (1 / Time.smoothDeltaTime), 0.3f);
+        deltatime = Mathf.Lerp(deltatime, Time.smoothDeltaTime, 0.3f);
+    }
     void OnGUI()
     {
         if (Debug.isDebugBuild)
         {
             float space = 15;
-            GUI.Box(new Rect(0, 0, 200, space * 13), "");
+            GUI.Box(new Rect(0, 0, 200, space * 16), "");
             GUI.Label(new Rect(0, 0, 500, 100), "PlayerControllerScript : ");
             GUI.Label(new Rect(10, space * 1, 500, 100), "Movement :");
             GUI.Label(new Rect(30, space * 2, 500, 100), "X : " + lastMovement.x.ToString("F2"));
@@ -137,6 +145,10 @@ public class PlayerControllerScript : MonoBehaviour
             GUI.Label(new Rect(10, space * 9, 500, 100), "Input :");
             GUI.Label(new Rect(30, space * 10, 500, 100), "X : " + inputMovement.x.ToString("F2"));
             GUI.Label(new Rect(30, space * 11, 500, 100), "Y : " + inputMovement.y.ToString("F2"));
+            GUI.Label(new Rect(10, space * 12, 500, 100), "Performance :");
+            GUI.Label(new Rect(30, space * 13, 500, 100), "FPS : " + Mathf.RoundToInt(fps));
+            GUI.Label(new Rect(30, space * 14, 500, 100), "Delay : " + deltatime);
+            
         }
     }//Debugging GUI stuff
 
