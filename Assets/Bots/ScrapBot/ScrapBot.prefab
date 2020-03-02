@@ -4929,6 +4929,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   botscript: {fileID: 6813172499673877050}
+  damageThreshold: 50
   decayTime: 15
 --- !u!1 &4968454808057817523
 GameObject:
