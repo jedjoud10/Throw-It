@@ -225,7 +225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec603ed80ddea27478e63b6dc2bcc52b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endPoint: {fileID: 1290750644}
   maxIterations: 1000
   _gridsizeX: 20
   _gridsizeY: 20

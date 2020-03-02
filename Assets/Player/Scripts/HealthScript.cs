@@ -28,7 +28,7 @@ public class HealthScript : MonoBehaviour
         Health -= damage;//Apply damage to health
         HealthText.text = "Health : " + Health;//Update health text
         HealthBar.value = (float)Health / (float)MaxHealth;//Update health bar
-        if (Health < 0) 
+        if (Health <= 0) 
         {            
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);//Reloads current scene
         }
