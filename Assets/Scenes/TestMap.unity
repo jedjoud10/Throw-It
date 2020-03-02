@@ -2528,6 +2528,56 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: temporalAntialiasing.jitterSpread
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: temporalAntialiasing.sharpness
+      value: 1.124
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: temporalAntialiasing.motionBlending
+      value: 0.639
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: temporalAntialiasing.stationaryBlending
+      value: 0.319
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: fastApproximateAntialiasing.fastMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: fastApproximateAntialiasing.keepAlpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: subpixelMorphologicalAntialiasing.quality
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: stopNaNPropagation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: m_ShowToolkit
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: m_ShowCustomSorter
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9018726255866149212, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_AnchorMax.x
