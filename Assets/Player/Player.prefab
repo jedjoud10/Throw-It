@@ -239,6 +239,7 @@ MonoBehaviour:
   ThrowPoint: {fileID: 632253684828843894}
   ChargeIncrement: 0.5
   ChargeTimeThreshold: 0.25
+  ChargeLerpSpeed: 1
   ChargeText: {fileID: 1087404709982179032}
   ChargeBar: {fileID: 6757347896408227671}
 --- !u!114 &632253683242069283

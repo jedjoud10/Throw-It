@@ -5,6 +5,7 @@ using UnityEngine;
 public class BotPhysicsScript : MonoBehaviour
 {
     public BotScript botscript;//The script for this bot
+    public int damageThreshold;//Minimum damage this part can receive before disconnecting from the bot
     public float decayTime;//Time before the part and bot gets destroyed
     private Joint joint;//The joint of this part to the bot
     private Rigidbody rb;//The rigidbody of this part
@@ -16,9 +17,9 @@ public class BotPhysicsScript : MonoBehaviour
         joint = GetComponent<Joint>();//Get joint component
     }
     //Removes joint from this part
-    public void RemoveJoint(Vector3 force, Vector3 position) 
-    {
-        if (joint != null)
+    public void RemoveJoint(Vector3 force, Vector3 position, int Damage) 
+    {        
+        if (joint != null && Damage > damageThreshold)//Check if this part can get yeeted if damage is big enough
         {
             Destroy(joint);//remove the joint
             transform.parent = null;
