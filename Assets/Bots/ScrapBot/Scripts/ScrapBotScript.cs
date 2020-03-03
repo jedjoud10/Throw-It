@@ -8,6 +8,7 @@ using UnityEngine;
 public class ScrapBotScript : BotScript
 {
     private BotStraightPathScript straightpathScript;//Goes straight to the destination specified
+    private PelletThrowingScript pelletThrowingScript;//The pellet throwing script that throws pellet
     // Start is called before the first frame update
     void Start()
     {

@@ -4,8 +4,11 @@ using UnityEngine;
 //Handles the health and death of bot
 public class BotHealthScript : MonoBehaviour
 {
+    [HideInInspector]
+    public BotScript botScript;//The script for our bot
     public int MaxHealth;//Maximum health
     public int Health;//Current health
+    public float DelayDeath = 3.5f;//Delay before dying
     // Start is called before the first frame update
     void Start()
     {
@@ -17,18 +20,14 @@ public class BotHealthScript : MonoBehaviour
         Health -= damage;
         if(Health <= 0)//Bot is dead 
         {
-            Death();//Death time
+            Death();
         }
     }
-    //Death time everyone
+    //Death after time everyone
     public void Death() 
     {
-        Destroy(gameObject);//Fast and chunky way to destroy bot
-    }
-    //Death after time everyone
-    public void Death(float time) 
-    {
         if (gameObject == null) return;
-        Destroy(gameObject, time);//Fast and chunky way to destroy bot after delay
+        Destroy(gameObject, DelayDeath);//Fast and chunky way to destroy bot after delay
+        botScript.Death();
     }
 }

@@ -15,12 +15,19 @@ public class BotScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        healthScript.botScript = this;//Init bot script for health script
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+    //Called when bot dies
+    public void Death() 
+    {
+        //Slow down movement and bobbing
+        movementScript.move = false;
+        bobbingScript.applybobbing = false;
     }
 }
