@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //Throws pellet for the scrap bot
-public class ScrapBotPelletThrowingScript : MonoBehaviour
+public class PelletThrowingScript : MonoBehaviour
 {
     public float throwDelay;//Delay between each throw
     public bool isThrowing;//Are we throwing ?
