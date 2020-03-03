@@ -1,22 +1,18 @@
 ﻿/// Created by @cortvi
-Shader "Custom/Refractive surface"
+Shader "Custom/Water Refractive surface"
 {
 	Properties
 	{
 		[Header(Color)]
-		_DarkColor("Dark water color",  Color) = (0,0,0,1)
 		[HDR] _LitColor("Lit water color", Color) = (1,1,1,1)
 		_Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
 
-		[Header(Fresnel)]
-		_FPower("Fresnel power", Range(0.001, 10.0)) = 5.0
-		_FScale("Fresnel scale", Range(0.0, 1.0)) = 1.0
-		_FBias("Fresnel bias", Range(0.0, 1.0)) = 0.0
-
 		[Header(Dissortion)]
-		_DissortAmt("Dissortion amount", Range(0.0, 1.0)) = 0.3
-		[Normal] _BumpMap("Normal dissortion map", 2D) = "bump" {}
-		_BumpScale("Normal strenght", Float) = 1.0
+		_DissortAmt("Dissortion amount", float) = 0.3
+
+		[Header(Waves)]
+		_WaveHeight("Wave Height", float) = 1.0
+		_WaveTexture("Wave Height Texture", 2D) = "white" {}
 
 		_SpeedX("Waves speed (X)", float) = 0.5
 		_SpeedY("Waves speed (Y)", float) = 0.5
@@ -41,7 +37,6 @@ Shader "Custom/Refractive surface"
 			#pragma target 3.0
 			struct Input
 			{
-				float2 uv_BumpMap;
 				float4 screenPos;
 				float3 viewDir;
 			};
@@ -52,25 +47,22 @@ Shader "Custom/Refractive surface"
 			uniform half4 _LitColor;
 			uniform float _Glossiness;
 
-			uniform float _FPower;
-			uniform float _FScale;
-			uniform float _FBias;
-
 			uniform float _DissortAmt;
-			uniform sampler2D _BumpMap;
 			uniform float _BumpScale;
+			uniform float _WaveHeight;
+			sampler2D _WaveTexture;
 
 			uniform float _SpeedX;
 			uniform float _SpeedY;
-
+			void vert(inout appdata_full v)
+			{
+				v.vertex.y += sin(v.vertex.x + _Time * _SpeedX) * _WaveHeight;
+			}
 			void surf(Input i, inout SurfaceOutputStandard s)
 			{
-				// Calculate normal bump
-				i.uv_BumpMap += SPEED_UV(xy);
-				float3 bump = UnpackScaleNormal(TEX(_BumpMap), _BumpScale);
 
 				// Calculate dissorted UVs
-				float2 dissort = bump * pow(_DissortAmt * DISSORTION_MAX + 1, 2.0);
+				float2 dissort = pow(_DissortAmt * DISSORTION_MAX + 1, 2.0);
 				i.screenPos.xy += (dissort * _GrabTexture_TexelSize.xy) * i.screenPos.z;
 
 				// I'm not really sure of this part :/
@@ -78,24 +70,14 @@ Shader "Custom/Refractive surface"
 					i.screenPos.y = 1 - i.screenPos.y;
 				#endif
 
-					// Calculate fresnel amount
-					float fresnel;
-					fresnel = 1.0 - dot(bump, i.viewDir);
-					fresnel = _FScale * pow(fresnel, _FPower);
-					fresnel = _FBias + (1.0 - _FBias) * saturate(fresnel);
+				// Compute final fragment color
+				half3 frag;
+				frag = lerp(tex2Dproj(_GrabTexture, i.screenPos), _LitColor, _LitColor.a).rgb;
 
-					// Compute final fragment color
-					half3 frag, emission;
-					frag = lerp(tex2Dproj(_GrabTexture, i.screenPos), _DarkColor, _DarkColor.a).rgb;
-					frag = lerp(frag, _LitColor, (_LitColor.a * fresnel));
-					emission = _LitColor * (_LitColor.a * fresnel);
-
-					// Feed output
-					s.Albedo = frag;
-					s.Normal = bump;
-					s.Emission = emission;
-					s.Smoothness = _Glossiness;
-				}
+				// Feed output
+				s.Albedo = frag;
+				s.Smoothness = _Glossiness;
+			}
 				ENDCG
 		}
 			FallBack "Standard"
