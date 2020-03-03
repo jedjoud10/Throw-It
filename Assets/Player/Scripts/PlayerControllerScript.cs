@@ -124,8 +124,8 @@ public class PlayerControllerScript : MonoBehaviour
     //Updates the fps counter with smoothed values
     private void updateFPS() 
     {
-        fps = Mathf.Lerp(fps, (1 / Time.smoothDeltaTime), 0.3f);
-        deltatime = Mathf.Lerp(deltatime, Time.smoothDeltaTime, 0.3f);
+        fps = Mathf.Lerp(fps, (1f / Time.unscaledDeltaTime), 0.5f);
+        deltatime = Mathf.Lerp(deltatime, Time.unscaledDeltaTime, 0.5f);
     }
     void OnGUI()
     {

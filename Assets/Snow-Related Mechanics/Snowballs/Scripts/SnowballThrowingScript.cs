@@ -65,7 +65,7 @@ public class SnowballThrowingScript : MonoBehaviour
         {
             float space = 15;
             float offset = space * 26;
-            GUI.Box(new Rect(0, offset, 250, space * 11), "");
+            GUI.Box(new Rect(0, offset, 250, space * 14), "");
             GUI.Label(new Rect(0, offset, 500, 100), "SnowballThrowingScript : ");
             GUI.Label(new Rect(10, offset + space * 1, 500, 100), "Charge : ");
             GUI.Label(new Rect(30, offset + space * 2, 500, 100), "Charge Percent :" + ChargePercent);
@@ -77,7 +77,7 @@ public class SnowballThrowingScript : MonoBehaviour
             GUI.Label(new Rect(60, offset + space * 8, 500, 100), "X : " + lastSnowballVelocity.x.ToString("F2"));
             GUI.Label(new Rect(60, offset + space * 9, 500, 100), "Y : " + lastSnowballVelocity.y.ToString("F2"));
             GUI.Label(new Rect(60, offset + space * 10, 500, 100), "Z : " + lastSnowballVelocity.z.ToString("F2"));
-            GUI.Label(new Rect(30, offset + space * 11, 000, 100), "LastSnowball HitObject :" + lastSnowballHitObject);
+            GUI.Label(new Rect(30, offset + space * 11, 500, 100), "LastSnowball HitObject :" + lastSnowballHitObject);
         }
     }
 }
