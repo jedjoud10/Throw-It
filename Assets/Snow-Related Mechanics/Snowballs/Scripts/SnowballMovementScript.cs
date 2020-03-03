@@ -5,17 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(SnowballProperities))]
 public class SnowballMovementScript : MonoBehaviour
 {
+    private SnowballThrowingScript throwingScript;//The throwing script that this snowball got spawned from
     private int Damage;//The base damage the snowball can do
     private float RigidbodyForce;//Force applied to every physics object when we hit it
     private Rigidbody rigidBody;//The rigidbody of the snowball
     private float DamageVelocityWeight = 1;//How muc the velocity changes the damage
     private Vector3 LastVelocity;//Last velocity measurement since OnCollisionEnter is called one frame after physics, thius giving us weird yeeting of the physics parts
     // Start is called before the first frame update
-    public void InitSnowball(float _Speed)//Multiply our base values by those arguments
+    public void InitSnowball(float _Speed, SnowballThrowingScript _throwingScript)//Multiply our base values by those arguments
     {
         #region Setup properities
         SnowballProperities properities = GetComponent<SnowballProperities>();//Gets properities from script
-
+        if(_throwingScript != null) throwingScript = _throwingScript;//Init throwingScript
         properities.InitSnowball();//Init snowball properities
         float Speed = properities.Speed;//Use one time float since we wont reuse this float later on
 
@@ -36,7 +37,7 @@ public class SnowballMovementScript : MonoBehaviour
     //When we hit an object (Ex. : Player, Snowman, Ground)
     private void OnCollisionEnter(Collision collision)
     {        
-        Damage *= Mathf.RoundToInt(rigidBody.velocity.magnitude * DamageVelocityWeight);//Take account velocity to damage, so if the snowball is fast, it does more damage
+        Damage *= Mathf.RoundToInt(LastVelocity.magnitude * DamageVelocityWeight);//Take account velocity to damage, so if the snowball is fast, it does more damage
         GameObject otherobject = collision.gameObject;//The colision gameobject  
         //Enter collision code handling
         if (otherobject.GetComponent<BotHealthScript>() != null) 
@@ -49,9 +50,15 @@ public class SnowballMovementScript : MonoBehaviour
             //Damage player
             otherobject.GetComponent<HealthScript>().Damage(Damage);
         }
-        if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint((LastVelocity) * RigidbodyForce, rigidBody.position); 
-        
+        if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint((LastVelocity) * RigidbodyForce, rigidBody.position, Damage);
 
+        //Debug only
+        if (throwingScript != null)
+        {
+            throwingScript.lastSnowballDamage = Damage;
+            throwingScript.lastSnowballVelocity = LastVelocity;
+            throwingScript.lastSnowballHitObject = collision.gameObject.name;
+        }
         Destroy(gameObject);//Destroys the snowball
     }
     //Update method

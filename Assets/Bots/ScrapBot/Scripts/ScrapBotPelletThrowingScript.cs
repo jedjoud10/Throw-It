@@ -26,7 +26,7 @@ public class ScrapBotPelletThrowingScript : MonoBehaviour
         if (isThrowing) 
         {
             pellet = Instantiate(pelletprefab, pelletOrigin.position, pelletOrigin.rotation);//Throw pellet from pellet origin
-            pellet.GetComponent<SnowballMovementScript>().InitSnowball(1.0f);//Init snowball
+            pellet.GetComponent<SnowballMovementScript>().InitSnowball(1.0f, null);//Init snowball
         }
     }
 }
