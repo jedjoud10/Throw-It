@@ -37,6 +37,8 @@ public class GameConfigHandlerScript : MonoBehaviour
         outconfig.AnisotropicTextures = QualitySettings.anisotropicFiltering.ToString();
         outconfig.SoftParticles = QualitySettings.softParticles;
         outconfig.RealtimeReflectionProbes = QualitySettings.realtimeReflectionProbes;
+        outconfig.ReflectionProbesResolution = 64;
+        outconfig.ReflectionProbesRefresh = 0;
         outconfig.BillboardsFaceCameraPosition = QualitySettings.billboardsFaceCameraPosition;
         outconfig.ResolutionScalingFixedDPI = QualitySettings.resolutionScalingFixedDPIFactor;
         outconfig.TextureStreaming = QualitySettings.streamingMipmapsActive;
