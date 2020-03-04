@@ -5,10 +5,12 @@ using UnityEngine;
 public class WorldManager : MonoBehaviour
 {
     public float waterHeight;//The height position of water
+    private AStarPathfinder pathfinder;//Pathfinder used to pathfind bots's pathes
     // Start is called before the first frame update
     void Start()
     {
-        FindObjectOfType<AStarPathfinder>().MakeTerrainGrid();//Init base terrain
+        pathfinder = FindObjectOfType<AStarPathfinder>();//Init base pathfinder
+        if (pathfinder != null) pathfinder.MakeTerrainGrid();
         StartCoroutine("WorldUpdateCoroutine");
     }
 
@@ -22,13 +24,16 @@ public class WorldManager : MonoBehaviour
     {
         #region Bots path calculations/recalculations
         //Recalculates every bots's path and updates pathfinding grid
-        BotPathfinderScript[] pathfinders = FindObjectsOfType<BotPathfinderScript>();
-        FindObjectOfType<AStarPathfinder>().MakeGrid();//Recalculate grid
-        yield return new WaitForSecondsRealtime(1.0f);
-        for (int i = 0; i < pathfinders.Length; i++)
+        if (pathfinder != null)
         {
+            BotPathfinderScript[] pathfinders = FindObjectsOfType<BotPathfinderScript>();
+            FindObjectOfType<AStarPathfinder>().MakeGrid();//Recalculate grid
             yield return new WaitForSecondsRealtime(1.0f);
-            pathfinders[i].FindPath();
+            for (int i = 0; i < pathfinders.Length; i++)
+            {
+                yield return new WaitForSecondsRealtime(1.0f);
+                pathfinders[i].FindPath();
+            }
         }
         #endregion
     }
