@@ -5517,8 +5517,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa988ff8de2bc646bfd84f7a19ca4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  botScript: {fileID: 0}
   MaxHealth: 200
   Health: 0
+  DelayDeath: 3.5
 --- !u!114 &4328283259045829849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5579,6 +5581,8 @@ MonoBehaviour:
   movementScript: {fileID: 5509279324734041416}
   bobbingScript: {fileID: 5520788041548390348}
   healthScript: {fileID: 2788950925942958376}
+  scrapBotAnimator: {fileID: 2594462075031492734}
+  slowDownSpeed: 0.7
 --- !u!95 &2594462075031492734
 Animator:
   serializedVersion: 3
