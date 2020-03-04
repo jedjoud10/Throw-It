@@ -15,7 +15,7 @@ public class UnderwaterEffectScript : MonoBehaviour
     public float baseDensity;//Density at the moment where you go underwater
 
     //Water settings
-    public float waterHeight;
+    private float waterHeight;
     public float densityMultiplier;
 
     private bool changedFog = false;//Used to make do-once function
@@ -23,6 +23,7 @@ public class UnderwaterEffectScript : MonoBehaviour
     void Start()
     {
         //Setup normal values
+        waterHeight = FindObjectOfType<WorldManager>().waterHeight;
         normalColor = RenderSettings.fogColor;
         normalDensity = RenderSettings.fogDensity;
     }

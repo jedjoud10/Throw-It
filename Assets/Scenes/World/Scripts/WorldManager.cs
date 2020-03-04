@@ -4,6 +4,7 @@ using UnityEngine;
 //Handles communications between multiple scripts and classes
 public class WorldManager : MonoBehaviour
 {
+    public float waterHeight;//The height position of water
     // Start is called before the first frame update
     void Start()
     {

@@ -14,9 +14,8 @@ public class TemperatureScript : MonoBehaviour
     private const int damageHypothermia = 10;//Damage you receive when your temperature is below minTemperature (Hyporthermia)
     private float timeInHypothermia = 0;//Our current time in hyporthermia. Will reset if value exceeds hypothermiaRese
     private const float hypothermiaReset = 1.0f;//If our timeInHypothermia is larger then this, then reset timeInHypothermia to 0 and apply damage
-    private Transform crystal;//De crystale
-    private const float waterTemperature = -100.0f;//How much temperature to remove from outsideTemperature when we are in water
-    public float waterLevel;//The water level
+    private const float waterTemperature = -1.0f;//How much temperature to remove from outsideTemperature when we are in water
+    private float waterLevel;//The water level
     private HeatEmmiterScript[] heatEmmiters = new HeatEmmiterScript[0];//Objects that emmit heat
     public Text temperatureText;//The text for showing temperature
     public Slider temperatureBar;//Temperature bar
@@ -29,7 +28,8 @@ public class TemperatureScript : MonoBehaviour
         temperature = targetTemperature;
         outsideTemperature = targetTemperature;
 
-        crystal = GameObject.FindGameObjectWithTag("Objective").transform;//Get crystal from tag
+        waterLevel = FindObjectOfType<WorldManager>().waterHeight;//Init global water height for the whole scene from world manager
+
         healthScript = GetComponent<HealthScript>();//Init health script
         heatEmmiters = new HeatEmmiterScript[0];
         CheckHeatEmmiters();
@@ -69,7 +69,7 @@ public class TemperatureScript : MonoBehaviour
     //Temperature relative to if we are in water
     private float TemperatureWater() 
     {
-        return Mathf.Min((waterLevel - transform.position.y) / waterLevel * waterTemperature, 0);//Water coldness clamped between -Infinity to 0 so we cant get heat from water if we are above, only remove heat if we are below
+        return Mathf.Min((waterLevel - transform.position.y) * waterTemperature, 0);//Water coldness clamped between -Infinity to 0 so we cant get heat from water if we are above, only remove heat if we are below
     }
     //Check if there is any new heat emmiters
     public void CheckHeatEmmiters() 

@@ -124,13 +124,16 @@ public class GameConfigHandlerScript : MonoBehaviour
         {
             PostProcessProfile postprocess = volumes[i].sharedProfile;
             //Set post-process effects
-            postprocess.settings[0].active = colorgrading;
-            postprocess.settings[1].active = chromaticaberration;
-            postprocess.settings[2].active = bloom;
-            postprocess.settings[3].active = vignette;
-            postprocess.settings[4].active = autoexposure;
-            postprocess.settings[5].active = motionblur;
-            postprocess.settings[6].active = ambientocclusion;
+            for(int s = 0; s < postprocess.settings.Count; s++) 
+            {
+                if (s == 0) postprocess.settings[s].active = colorgrading;
+                if (s == 1) postprocess.settings[s].active = chromaticaberration;
+                if (s == 2) postprocess.settings[s].active = bloom;
+                if (s == 3) postprocess.settings[s].active = vignette;
+                if (s == 4) postprocess.settings[s].active = autoexposure;
+                if (s == 5) postprocess.settings[s].active = motionblur;
+                if (s == 6) postprocess.settings[s].active = ambientocclusion;
+            }
         }
 
         layer.enabled = usepostprocessing;//If we are 
