@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 //An object emmiting heat
-public class HeatEmmiterScript : MonoBehaviour
+public class HeatEmitterScript : MonoBehaviour
 {
-    public float heatEmmision;//How much heat this object emmits
-    public float maxEmmisionDistance;//Minimum distance that we emmit heat to
-    public float minHeat;//Minimum heat at any point in space
+    public float heatEmmission;//Heat emmision at distance 0 from this objec
+    public float minHeat;//Minimum heat emmision : Mathf.Min(heatEmmission, minHeat)
+    public float maxEmmisionDistance;//Maximum distance that we emmit heat from
     // Start is called before the first frame update
     void Start()
     {

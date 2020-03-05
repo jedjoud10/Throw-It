@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8655902438020177997}
+  - component: {fileID: 3126079285528885423}
   m_Layer: 0
   m_Name: Crystal
   m_TagString: Objective
@@ -32,6 +33,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3126079285528885423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2578720555838755542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0604b31d95964da3f40c015d29a51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heatEmmision: 0
+  maxEmmisionDistance: 0
+  minHeat: 0
 --- !u!1 &3994987894471600469
 GameObject:
   m_ObjectHideFlags: 0

@@ -242,6 +242,9 @@ MonoBehaviour:
   ChargeLerpSpeed: 1
   ChargeText: {fileID: 1087404709982179032}
   ChargeBar: {fileID: 6757347896408227671}
+  lastSnowballDamage: 0
+  lastSnowballVelocity: {x: 0, y: 0, z: 0}
+  lastSnowballHitObject: 
 --- !u!114 &632253683242069283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,10 +347,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterColor: {r: 0, g: 0.46812057, b: 1, a: 0}
-  waterDensity: 1
+  waterDensity: 0.01
   baseDensity: 0
-  waterHeight: 22.8
-  densityMultiplier: 1
+  densityMultiplier: 0.5
 --- !u!114 &6231078546033701756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,9 +362,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bfa93549d40b9644bf1a289063ca752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heatDispersion: 0.01
   targetTemperatureSpeed: 1
-  waterLevel: 22.8
+  heatDispersion: 0.01
   temperatureText: {fileID: 1904807591899911719}
   temperatureBar: {fileID: 2770141070961467530}
 --- !u!1 &632253684259395822
@@ -1715,7 +1716,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 309.15, y: 38.299988}
+  m_AnchoredPosition: {x: 309.15002, y: 38.299927}
   m_SizeDelta: {x: 618.4, y: 76.600006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6757347896408227671

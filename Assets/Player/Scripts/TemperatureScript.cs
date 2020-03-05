@@ -5,22 +5,26 @@ using UnityEngine.UI;
 //Player temperature calculations and UI temeprature stuff
 public class TemperatureScript : MonoBehaviour
 {
+    public float targetTemperatureSpeed;//The speed at how much were going to get at targetTemperature from current temperature
+    public float heatDispersion;//How much the outside temperature influences our own body temperature
     private float temperature;//Current body temperature
     private float outsideTemperature;//The current outside temperature
-    public float heatDispersion;//How much the outside temperature influences our own body temperature
     private const float targetTemperature = 37.0f;//The temperature that we want to come close to
-    public float targetTemperatureSpeed;//The speed at how much were going to get at targetTemperature from current temperature
+    private const float waterTemperature = -1.0f;//How much temperature to remove from outsideTemperature when we are in water
     private const float minTemperature = 35.5f;//Minimum temperature before we start getting damage
+    private const float baseTemperature = -20.0f;//base temperature of world
+    
     private const int damageHypothermia = 10;//Damage you receive when your temperature is below minTemperature (Hyporthermia)
     private float timeInHypothermia = 0;//Our current time in hyporthermia. Will reset if value exceeds hypothermiaRese
     private const float hypothermiaReset = 1.0f;//If our timeInHypothermia is larger then this, then reset timeInHypothermia to 0 and apply damage
-    private const float waterTemperature = -1.0f;//How much temperature to remove from outsideTemperature when we are in water
-    private float waterLevel;//The water level
-    private HeatEmmiterScript[] heatEmmiters = new HeatEmmiterScript[0];//Objects that emmit heat
+    
     public Text temperatureText;//The text for showing temperature
     public Slider temperatureBar;//Temperature bar
+    private float waterLevel;//The water level
+    private HeatEmitterScript[] heatEmitters = new HeatEmitterScript[0];//Objects that emmit heat
 
     private HealthScript healthScript;//health script of player
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,15 +35,15 @@ public class TemperatureScript : MonoBehaviour
         waterLevel = FindObjectOfType<WorldManager>().waterHeight;//Init global water height for the whole scene from world manager
 
         healthScript = GetComponent<HealthScript>();//Init health script
-        heatEmmiters = new HeatEmmiterScript[0];
-        CheckHeatEmmiters();
-        DelayedCheckHeatEmmiters(5.0f);
+        heatEmitters = new HeatEmitterScript[0];
+        CheckHeatEmitters();
+        DelayedCheckHeatEmitters(5.0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        outsideTemperature = TemperatureHeatEmmiters() + TemperatureWater();//Calculate oustide temperature
+        outsideTemperature = TemperatureHeatEmmiters() + TemperatureWater() + baseTemperature;//Calculate oustide temperature
         temperature = Mathf.Lerp(temperature, outsideTemperature, heatDispersion * Time.deltaTime);
         temperature = Mathf.Lerp(temperature, targetTemperature, targetTemperatureSpeed * Time.deltaTime);//Get closer to target temperature
         temperatureText.text = "Temperature : " + temperature.ToString("F2");
@@ -54,15 +58,20 @@ public class TemperatureScript : MonoBehaviour
             }            
         }
     }
+    #region Temperatures
     //Temperature relative to closest heat-emmiter. This also includes the crystal as a heat emmiter
     private float TemperatureHeatEmmiters() 
     {
         float TempHeatEmmiters = 0;
         float playerDist;
-        for(int i = 0; i < heatEmmiters.Length; i++) 
+        for(int i = 0; i < heatEmitters.Length; i++) 
         {
-            playerDist = Vector3.Distance(transform.position, heatEmmiters[i].transform.position);
-            TempHeatEmmiters += Mathf.Max((heatEmmiters[i].maxEmmisionDistance - playerDist) / heatEmmiters[i].maxEmmisionDistance, heatEmmiters[i].minHeat) * heatEmmiters[i].heatEmmision;//Add temperature of all close heating objects
+            playerDist = Vector3.Distance(transform.position, heatEmitters[i].transform.position);//Distance from player to heat emmit
+            //At the border of the heat emmiter, this becomes 0. At distance 0 from heatEmmiter, this becomes 1. When over the border of the heat emmiter, this becomes negative
+            playerDist = (heatEmitters[i].maxEmmisionDistance - playerDist) / heatEmitters[i].maxEmmisionDistance;
+
+
+            TempHeatEmmiters += Mathf.Max(playerDist * heatEmitters[i].heatEmmission, heatEmitters[i].minHeat);//Add temperature of all close heating objects
         }
         return TempHeatEmmiters;
     }
@@ -71,15 +80,16 @@ public class TemperatureScript : MonoBehaviour
     {
         return Mathf.Min((waterLevel - transform.position.y) * waterTemperature, 0);//Water coldness clamped between -Infinity to 0 so we cant get heat from water if we are above, only remove heat if we are below
     }
+    #endregion
     //Check if there is any new heat emmiters
-    public void CheckHeatEmmiters() 
+    public void CheckHeatEmitters() 
     {
-        heatEmmiters = GameObject.FindObjectsOfType<HeatEmmiterScript>();//Set new array of heat emmiters
+        heatEmitters = GameObject.FindObjectsOfType<HeatEmitterScript>();//Set new array of heat emmiters
     }
     //Delayed check heat emmiters
-    public void DelayedCheckHeatEmmiters(float delay) 
+    public void DelayedCheckHeatEmitters(float delay) 
     {
-        Invoke("CheckHeatEmmiters", delay);
+        Invoke("CheckHeatEmitters", delay);
     }
     void OnGUI()
     {
@@ -95,7 +105,7 @@ public class TemperatureScript : MonoBehaviour
             GUI.Label(new Rect(30, offset + space * 4, 500, 100), "Time in hypothermia :" + timeInHypothermia.ToString("F3"));
             GUI.Label(new Rect(30, offset + space * 6, 500, 100), "Current Water Temp :" + TemperatureWater().ToString("F3"));
             GUI.Label(new Rect(30, offset + space * 7, 500, 100), "Current HeatEmmiters Temp :" + TemperatureHeatEmmiters().ToString("F3"));
-            GUI.Label(new Rect(30, offset + space * 8, 500, 100), "HeatEmmiters Ammount :" + heatEmmiters.Length);
+            GUI.Label(new Rect(30, offset + space * 8, 500, 100), "HeatEmmiters Ammount :" + heatEmitters.Length);
         }
     }
     //Debugging GUI stuff
