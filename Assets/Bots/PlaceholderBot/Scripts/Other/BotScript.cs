@@ -12,22 +12,25 @@ public class BotScript : MonoBehaviour
     public BotMovementScript movementScript;
     public BotBobbingScript bobbingScript;
     public BotHealthScript healthScript;
+    protected bool isDead;//When the bot is dead
     // Start is called before the first frame update
-    void Start()
+    virtual public void Start()
     {
         healthScript.botScript = this;//Init bot script for health script
     }
 
     // Update is called once per frame
-    void Update()
+    virtual public void Update()
     {
         
     }
     //Called when bot dies
-    public void Death() 
+    virtual public void Death() 
     {
         //Slow down movement and bobbing
         movementScript.move = false;
         bobbingScript.applybobbing = false;
+
+        isDead = true;//well, he is dead
     }
 }
