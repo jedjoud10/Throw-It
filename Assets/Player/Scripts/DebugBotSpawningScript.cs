@@ -43,7 +43,7 @@ public class DebugBotSpawningScript : MonoBehaviour
         if (changeBot) 
         {
             botIndex += 1;//Change to select next bot
-            botIndex = botIndex % bots.Length - 1;//Return to 0 if the number is bigger than the spawnable bot's array
+            botIndex = botIndex % bots.Length;//Return to 0 if the number is bigger than the spawnable bot's array
             currentBot = bots[botIndex];
         }
         if (spawnBot) 

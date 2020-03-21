@@ -114,19 +114,6 @@ public class PlayerControllerScript : MonoBehaviour
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
         characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController by the Movement Vector and the deceleration
         #endregion
-        if (Debug.isDebugBuild)
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                Cursor.lockState = CursorLockMode.None;//Unlocks the cursor from the middle of the screen
-                Cursor.visible = true;//Make the cursor visible
-            }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                Cursor.lockState = CursorLockMode.Locked;//Locks the cursor to the middle of the screen
-                Cursor.visible = false;//Make the cursor invisible
-            }
-        }//Allow debug stuff
     }
     //Three value interpolation for idle, walking and sprinting fov values
     private float GetCameraFOV(float idle, float walk, float sprint, float walkfactor, float sprintfactor) 

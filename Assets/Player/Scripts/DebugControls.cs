@@ -65,7 +65,7 @@ public class @DebugControls : IInputActionCollection, IDisposable
             ""id"": ""06bc96dd-dcb9-43e6-9ad2-27b333f8de7e"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""ChangeResolution"",
                     ""type"": ""Button"",
                     ""id"": ""1a6e9a05-dcbf-490b-9963-0a8e426e2868"",
                     ""expectedControlType"": """",
@@ -77,11 +77,57 @@ public class @DebugControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b6850ecc-ba56-4464-b31b-5ef986378a56"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""ChangeResolution"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Map"",
+            ""id"": ""f393e2e9-e12a-4865-b927-6b1d4d68e8b3"",
+            ""actions"": [
+                {
+                    ""name"": ""SwitchMap"",
+                    ""type"": ""Button"",
+                    ""id"": ""a605ec48-9fd5-4f1b-b367-e535a26e4056"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RecalculatePathfinder"",
+                    ""type"": ""Button"",
+                    ""id"": ""cb4dddb7-b564-407f-9b02-9b23c7d7074a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""dd4003ce-d364-4789-9ac9-3b557828d97b"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""56d37cc8-534d-4d90-bdc7-1547bec875cb"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RecalculatePathfinder"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -96,7 +142,11 @@ public class @DebugControls : IInputActionCollection, IDisposable
         m_BotSpawning_ChangeBot = m_BotSpawning.FindAction("ChangeBot", throwIfNotFound: true);
         // Resolution
         m_Resolution = asset.FindActionMap("Resolution", throwIfNotFound: true);
-        m_Resolution_Newaction = m_Resolution.FindAction("New action", throwIfNotFound: true);
+        m_Resolution_ChangeResolution = m_Resolution.FindAction("ChangeResolution", throwIfNotFound: true);
+        // Map
+        m_Map = asset.FindActionMap("Map", throwIfNotFound: true);
+        m_Map_SwitchMap = m_Map.FindAction("SwitchMap", throwIfNotFound: true);
+        m_Map_RecalculatePathfinder = m_Map.FindAction("RecalculatePathfinder", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -187,12 +237,12 @@ public class @DebugControls : IInputActionCollection, IDisposable
     // Resolution
     private readonly InputActionMap m_Resolution;
     private IResolutionActions m_ResolutionActionsCallbackInterface;
-    private readonly InputAction m_Resolution_Newaction;
+    private readonly InputAction m_Resolution_ChangeResolution;
     public struct ResolutionActions
     {
         private @DebugControls m_Wrapper;
         public ResolutionActions(@DebugControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Resolution_Newaction;
+        public InputAction @ChangeResolution => m_Wrapper.m_Resolution_ChangeResolution;
         public InputActionMap Get() { return m_Wrapper.m_Resolution; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -202,20 +252,61 @@ public class @DebugControls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_ResolutionActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_ResolutionActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_ResolutionActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_ResolutionActionsCallbackInterface.OnNewaction;
+                @ChangeResolution.started -= m_Wrapper.m_ResolutionActionsCallbackInterface.OnChangeResolution;
+                @ChangeResolution.performed -= m_Wrapper.m_ResolutionActionsCallbackInterface.OnChangeResolution;
+                @ChangeResolution.canceled -= m_Wrapper.m_ResolutionActionsCallbackInterface.OnChangeResolution;
             }
             m_Wrapper.m_ResolutionActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @ChangeResolution.started += instance.OnChangeResolution;
+                @ChangeResolution.performed += instance.OnChangeResolution;
+                @ChangeResolution.canceled += instance.OnChangeResolution;
             }
         }
     }
     public ResolutionActions @Resolution => new ResolutionActions(this);
+
+    // Map
+    private readonly InputActionMap m_Map;
+    private IMapActions m_MapActionsCallbackInterface;
+    private readonly InputAction m_Map_SwitchMap;
+    private readonly InputAction m_Map_RecalculatePathfinder;
+    public struct MapActions
+    {
+        private @DebugControls m_Wrapper;
+        public MapActions(@DebugControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SwitchMap => m_Wrapper.m_Map_SwitchMap;
+        public InputAction @RecalculatePathfinder => m_Wrapper.m_Map_RecalculatePathfinder;
+        public InputActionMap Get() { return m_Wrapper.m_Map; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MapActions set) { return set.Get(); }
+        public void SetCallbacks(IMapActions instance)
+        {
+            if (m_Wrapper.m_MapActionsCallbackInterface != null)
+            {
+                @SwitchMap.started -= m_Wrapper.m_MapActionsCallbackInterface.OnSwitchMap;
+                @SwitchMap.performed -= m_Wrapper.m_MapActionsCallbackInterface.OnSwitchMap;
+                @SwitchMap.canceled -= m_Wrapper.m_MapActionsCallbackInterface.OnSwitchMap;
+                @RecalculatePathfinder.started -= m_Wrapper.m_MapActionsCallbackInterface.OnRecalculatePathfinder;
+                @RecalculatePathfinder.performed -= m_Wrapper.m_MapActionsCallbackInterface.OnRecalculatePathfinder;
+                @RecalculatePathfinder.canceled -= m_Wrapper.m_MapActionsCallbackInterface.OnRecalculatePathfinder;
+            }
+            m_Wrapper.m_MapActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @SwitchMap.started += instance.OnSwitchMap;
+                @SwitchMap.performed += instance.OnSwitchMap;
+                @SwitchMap.canceled += instance.OnSwitchMap;
+                @RecalculatePathfinder.started += instance.OnRecalculatePathfinder;
+                @RecalculatePathfinder.performed += instance.OnRecalculatePathfinder;
+                @RecalculatePathfinder.canceled += instance.OnRecalculatePathfinder;
+            }
+        }
+    }
+    public MapActions @Map => new MapActions(this);
     public interface IBotSpawningActions
     {
         void OnSpawnBot(InputAction.CallbackContext context);
@@ -223,6 +314,11 @@ public class @DebugControls : IInputActionCollection, IDisposable
     }
     public interface IResolutionActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnChangeResolution(InputAction.CallbackContext context);
+    }
+    public interface IMapActions
+    {
+        void OnSwitchMap(InputAction.CallbackContext context);
+        void OnRecalculatePathfinder(InputAction.CallbackContext context);
     }
 }

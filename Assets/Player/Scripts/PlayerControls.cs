@@ -49,6 +49,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ChargeSnowball"",
+                    ""type"": ""Button"",
+                    ""id"": ""ddcdbb81-2a0f-4951-a852-d4ddb23c2e7b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""ReleaseSnowball"",
+                    ""type"": ""Button"",
+                    ""id"": ""90889ae4-0958-4379-b391-2b928cf22111"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
                 }
             ],
             ""bindings"": [
@@ -139,6 +155,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2afda31e-df2d-46a1-81ec-75f40fefb494"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChargeSnowball"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""838f6a09-d9df-4b52-b751-b922b0bd068a"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ReleaseSnowball"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -151,6 +189,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        m_Player_ChargeSnowball = m_Player.FindAction("ChargeSnowball", throwIfNotFound: true);
+        m_Player_ReleaseSnowball = m_Player.FindAction("ReleaseSnowball", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -204,6 +244,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Sprint;
+    private readonly InputAction m_Player_ChargeSnowball;
+    private readonly InputAction m_Player_ReleaseSnowball;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -212,6 +254,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+        public InputAction @ChargeSnowball => m_Wrapper.m_Player_ChargeSnowball;
+        public InputAction @ReleaseSnowball => m_Wrapper.m_Player_ReleaseSnowball;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -233,6 +277,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Sprint.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                @ChargeSnowball.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChargeSnowball;
+                @ChargeSnowball.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChargeSnowball;
+                @ChargeSnowball.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChargeSnowball;
+                @ReleaseSnowball.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReleaseSnowball;
+                @ReleaseSnowball.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReleaseSnowball;
+                @ReleaseSnowball.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReleaseSnowball;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -249,6 +299,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
+                @ChargeSnowball.started += instance.OnChargeSnowball;
+                @ChargeSnowball.performed += instance.OnChargeSnowball;
+                @ChargeSnowball.canceled += instance.OnChargeSnowball;
+                @ReleaseSnowball.started += instance.OnReleaseSnowball;
+                @ReleaseSnowball.performed += instance.OnReleaseSnowball;
+                @ReleaseSnowball.canceled += instance.OnReleaseSnowball;
             }
         }
     }
@@ -259,5 +315,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnChargeSnowball(InputAction.CallbackContext context);
+        void OnReleaseSnowball(InputAction.CallbackContext context);
     }
 }

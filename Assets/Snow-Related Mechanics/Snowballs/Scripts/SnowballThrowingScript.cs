@@ -16,6 +16,14 @@ public class SnowballThrowingScript : MonoBehaviour
     public Text ChargeText;//UI Text
     public Slider ChargeBar;//The charge bar
     private bool isHolding;//If we are holding the left mouse button
+    private bool releaseHold;//When we stop holding the left mouse button
+    private PlayerControls playerControls;
+    private void Awake()
+    {
+        playerControls = new PlayerControls();
+        playerControls.Player.ChargeSnowball.performed += ctx => isHolding = ctx.ReadValueAsButton();
+        playerControls.Player.ReleaseSnowball.performed += ctx => releaseHold = ctx.ReadValueAsButton();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -25,9 +33,8 @@ public class SnowballThrowingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))//Dedect if we are holding the left mouse button
+        if (isHolding)//Dedect if we are holding the left mouse button
         {
-            isHolding = true;
             ChargeTime += Time.deltaTime;//Add one second based on the delay between each frame
             if (ChargeTime > ChargeTimeThreshold)//If we held the button long enough, then start charging
             {
@@ -35,9 +42,8 @@ public class SnowballThrowingScript : MonoBehaviour
                 ChargePercent = Mathf.Clamp(ChargePercent, 1f, 2f);//Clamp the value so we stay between a 0 - 1 range
             }
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (releaseHold)
         {
-            isHolding = false;
             ThrowSnowball();//Throw snowball
             ChargeTime = 0;//Reset the time since we threw the snowball            
         }
@@ -55,6 +61,16 @@ public class SnowballThrowingScript : MonoBehaviour
         InstanceSnowball = Instantiate(Snowball, ThrowPoint.position, ThrowPoint.rotation);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
         InstanceSnowball.GetComponent<SnowballMovementScript>().InitSnowball(ChargePercent, this);//Init the snowball with taking account the charging
     }
+    #region Enable/Disable
+    private void OnEnable()
+    {
+        playerControls.Enable();
+    }
+    private void OnDisable()
+    {
+        playerControls.Disable();
+    }
+    #endregion 
     //Debug
     public float lastSnowballDamage;
     public Vector3 lastSnowballVelocity;

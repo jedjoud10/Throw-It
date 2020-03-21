@@ -52,7 +52,7 @@
             "id": "06bc96dd-dcb9-43e6-9ad2-27b333f8de7e",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "ChangeResolution",
                     "type": "Button",
                     "id": "1a6e9a05-dcbf-490b-9963-0a8e426e2868",
                     "expectedControlType": "",
@@ -64,11 +64,57 @@
                 {
                     "name": "",
                     "id": "b6850ecc-ba56-4464-b31b-5ef986378a56",
-                    "path": "",
+                    "path": "<Keyboard>/l",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "ChangeResolution",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Map",
+            "id": "f393e2e9-e12a-4865-b927-6b1d4d68e8b3",
+            "actions": [
+                {
+                    "name": "SwitchMap",
+                    "type": "Button",
+                    "id": "a605ec48-9fd5-4f1b-b367-e535a26e4056",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RecalculatePathfinder",
+                    "type": "Button",
+                    "id": "cb4dddb7-b564-407f-9b02-9b23c7d7074a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "dd4003ce-d364-4789-9ac9-3b557828d97b",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchMap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "56d37cc8-534d-4d90-bdc7-1547bec875cb",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RecalculatePathfinder",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
