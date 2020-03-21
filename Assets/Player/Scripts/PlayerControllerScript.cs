@@ -34,11 +34,27 @@ public class PlayerControllerScript : MonoBehaviour
     private Vector2 inputMovement;//Input data from keyboard WASD
     private float Speed;//The overall speed of the player (Smoothed between the walking speed and sprinting speed)
     private float _decelerationFactor;//How much you decelerate in general (Used for ice and other physics materials)
-    private bool isWalking;
-    private bool isSprinting;
+    private bool isWalking;//Bruh moment walk boi
+    private bool isSprinting;//Logically speaking, are we sprinting ?
+    private bool buttonSprinting;//If the button for sprinting is pressed
+    private bool buttonJumping;//If the button for jumping is pressed
     private float walkingFactor;//Value used to lerp between fov when walking
     private float sprintingFactor;//Value used to lerp between fov when sprinting
     private float camFOV;//Current camera fov
+
+    private Vector2 cameraRotDelta;//Delta rotation of camera
+
+    private PlayerControls playerControls;//The inputs controls
+
+    private void Awake()
+    {
+        //Init input controls for player
+        playerControls = new PlayerControls();
+        playerControls.Player.Camera.performed += ctx => cameraRotDelta = ctx.ReadValue<Vector2>();
+        playerControls.Player.Movement.performed += ctx => inputMovement = ctx.ReadValue<Vector2>();
+        playerControls.Player.Jump.performed += ctx => buttonJumping = ctx.ReadValueAsButton();
+        playerControls.Player.Sprint.performed += ctx => buttonSprinting = ctx.ReadValueAsButton();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -56,21 +72,20 @@ public class PlayerControllerScript : MonoBehaviour
     void Update()
     {
         #region Camera Control
-        transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * Sensivity));//Rotate the whole player around and around
-        CameraRotationXAxis -= Input.GetAxis("Mouse Y") * Sensivity;//Sets the up-down value of camera rotation
+        transform.Rotate(new Vector3(0, cameraRotDelta.x * Sensivity));//Rotate the whole player around and around
+        CameraRotationXAxis -= cameraRotDelta.y * Sensivity;//Sets the up-down value of camera rotation
         CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
         Camera.transform.localEulerAngles = new Vector3(CameraRotationXAxis, 0, 0);//Rotates the camera up-down motion from variable
         Camera.fieldOfView = GetCameraFOV(IdleFov, WalkingFov, SprintingFov, walkingFactor, sprintingFactor);//Changes the FOV of the player camera if walking
         #endregion
         #region Player Movement Control
-        inputMovement.x = Input.GetAxis("LeftRight"); inputMovement.y = Input.GetAxis("ForwardBackward");//Set input movement values
         Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, sprintingFactor);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
         Movement.x = inputMovement.x * Speed;//Left/right movement
         Movement.z = inputMovement.y * Speed;//Forward/backwawrd movement
      
         #region Walking and Sprinting values
         isWalking = Mathf.Abs(inputMovement.magnitude) > 0;//Are we walking ?
-        isSprinting = isWalking && Input.GetAxis("Sprint") > 0;
+        isSprinting = isWalking && buttonSprinting;
         if (isWalking) walkingFactor += (1 - walkingFactor) * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 1
         else walkingFactor -= walkingFactor * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 0
         if (isSprinting) sprintingFactor += (1 - sprintingFactor) * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 1
@@ -84,8 +99,8 @@ public class PlayerControllerScript : MonoBehaviour
         Movement = transform.TransformDirection(Movement);//Takes account the rotation of the player when moving
         if (characterController.isGrounded)//Only allows us to jump when we are touching ground
         {
-            Movement.y = 0;//Sets the movement in the Y axis to stop, thus allowing us in-air movement
-            if (Input.GetAxis("Jump") > 0.5)//Jumping by the Jump axis
+            Movement.y = 0;//Bruh we already on the ground why add more gravity
+            if (buttonJumping)
             {
                 Movement.y = Jump;
             }
@@ -166,6 +181,16 @@ public class PlayerControllerScript : MonoBehaviour
         { 
             _decelerationFactor = decelerationFactor;//Reset the decelerationFactor to base
         }
-    } 
+    }
     #endregion
+    #region Enable/Disable
+    private void OnEnable()
+    {
+        playerControls.Enable();
+    }
+    private void OnDisable()
+    {
+        playerControls.Disable();
+    }
+    #endregion 
 }

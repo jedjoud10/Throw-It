@@ -4,6 +4,7 @@ using UnityEngine;
 //Loops over resolutions and sets the current screen resolution to the selected one
 public class DebugResolutionScript : MonoBehaviour
 {
+    private DebugControls debugControls;
     private Resolution[] resolutions = { new Resolution(1080, 1920), new Resolution(900, 1600), new Resolution(768, 1366), new Resolution(720, 1280), new Resolution(480, 640) };
     private int currentResolution;
     // Start is called before the first frame update
