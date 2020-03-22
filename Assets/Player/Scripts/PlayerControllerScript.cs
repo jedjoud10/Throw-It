@@ -72,8 +72,8 @@ public class PlayerControllerScript : MonoBehaviour
     void Update()
     {
         #region Camera Control
-        transform.Rotate(new Vector3(0, cameraRotDelta.x * Sensivity));//Rotate the whole player around and around
-        CameraRotationXAxis -= cameraRotDelta.y * Sensivity;//Sets the up-down value of camera rotation
+        transform.Rotate(new Vector3(0, cameraRotDelta.x * Sensivity * Time.deltaTime));//Rotate the whole player around and around
+        CameraRotationXAxis -= cameraRotDelta.y * Sensivity * Time.deltaTime;//Sets the up-down value of camera rotation
         CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
         Camera.transform.localEulerAngles = new Vector3(CameraRotationXAxis, 0, 0);//Rotates the camera up-down motion from variable
         Camera.fieldOfView = GetCameraFOV(IdleFov, WalkingFov, SprintingFov, walkingFactor, sprintingFactor);//Changes the FOV of the player camera if walking

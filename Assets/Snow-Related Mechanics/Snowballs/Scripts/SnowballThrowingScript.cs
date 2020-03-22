@@ -22,7 +22,7 @@ public class SnowballThrowingScript : MonoBehaviour
     {
         playerControls = new PlayerControls();
         playerControls.Player.ChargeSnowball.performed += ctx => isHolding = ctx.ReadValueAsButton();
-        playerControls.Player.ReleaseSnowball.performed += ctx => releaseHold = ctx.ReadValueAsButton();
+        playerControls.Player.ReleaseSnowball.performed += ctx => releaseHold = true;
     }
     // Start is called before the first frame update
     void Start()
@@ -34,7 +34,7 @@ public class SnowballThrowingScript : MonoBehaviour
     void Update()
     {
         if (isHolding)//Dedect if we are holding the left mouse button
-        {
+        {            
             ChargeTime += Time.deltaTime;//Add one second based on the delay between each frame
             if (ChargeTime > ChargeTimeThreshold)//If we held the button long enough, then start charging
             {
@@ -55,6 +55,7 @@ public class SnowballThrowingScript : MonoBehaviour
         //Set UI
         ChargeText.text = "Charge : " + (ChargePercent * 100.0f).ToString("F2");
         ChargeBar.value = ChargePercent - 1;
+        releaseHold = false;//Reset release button
     }
     public void ThrowSnowball()//Throw snowball method
     {

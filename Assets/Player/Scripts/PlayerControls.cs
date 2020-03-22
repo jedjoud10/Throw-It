@@ -36,33 +36,33 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Jump"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""fe437376-29db-48a5-bc94-119e06833f00"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
                     ""name"": ""Sprint"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""23f80f7d-25ee-4b19-9588-11d269f55cdc"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
                     ""name"": ""ChargeSnowball"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""ddcdbb81-2a0f-4951-a852-d4ddb23c2e7b"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
                     ""name"": ""ReleaseSnowball"",
                     ""type"": ""Button"",
-                    ""id"": ""90889ae4-0958-4379-b391-2b928cf22111"",
-                    ""expectedControlType"": ""Button"",
+                    ""id"": ""ec00ad13-0e54-44a9-b315-7308f113bf4a"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=1)""
                 }
@@ -82,7 +82,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""2D Vector"",
                     ""id"": ""5d2228ca-88eb-4bbb-8f74-4ae4a0b5f331"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -169,7 +169,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""838f6a09-d9df-4b52-b751-b922b0bd068a"",
+                    ""id"": ""b1e63554-08ab-4501-a803-55fb546408ab"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",

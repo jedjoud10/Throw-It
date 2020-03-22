@@ -12,7 +12,7 @@ public class DebugResolutionScript : MonoBehaviour
     private void Awake()
     {
         debugControls = new DebugControls();
-        debugControls.Resolution.ChangeResolution.performed += ctx => switchResolution = ctx.ReadValueAsButton();
+        debugControls.Resolution.ChangeResolution.performed += ctx => switchResolution = true;
     }
     // Start is called before the first frame update
     void Start()
@@ -29,6 +29,7 @@ public class DebugResolutionScript : MonoBehaviour
             Resolution current = resolutions[currentResolution % resolutions.Length];
             Screen.SetResolution(current.width, current.height, true);
         }
+        switchResolution = false;
     }
     #region Enable/Disable
     private void OnEnable()

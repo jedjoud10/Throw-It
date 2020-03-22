@@ -2455,6 +2455,11 @@ PrefabInstance:
       propertyPath: airControl
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: Sensivity
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 632253683242069309, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_Name
@@ -2465,15 +2470,20 @@ PrefabInstance:
       propertyPath: m_RenderingPath
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2211472193914651441, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 113.1001
+      objectReference: {fileID: 0}
     - target: {fileID: 5158998839459778089, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 309.15002
+      value: 309.1499
       objectReference: {fileID: 0}
     - target: {fileID: 5158998839459778089, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 38.299927
+      value: 38.299805
       objectReference: {fileID: 0}
     - target: {fileID: 5879957929415658994, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
@@ -2499,6 +2509,16 @@ PrefabInstance:
         type: 3}
       propertyPath: maxCrystalDistanceFalloff
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616346788869769111, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 309.1499
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616346788869769111, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 113.1001
       objectReference: {fileID: 0}
     - target: {fileID: 7320029530100180668, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}

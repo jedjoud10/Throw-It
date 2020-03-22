@@ -20,13 +20,13 @@ public class DebugBotSpawningScript : MonoBehaviour
     {
         //Init input controls for debugging
         debugControls = new DebugControls();
-        debugControls.BotSpawning.SpawnBot.performed += ctx => spawnBot = ctx.ReadValueAsButton();
-        debugControls.BotSpawning.ChangeBot.performed += ctx => changeBot = ctx.ReadValueAsButton();
+        debugControls.BotSpawning.SpawnBot.performed += ctx => spawnBot = true;
+        debugControls.BotSpawning.ChangeBot.performed += ctx => changeBot = true;
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentBot = bots[0];
     }
 
     // Update is called once per frame
@@ -43,13 +43,14 @@ public class DebugBotSpawningScript : MonoBehaviour
         if (changeBot) 
         {
             botIndex += 1;//Change to select next bot
-            botIndex = botIndex % bots.Length;//Return to 0 if the number is bigger than the spawnable bot's array
-            currentBot = bots[botIndex];
+            currentBot = bots[botIndex % bots.Length];
         }
         if (spawnBot) 
         {
             Instantiate(currentBot, point, Quaternion.identity);
         }
+        spawnBot = false;
+        changeBot = false;
     }
     //Gizmoo
     private void OnDrawGizmos()

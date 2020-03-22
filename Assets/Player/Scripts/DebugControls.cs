@@ -22,7 +22,7 @@ public class @DebugControls : IInputActionCollection, IDisposable
                     ""name"": ""SpawnBot"",
                     ""type"": ""Button"",
                     ""id"": ""c75806f0-bc44-4052-b023-aa6d8db0ae90"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
@@ -30,7 +30,7 @@ public class @DebugControls : IInputActionCollection, IDisposable
                     ""name"": ""ChangeBot"",
                     ""type"": ""Button"",
                     ""id"": ""457bfcf3-a598-4f02-9090-d5c9a19b9fa5"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -66,9 +66,9 @@ public class @DebugControls : IInputActionCollection, IDisposable
             ""actions"": [
                 {
                     ""name"": ""ChangeResolution"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""1a6e9a05-dcbf-490b-9963-0a8e426e2868"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -93,17 +93,17 @@ public class @DebugControls : IInputActionCollection, IDisposable
             ""actions"": [
                 {
                     ""name"": ""SwitchMap"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""a605ec48-9fd5-4f1b-b367-e535a26e4056"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
                     ""name"": ""RecalculatePathfinder"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""cb4dddb7-b564-407f-9b02-9b23c7d7074a"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }

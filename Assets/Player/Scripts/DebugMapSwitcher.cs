@@ -12,7 +12,7 @@ public class DebugMapSwitcher : MonoBehaviour
     private void Awake()
     {
         debugControls = new DebugControls();
-        debugControls.Map.SwitchMap.performed += ctx => switchMap = ctx.ReadValueAsButton();
+        debugControls.Map.SwitchMap.performed += ctx => switchMap = true;
     }
     // Update is called once per frame
     void Update()
@@ -20,8 +20,8 @@ public class DebugMapSwitcher : MonoBehaviour
         if (switchMap) 
         {
             index += 1;
-            index = index % maps.Length;
-            SceneManager.LoadScene(maps[index], LoadSceneMode.Single);
+            SceneManager.LoadScene(maps[index % maps.Length], LoadSceneMode.Single);
         }
+        switchMap = false;
     }
 }
