@@ -16,25 +16,18 @@ public class SnowballThrowingScript : MonoBehaviour
     public Text ChargeText;//UI Text
     public Slider ChargeBar;//The charge bar
     private bool isHolding;//If we are holding the left mouse button
-    private bool releaseHold;//When we stop holding the left mouse button
-    private PlayerControls playerControls;
-    private void Awake()
-    {
-        playerControls = new PlayerControls();
-        playerControls.Player.ChargeSnowball.performed += ctx => isHolding = ctx.ReadValueAsButton();
-        playerControls.Player.ReleaseSnowball.performed += ctx => releaseHold = true;
-    }
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isHolding)//Dedect if we are holding the left mouse button
-        {            
+        if (Input.GetMouseButton(0))//Dedect if we are holding the left mouse button
+        {
+            isHolding = true;
             ChargeTime += Time.deltaTime;//Add one second based on the delay between each frame
             if (ChargeTime > ChargeTimeThreshold)//If we held the button long enough, then start charging
             {
@@ -42,12 +35,13 @@ public class SnowballThrowingScript : MonoBehaviour
                 ChargePercent = Mathf.Clamp(ChargePercent, 1f, 2f);//Clamp the value so we stay between a 0 - 1 range
             }
         }
-        else if (releaseHold)
+        else if (Input.GetMouseButtonUp(0))
         {
+            isHolding = false;
             ThrowSnowball();//Throw snowball
             ChargeTime = 0;//Reset the time since we threw the snowball            
         }
-        if (!isHolding) 
+        if (!isHolding)
         {
             ChargePercent = Mathf.Lerp(ChargePercent, 1.0f, ChargeLerpSpeed * Time.deltaTime);//Make the charge percent go smoothly back to 1.0 since we arent charging the snowball anymore and 1.0 is the base value for throwing
             if (ChargePercent < 1.01f) ChargePercent = 1.0f;//ChargePercent is close enough to 1, so make it 1.0
@@ -55,23 +49,12 @@ public class SnowballThrowingScript : MonoBehaviour
         //Set UI
         ChargeText.text = "Charge : " + (ChargePercent * 100.0f).ToString("F2");
         ChargeBar.value = ChargePercent - 1;
-        releaseHold = false;//Reset release button
     }
     public void ThrowSnowball()//Throw snowball method
     {
         InstanceSnowball = Instantiate(Snowball, ThrowPoint.position, ThrowPoint.rotation);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
         InstanceSnowball.GetComponent<SnowballMovementScript>().InitSnowball(ChargePercent, this);//Init the snowball with taking account the charging
     }
-    #region Enable/Disable
-    private void OnEnable()
-    {
-        playerControls.Enable();
-    }
-    private void OnDisable()
-    {
-        playerControls.Disable();
-    }
-    #endregion 
     //Debug
     public float lastSnowballDamage;
     public Vector3 lastSnowballVelocity;

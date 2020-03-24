@@ -56,13 +56,10 @@ public class PlayerControllerScript : MonoBehaviour
     void Update()
     {
         #region Camera Control
-<<<<<<< HEAD
-        transform.Rotate(new Vector3(0, cameraRotDelta.x * Sensivity * Time.deltaTime));//Rotate the whole player around and around
-        CameraRotationXAxis -= cameraRotDelta.y * Sensivity * Time.deltaTime;//Sets the up-down value of camera rotation
-=======
+
         transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * Sensivity));//Rotate the whole player around and around
         CameraRotationXAxis -= Input.GetAxis("Mouse Y") * Sensivity;//Sets the up-down value of camera rotation
->>>>>>> parent of ab83cf1... Changed to new input system and im fixing this bug tomorow now lemme play minecraft
+
         CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
         Camera.transform.localEulerAngles = new Vector3(CameraRotationXAxis, 0, 0);//Rotates the camera up-down motion from variable
         Camera.fieldOfView = GetCameraFOV(IdleFov, WalkingFov, SprintingFov, walkingFactor, sprintingFactor);//Changes the FOV of the player camera if walking

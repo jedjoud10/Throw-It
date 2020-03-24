@@ -2,26 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-//Switches between the two maps using two keys
+using System.Linq;
+//Loops over maps when pressing a key
 public class DebugMapSwitcher : MonoBehaviour
 {
     public string[] maps;//Maps that we can load by clicking the key "H"
     private int index;//Index of current map
-    private DebugControls debugControls;
-    private bool switchMap;
-    private void Awake()
+    void Start() 
     {
-        debugControls = new DebugControls();
-        debugControls.Map.SwitchMap.performed += ctx => switchMap = true;
+        index = System.Array.IndexOf(maps, SceneManager.GetActiveScene().name);
     }
-    // Update is called once per frame
+    // Update is called once per frame    
     void Update()
     {
-        if (switchMap) 
+        if (Input.GetKeyDown(KeyCode.H)) 
         {
             index += 1;
             SceneManager.LoadScene(maps[index % maps.Length], LoadSceneMode.Single);
         }
-        switchMap = false;
     }
 }

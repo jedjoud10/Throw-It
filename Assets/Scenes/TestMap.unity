@@ -2350,11 +2350,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 58833311903029485, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: densityMultiplier
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 632253683242069280, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2410,81 +2405,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: walkingFactorSpeed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: sprintingFactorSpeed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: IdleFov
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: WalkingFov
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: SprintingFov
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: maxSpeed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: decelerationFactor
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: lastMovementDamping
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: airControl
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 632253683242069281, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: Sensivity
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 632253683242069309, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 632253684259397395, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_RenderingPath
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2211472193914651441, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 113.1001
-      objectReference: {fileID: 0}
-    - target: {fileID: 5158998839459778089, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 309.1499
-      objectReference: {fileID: 0}
-    - target: {fileID: 5158998839459778089, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 38.299805
-      objectReference: {fileID: 0}
     - target: {fileID: 5879957929415658994, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2495,31 +2420,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6231078546033701756, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: targetTemperatureSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6231078546033701756, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: heatDispersion
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 6231078546033701756, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: maxCrystalDistanceFalloff
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 6616346788869769111, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 309.1499
-      objectReference: {fileID: 0}
-    - target: {fileID: 6616346788869769111, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 113.1001
-      objectReference: {fileID: 0}
     - target: {fileID: 7320029530100180668, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2528,71 +2428,6 @@ PrefabInstance:
     - target: {fileID: 7320029530100180668, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: finalBlitToCameraTarget
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: antialiasingMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: temporalAntialiasing.jitterSpread
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: temporalAntialiasing.sharpness
-      value: 1.124
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: temporalAntialiasing.motionBlending
-      value: 0.639
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: temporalAntialiasing.stationaryBlending
-      value: 0.319
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: fastApproximateAntialiasing.fastMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: fastApproximateAntialiasing.keepAlpha
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: subpixelMorphologicalAntialiasing.quality
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: stopNaNPropagation
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_ShowToolkit
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
-        type: 3}
-      propertyPath: m_ShowCustomSorter
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9018726255866149212, guid: 784879f366315244a9b4be7a7f0bbcce,
