@@ -55,6 +55,10 @@ public class GameConfig
     public bool useAutoExposure;
     public bool useMotionBlur;
     public bool useAmbientOcclusion;
+    public bool useDepthOfField;
+    public bool useScreenSpaceReflections;
+    public bool useGrain;
+    public bool useLensDistortion;
     public int useAntiAliasing;
     //Shadows
     public string ShadowsType;
