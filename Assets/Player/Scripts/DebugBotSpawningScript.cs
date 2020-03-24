@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//Spawning of debug bots
+//Spawning of placeholder with "m" and scrapbot with "n"
 public class DebugBotSpawningScript : MonoBehaviour
 {
     public Transform cam;//Camera
@@ -9,6 +9,7 @@ public class DebugBotSpawningScript : MonoBehaviour
     public float distance;
     private Vector3 point;//End point
     private RaycastHit hit;
+<<<<<<< HEAD
     public GameObject[] bots;//All the debug bots that the player can spawn
     private GameObject currentBot;//The current bot that the player can spawn
     private int botIndex = 0;//The index to select a bot from the bots array
@@ -23,6 +24,10 @@ public class DebugBotSpawningScript : MonoBehaviour
         debugControls.BotSpawning.SpawnBot.performed += ctx => spawnBot = true;
         debugControls.BotSpawning.ChangeBot.performed += ctx => changeBot = true;
     }
+=======
+    public GameObject placeholderbot;
+    public GameObject scrapbot;
+>>>>>>> parent of ab83cf1... Changed to new input system and im fixing this bug tomorow now lemme play minecraft
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +45,7 @@ public class DebugBotSpawningScript : MonoBehaviour
         {
             point = cam.position + cam.forward * distance;
         }
+<<<<<<< HEAD
         if (changeBot) 
         {
             botIndex += 1;//Change to select next bot
@@ -51,21 +57,14 @@ public class DebugBotSpawningScript : MonoBehaviour
         }
         spawnBot = false;
         changeBot = false;
+=======
+        if (Input.GetKeyDown(KeyCode.M)) Instantiate(placeholderbot, point + offset, Quaternion.identity);
+        if (Input.GetKeyDown(KeyCode.N)) Instantiate(scrapbot, point + offset, Quaternion.identity);
+>>>>>>> parent of ab83cf1... Changed to new input system and im fixing this bug tomorow now lemme play minecraft
     }
     //Gizmoo
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(point + offset, 0.5f);
     }
-
-    #region Enable/Disable
-    private void OnEnable()
-    {
-        debugControls.Enable();
-    }
-    private void OnDisable()
-    {
-        debugControls.Disable();
-    }
-    #endregion 
 }
