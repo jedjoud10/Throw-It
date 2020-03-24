@@ -30,10 +30,6 @@ public class GameConfigHandlerScript : MonoBehaviour
         outconfig.useAutoExposure = true;
         outconfig.useMotionBlur = true;
         outconfig.useAmbientOcclusion = true;
-        outconfig.useDepthOfField = true;
-        outconfig.useScreenSpaceReflections = true;
-        outconfig.useGrain = true;
-        outconfig.useLensDistortion = true;
         outconfig.useAntiAliasing = 1;
 
         outconfig.PixelLightCount = QualitySettings.pixelLightCount;
@@ -70,10 +66,6 @@ public class GameConfigHandlerScript : MonoBehaviour
             inconfig.useAutoExposure,
             inconfig.useMotionBlur,
             inconfig.useAmbientOcclusion,
-            inconfig.useDepthOfField,
-            inconfig.useScreenSpaceReflections,
-            inconfig.useGrain,
-            inconfig.useLensDistortion,
             inconfig.useAntiAliasing
         );
         QualitySettings.pixelLightCount = inconfig.PixelLightCount;
@@ -120,7 +112,7 @@ public class GameConfigHandlerScript : MonoBehaviour
         }
     }
     //Changes if we use post-processing or not
-    private void SetPostProcessing(bool usepostprocessing, bool colorgrading, bool chromaticaberration, bool bloom, bool vignette, bool autoexposure, bool motionblur, bool ambientocclusion, bool depthoffield, bool screenspacereflections, bool grain, bool lensdistortion,int antialiasing) 
+    private void SetPostProcessing(bool usepostprocessing, bool colorgrading, bool chromaticaberration, bool bloom, bool vignette, bool autoexposure, bool motionblur, bool ambientocclusion, int antialiasing) 
     {
         PostProcessLayer layer = GameObject.FindObjectOfType<PostProcessLayer>();//Get the camera post-processing
         if (antialiasing != 1 || antialiasing != 2 || antialiasing != 3) layer.antialiasingMode = PostProcessLayer.Antialiasing.None;
@@ -139,10 +131,6 @@ public class GameConfigHandlerScript : MonoBehaviour
             postprocess.settings[4].active = autoexposure;
             postprocess.settings[5].active = motionblur;
             postprocess.settings[6].active = ambientocclusion;
-            postprocess.settings[7].active = depthoffield;
-            postprocess.settings[8].active = screenspacereflections;
-            postprocess.settings[9].active = grain;
-            postprocess.settings[10].active = lensdistortion;
         }
 
         layer.enabled = usepostprocessing;//If we are 
