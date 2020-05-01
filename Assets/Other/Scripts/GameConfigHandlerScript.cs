@@ -143,8 +143,8 @@ public class GameConfigHandlerScript : MonoBehaviour
             postprocess.settings[8].active = screenspacereflections;
             postprocess.settings[9].active = grain;
             postprocess.settings[10].active = lensdistortion;
+            volumes[i].enabled = usepostprocessing;//If we are 
         }
 
-        layer.enabled = usepostprocessing;//If we are 
     }
 }
