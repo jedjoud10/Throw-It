@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SlopeTerrain_Mat
-  m_Shader: {fileID: 4800000, guid: 84fcd2a6b20f60547a4d07c941e0874a, type: 3}
+  m_Name: UIBlurMaterial
+  m_Shader: {fileID: 4800000, guid: 1ed882e8481ecf748997d7081a579bf7, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,17 +19,17 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 10, y: 8}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Glossiness: 0
-    - _Metallic: 0
-    - _blend: 2
-    - _factor: 1
-    - _pow: 10
+    - _BumpAmt: 128
+    - _Size: 2
     m_Colors:
-    - _Color: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 1}
-    - _Color2: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

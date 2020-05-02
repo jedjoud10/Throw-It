@@ -23,6 +23,8 @@ public class GameConfigHandlerScript : MonoBehaviour
         GameConfig outconfig = new GameConfig();
         //Post-processing
         outconfig.usePostProcessing = true;
+        outconfig.fastPostProcessing = false;
+        outconfig.useFog = true;
         outconfig.useColorGrading = true;
         outconfig.useChromaticAberration = true;
         outconfig.useBloom = true;
@@ -46,6 +48,7 @@ public class GameConfigHandlerScript : MonoBehaviour
         outconfig.BillboardsFaceCameraPosition = QualitySettings.billboardsFaceCameraPosition;
         outconfig.ResolutionScalingFixedDPI = QualitySettings.resolutionScalingFixedDPIFactor;
         outconfig.TextureStreaming = QualitySettings.streamingMipmapsActive;
+        outconfig.FastRendering = false;
 
         outconfig.ShadowsType = QualitySettings.shadows.ToString();
         outconfig.ShadowsResolution = QualitySettings.shadowResolution.ToString();
@@ -61,8 +64,10 @@ public class GameConfigHandlerScript : MonoBehaviour
     private void LoadConfig(GameConfig inconfig)
     {
         //Set post-processing   
-        SetPostProcessing(
+        SetPostProcessingConfig(
             inconfig.usePostProcessing,
+            inconfig.fastPostProcessing,
+            inconfig.useFog,
             inconfig.useColorGrading,
             inconfig.useChromaticAberration,
             inconfig.useBloom,
@@ -86,6 +91,7 @@ public class GameConfigHandlerScript : MonoBehaviour
         QualitySettings.billboardsFaceCameraPosition = inconfig.BillboardsFaceCameraPosition;
         QualitySettings.resolutionScalingFixedDPIFactor = inconfig.ResolutionScalingFixedDPI;
         QualitySettings.streamingMipmapsActive = inconfig.TextureStreaming;
+        SetCamerasConfig(inconfig.FastRendering);
 
         QualitySettings.shadows = (ShadowQuality)System.Enum.Parse(typeof(ShadowQuality), inconfig.ShadowsType);
         QualitySettings.shadowResolution = (ShadowResolution)System.Enum.Parse(typeof(ShadowResolution), inconfig.ShadowsResolution);
@@ -120,13 +126,19 @@ public class GameConfigHandlerScript : MonoBehaviour
         }
     }
     //Changes if we use post-processing or not
-    private void SetPostProcessing(bool usepostprocessing, bool colorgrading, bool chromaticaberration, bool bloom, bool vignette, bool autoexposure, bool motionblur, bool ambientocclusion, bool depthoffield, bool screenspacereflections, bool grain, bool lensdistortion,int antialiasing) 
+    private void SetPostProcessingConfig(bool usepostprocessing, bool fastpostprocessing, bool fog, bool colorgrading, bool chromaticaberration, bool bloom, bool vignette, bool autoexposure, bool motionblur, bool ambientocclusion, bool depthoffield, bool screenspacereflections, bool grain, bool lensdistortion,int antialiasing) 
     {
-        PostProcessLayer layer = GameObject.FindObjectOfType<PostProcessLayer>();//Get the camera post-processing
-        if (antialiasing != 1 || antialiasing != 2 || antialiasing != 3) layer.antialiasingMode = PostProcessLayer.Antialiasing.None;
-        if (antialiasing == 1) layer.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
-        if (antialiasing == 2) layer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
-        if (antialiasing == 3) layer.antialiasingMode = PostProcessLayer.Antialiasing.TemporalAntialiasing;
+        PostProcessLayer[] layers = GameObject.FindObjectsOfType<PostProcessLayer>();//Get the cameras post-processing layers
+        foreach (var layer in layers)
+        {
+            if (antialiasing != 1 || antialiasing != 2 || antialiasing != 3) layer.antialiasingMode = PostProcessLayer.Antialiasing.None;
+            if (antialiasing == 1) layer.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
+            if (antialiasing == 2) layer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
+            if (antialiasing == 3) layer.antialiasingMode = PostProcessLayer.Antialiasing.TemporalAntialiasing;
+            layer.fog.enabled = fog;
+            layer.finalBlitToCameraTarget = fastpostprocessing;
+            layer.enabled = usepostprocessing;//Whether or not to use postprocessing effects
+        }
         PostProcessVolume[] volumes = GameObject.FindObjectsOfType<PostProcessVolume>();//Get all post-processing volumes so we can change every post-processing profile
         for (int i = 0; i < volumes.Length; i++)
         {
@@ -142,9 +154,18 @@ public class GameConfigHandlerScript : MonoBehaviour
             postprocess.settings[7].active = depthoffield;
             postprocess.settings[8].active = screenspacereflections;
             postprocess.settings[9].active = grain;
-            postprocess.settings[10].active = lensdistortion;
-            volumes[i].enabled = usepostprocessing;//If we are 
+            postprocess.settings[10].active = lensdistortion;            
         }
 
+    }
+    //Sets the cameras settings like whether or not to use fast rendering
+    private void SetCamerasConfig(bool fastrender) 
+    {
+        Camera[] cameras = GameObject.FindObjectsOfType<Camera>();//Find all cameras in current scene
+        foreach (var camera in cameras)
+        {
+            if (fastrender) camera.renderingPath = RenderingPath.Forward;
+            else { camera.renderingPath = RenderingPath.DeferredShading; }
+        }
     }
 }

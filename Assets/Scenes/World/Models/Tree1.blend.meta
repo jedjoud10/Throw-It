@@ -12,7 +12,17 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: BranchMAT.001
+    second: {fileID: 2100000, guid: 02c2373236587354b853c5ad93acfd0f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: LeaveMAT
+    second: {fileID: 2100000, guid: 5a538e8e43b40bf4c920d772a069be82, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LeaveMAT.001
     second: {fileID: 2100000, guid: 5a538e8e43b40bf4c920d772a069be82, type: 2}
   materials:
     materialImportMode: 1

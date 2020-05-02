@@ -46,8 +46,11 @@ public class GameConfig
     public bool BillboardsFaceCameraPosition;
     public float ResolutionScalingFixedDPI;
     public bool TextureStreaming;
+    public bool FastRendering;
     //Post-processing
     public bool usePostProcessing;
+    public bool fastPostProcessing;
+    public bool useFog;
     public bool useColorGrading;
     public bool useChromaticAberration;
     public bool useBloom;

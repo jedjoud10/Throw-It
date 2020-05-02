@@ -6,6 +6,21 @@ ModelImporter:
   - first:
       74: -623603649343465320
     second: Idle
+  - first:
+      74: -7870704129693888302
+    second: Gear2|Gear2Rotate
+  - first:
+      74: 6060606779824008497
+    second: Body|Action.001
+  - first:
+      74: 6021404813830965414
+    second: Gear2|Gear1Action
+  - first:
+      74: 6998377264156225608
+    second: Gear2|Gear2Action (1)
+  - first:
+      74: -7998628118113187294
+    second: Gear1|Gear1Action (1)
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,18 +50,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle
-      takeName: Scene
+      name: Gear2|Gear2Action (1)
+      takeName: Gear2|Gear2Action
       internalID: 0
-      firstFrame: 1
-      lastFrame: 250
+      firstFrame: 0
+      lastFrame: 99
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

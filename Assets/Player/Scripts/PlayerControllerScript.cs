@@ -49,7 +49,6 @@ public class PlayerControllerScript : MonoBehaviour
         #endregion
         characterController = GetComponent<CharacterController>();//Sets the CharachterController from the component
         _decelerationFactor = decelerationFactor;//Setup decelerationFactor
-        InvokeRepeating("updateFPS", 0.0f, 0.1f);//Update FPS counter each 1/10 a second
     }
 
     // Update is called once per frame
@@ -108,14 +107,6 @@ public class PlayerControllerScript : MonoBehaviour
         camFOV = Mathf.Lerp(Mathf.Lerp(idle, walk, walkfactor), sprint, sprintfactor);//Lerp of lerp
         return camFOV;
     }
-    float fps;//Frames per second
-    float deltatime;//Delay in seconds between each frame
-    //Updates the fps counter with smoothed values
-    private void updateFPS() 
-    {
-        fps = Mathf.Lerp(fps, (1f / Time.unscaledDeltaTime), 0.5f);
-        deltatime = Mathf.Lerp(deltatime, Time.unscaledDeltaTime, 0.5f);
-    }
     void OnGUI()
     {
         if (Debug.isDebugBuild)
@@ -133,11 +124,7 @@ public class PlayerControllerScript : MonoBehaviour
             GUI.Label(new Rect(30, space * 8, 500, 100), "Deceleration Factor : " + _decelerationFactor.ToString("F2"));
             GUI.Label(new Rect(10, space * 9, 500, 100), "Input :");
             GUI.Label(new Rect(30, space * 10, 500, 100), "X : " + inputMovement.x.ToString("F2"));
-            GUI.Label(new Rect(30, space * 11, 500, 100), "Y : " + inputMovement.y.ToString("F2"));
-            GUI.Label(new Rect(10, space * 12, 500, 100), "Performance :");
-            GUI.Label(new Rect(30, space * 13, 500, 100), "FPS : " + Mathf.RoundToInt(fps));
-            GUI.Label(new Rect(30, space * 14, 500, 100), "Delay : " + deltatime);
-            
+            GUI.Label(new Rect(30, space * 11, 500, 100), "Y : " + inputMovement.y.ToString("F2"));            
         }
     }//Debugging GUI stuff
 
