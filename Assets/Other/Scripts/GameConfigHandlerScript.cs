@@ -5,14 +5,20 @@ using UnityEngine.Rendering.PostProcessing;
 //A handler script that handles information flow between GameConfigSaverLoader class and the game config itself
 public class GameConfigHandlerScript : MonoBehaviour
 {
-    GameConfigSaverLoader gameConfigSaverLoader;//Config saver/loader
+    private GameConfigSaverLoader gameConfigSaverLoader;//Config saver/loader
+    private GameConfig currentGameConfig;
     // Start is called before the first frame update
     void Start()
     {
         gameConfigSaverLoader = new GameConfigSaverLoader();
         gameConfigSaverLoader.SetupPathes();//Setup config path
         GameConfig config = gameConfigSaverLoader.LoadConfig();
-        if (config != null) LoadConfig(gameConfigSaverLoader.LoadConfig());
+        if (config != null) 
+        {
+            currentGameConfig = gameConfigSaverLoader.LoadConfig();
+            LoadConfig(currentGameConfig); 
+            gameConfigSaverLoader.SaveConfig(currentGameConfig); 
+        }
         else gameConfigSaverLoader.SaveConfig(SaveConfig());
         Debug.Log("Finished reading game config");
         //gameConfigSaverLoader.SaveConfig(SaveConfig());
@@ -37,6 +43,11 @@ public class GameConfigHandlerScript : MonoBehaviour
         outconfig.useGrain = true;
         outconfig.useLensDistortion = true;
         outconfig.useAntiAliasing = 1;
+
+        outconfig.ScreenWidth = 1920;
+        outconfig.ScreenHeight = 1080;
+        outconfig.TargetFrameRate = 60;
+        outconfig.Fullscreen = true;
 
         outconfig.PixelLightCount = QualitySettings.pixelLightCount;
         outconfig.TextureQuality = QualitySettings.masterTextureLimit;
@@ -81,6 +92,10 @@ public class GameConfigHandlerScript : MonoBehaviour
             inconfig.useLensDistortion,
             inconfig.useAntiAliasing
         );
+
+        Screen.SetResolution(inconfig.ScreenWidth, inconfig.ScreenHeight, inconfig.Fullscreen);
+        Application.targetFrameRate = inconfig.TargetFrameRate;
+
         QualitySettings.pixelLightCount = inconfig.PixelLightCount;
         QualitySettings.masterTextureLimit = inconfig.TextureQuality;
         QualitySettings.anisotropicFiltering = (AnisotropicFiltering)System.Enum.Parse(typeof(AnisotropicFiltering), inconfig.AnisotropicTextures);

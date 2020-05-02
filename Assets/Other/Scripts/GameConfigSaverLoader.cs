@@ -36,6 +36,8 @@ public class GameConfig
 {
     #region QualitySettings
     //Rendering    
+    public bool Fullscreen; public int TargetFrameRate;
+    public int ScreenHeight; public int ScreenWidth;
     public int PixelLightCount;
     public int TextureQuality;
     public string AnisotropicTextures;
@@ -46,7 +48,7 @@ public class GameConfig
     public bool BillboardsFaceCameraPosition;
     public float ResolutionScalingFixedDPI;
     public bool TextureStreaming;
-    public bool FastRendering;
+    public bool FastRendering;    
     //Post-processing
     public bool usePostProcessing;
     public bool fastPostProcessing;

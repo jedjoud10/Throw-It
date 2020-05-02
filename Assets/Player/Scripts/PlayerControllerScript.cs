@@ -49,6 +49,7 @@ public class PlayerControllerScript : MonoBehaviour
         #endregion
         characterController = GetComponent<CharacterController>();//Sets the CharachterController from the component
         _decelerationFactor = decelerationFactor;//Setup decelerationFactor
+        InvokeRepeating("updateFPS", 0.0f, 0.1f);//Update FPS counter each 1/10 a second
     }
 
     // Update is called once per frame
@@ -68,7 +69,7 @@ public class PlayerControllerScript : MonoBehaviour
         Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, sprintingFactor);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
         Movement.x = inputMovement.x * Speed;//Left/right movement
         Movement.z = inputMovement.y * Speed;//Forward/backwawrd movement
-     
+
         #region Walking and Sprinting values
         isWalking = Mathf.Abs(inputMovement.magnitude) > 0;//Are we walking ?
         isSprinting = isWalking && Input.GetAxis("Sprint") > 0;
@@ -91,9 +92,9 @@ public class PlayerControllerScript : MonoBehaviour
                 Movement.y = Jump;
             }
         }
-        else 
+        else
         {
-            _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss *  Time.deltaTime);
+            _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss * Time.deltaTime);
         }
         Movement.y -= Gravity * Time.deltaTime;//Applies gravity as acceleration        
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
@@ -102,10 +103,18 @@ public class PlayerControllerScript : MonoBehaviour
         #endregion
     }
     //Three value interpolation for idle, walking and sprinting fov values
-    private float GetCameraFOV(float idle, float walk, float sprint, float walkfactor, float sprintfactor) 
+    private float GetCameraFOV(float idle, float walk, float sprint, float walkfactor, float sprintfactor)
     {
         camFOV = Mathf.Lerp(Mathf.Lerp(idle, walk, walkfactor), sprint, sprintfactor);//Lerp of lerp
         return camFOV;
+    }
+    float fps;//Frames per second
+    float deltatime;//Delay in seconds between each frame
+    //Updates the fps counter with smoothed values
+    private void updateFPS()
+    {
+        fps = Mathf.Lerp(fps, (1f / Time.unscaledDeltaTime), 0.5f);
+        deltatime = Mathf.Lerp(deltatime, Time.unscaledDeltaTime, 0.5f);
     }
     void OnGUI()
     {
@@ -124,7 +133,11 @@ public class PlayerControllerScript : MonoBehaviour
             GUI.Label(new Rect(30, space * 8, 500, 100), "Deceleration Factor : " + _decelerationFactor.ToString("F2"));
             GUI.Label(new Rect(10, space * 9, 500, 100), "Input :");
             GUI.Label(new Rect(30, space * 10, 500, 100), "X : " + inputMovement.x.ToString("F2"));
-            GUI.Label(new Rect(30, space * 11, 500, 100), "Y : " + inputMovement.y.ToString("F2"));            
+            GUI.Label(new Rect(30, space * 11, 500, 100), "Y : " + inputMovement.y.ToString("F2"));
+            GUI.Label(new Rect(10, space * 12, 500, 100), "Performance :");
+            GUI.Label(new Rect(30, space * 13, 500, 100), "FPS : " + Mathf.RoundToInt(fps));
+            GUI.Label(new Rect(30, space * 14, 500, 100), "Delay : " + deltatime);
+
         }
     }//Debugging GUI stuff
 
@@ -138,10 +151,10 @@ public class PlayerControllerScript : MonoBehaviour
         {
             _decelerationFactor = otherObject.gameObject.GetComponent<PhysicsObjectScript>().DecelerationFactor;//Set new deceleration factor
         }
-        else 
-        { 
+        else
+        {
             _decelerationFactor = decelerationFactor;//Reset the decelerationFactor to base
         }
-    } 
+    }
     #endregion
 }
