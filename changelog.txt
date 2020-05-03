@@ -1,4 +1,4 @@
-Version: work pls
+Version: TestVersion0.1
 
 Changelog: 
-I lost this whole day trying to make this thing work aaaa
+This is a test version made from the ThrowItBuildUpdater, hopefully it sends the new update correctly
