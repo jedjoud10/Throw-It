@@ -1,4 +1,4 @@
-Version: TestVersionHahDeWorko
+Version: TestVersion
 
 Changelog: 
-First changelog version !
+Hi
