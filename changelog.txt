@@ -1,4 +1,4 @@
-Version : TestVersion
+Version: TestVersion
 
-Changelog : 
+Changelog: 
 First changelog version !
