@@ -1,4 +1,4 @@
-Version: another change
+Version: NewVersion
 
 Changelog: 
-Hehe de testo
+This is a better testl
