@@ -12,14 +12,19 @@ public class GameConfigHandlerScript : MonoBehaviour
     {
         gameConfigSaverLoader = new GameConfigSaverLoader();
         gameConfigSaverLoader.SetupPathes();//Setup config path
-        GameConfig config = gameConfigSaverLoader.LoadConfig();
-        if (config != null) 
+        currentGameConfig = new GameConfig();//Make default config to make sure that default variables are always present
+        currentGameConfig = gameConfigSaverLoader.LoadConfig();
+        gameConfigSaverLoader.SaveConfig(currentGameConfig);
+        if (currentGameConfig != null)
         {
-            currentGameConfig = gameConfigSaverLoader.LoadConfig();
-            LoadConfig(currentGameConfig); 
-            gameConfigSaverLoader.SaveConfig(currentGameConfig); 
+            LoadConfig(currentGameConfig);
         }
-        else gameConfigSaverLoader.SaveConfig(SaveConfig());
+        else 
+        {
+            currentGameConfig = new GameConfig();
+            gameConfigSaverLoader.SaveConfig(currentGameConfig);
+            LoadConfig(currentGameConfig);
+        }
         Debug.Log("Finished reading game config");
         //gameConfigSaverLoader.SaveConfig(SaveConfig());
     }

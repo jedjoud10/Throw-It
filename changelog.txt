@@ -1,4 +1,4 @@
-Version: TestVersion0.2
+Version: TestVersion0.3
 
 Changelog: 
-This is a test version made from the ThrowItBuildUpdater, hopefully it sends the new update correctly. This is the second test
+-Fixed bug where changing the config file doesn't have a default value for each of it's parameters

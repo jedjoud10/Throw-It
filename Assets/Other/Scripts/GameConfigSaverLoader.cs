@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-//Loads and saves  a string that contains the game's configuration
+//Loads and saves a string that contains the game's configuration
 public class GameConfigSaverLoader
 {
     string config_path;//Path of config file
@@ -36,43 +36,49 @@ public class GameConfig
 {
     #region QualitySettings
     //Rendering    
-    public bool Fullscreen; public int TargetFrameRate;
-    public int ScreenHeight; public int ScreenWidth;
-    public int PixelLightCount;
-    public int TextureQuality;
-    public string AnisotropicTextures;
-    public bool SoftParticles;
-    public bool RealtimeReflectionProbes;
-    public int ReflectionProbesResolution;
-    public int ReflectionProbesRefresh;
-    public bool BillboardsFaceCameraPosition;
-    public float ResolutionScalingFixedDPI;
-    public bool TextureStreaming;
-    public bool FastRendering;    
+    public bool Fullscreen = true; public int TargetFrameRate = 60;
+    public int ScreenHeight = 1920; public int ScreenWidth = 1080;
+    public int PixelLightCount = 5;
+    public int TextureQuality = 2;
+    public string AnisotropicTextures = "ForceEnable";
+    public bool SoftParticles = true;
+    public bool RealtimeReflectionProbes = true;
+    public int ReflectionProbesResolution = 64;
+    public int ReflectionProbesRefresh = 0;
+    public bool BillboardsFaceCameraPosition = true;
+    public float ResolutionScalingFixedDPI = 1f;
+    public bool TextureStreaming = true;
+    public bool FastRendering = false;
+    #endregion
+    #region Post-processing
     //Post-processing
-    public bool usePostProcessing;
-    public bool fastPostProcessing;
-    public bool useFog;
-    public bool useColorGrading;
-    public bool useChromaticAberration;
-    public bool useBloom;
-    public bool useVignette;
-    public bool useAutoExposure;
-    public bool useMotionBlur;
-    public bool useAmbientOcclusion;
-    public bool useDepthOfField;
-    public bool useScreenSpaceReflections;
-    public bool useGrain;
-    public bool useLensDistortion;
-    public int useAntiAliasing;
+    public bool usePostProcessing = true;
+    public bool fastPostProcessing = false;
+    public bool useFog = true;
+    public bool useColorGrading = true;
+    public bool useChromaticAberration = true;
+    public bool useBloom = true;
+    public bool useVignette = true;
+    public bool useAutoExposure = true;
+    public bool useMotionBlur = true;
+    public bool useAmbientOcclusion = true;
+    public bool useDepthOfField = true;
+    public bool useScreenSpaceReflections = true;
+    public bool useGrain = true;
+    public bool useLensDistortion = true;
+    public int useAntiAliasing = 1;
+    #endregion
+    #region Shadows
     //Shadows
-    public string ShadowsType;
-    public string ShadowsResolution;
-    public float ShadowDistance;
+    public string ShadowsType = "All";
+    public string ShadowsResolution = "VeryHigh";
+    public float ShadowDistance = 100;
+    #endregion
+    #region Other
     //Other
-    public string SkinWeights;
-    public int VSync;
-    public float LODBias;
-    public int MaxLODLevel;
+    public string SkinWeights = "Unlimited";
+    public int VSync = 1;
+    public float LODBias = 3;
+    public int MaxLODLevel = 0;
     #endregion
 }
