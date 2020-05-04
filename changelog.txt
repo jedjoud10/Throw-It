@@ -1,5 +1,4 @@
-Version: TestVersion0.3
+Version: TestVersion0.5
 
 Changelog: 
--Made default config parameters for the config file
--Added resolution and fullscreen parameters to the config file
+-This commit was made using an account of a user that isnt allowed to commit
