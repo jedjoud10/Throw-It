@@ -1,4 +1,5 @@
 Version: TestVersion0.3
 
 Changelog: 
--Fixed bug where changing the config file doesn't have a default value for each of it's parameters
+-Made default config parameters for the config file
+-Added resolution and fullscreen parameters to the config file

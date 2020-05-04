@@ -37,7 +37,7 @@ public class GameConfig
     #region QualitySettings
     //Rendering    
     public bool Fullscreen = true; public int TargetFrameRate = 60;
-    public int ScreenHeight = 1920; public int ScreenWidth = 1080;
+    public int ScreenHeight = 1080; public int ScreenWidth = 1920;
     public int PixelLightCount = 5;
     public int TextureQuality = 2;
     public string AnisotropicTextures = "ForceEnable";
