@@ -1,5 +1,6 @@
-Version: TestVersion0.5
+Version: TestVersion0.6
 
-Changelog:
--Made default config parameters for the config file
--Added resolution and fullscreen parameters to the config file
+Changelog: 
+-Cleaned some of the asset files
+-Switched to newer Unity version
+-Added player damage UI animation
