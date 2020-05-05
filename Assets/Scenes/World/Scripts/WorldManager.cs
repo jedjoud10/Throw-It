@@ -6,6 +6,18 @@ using UnityEngine.SceneManagement;
 public class WorldManager : MonoBehaviour
 {
     public bool CalculatePathesAtStart = true;//Should we calculate bot pathfinding at the start of the game ?
+
+    //Reflection probes
+    public int ReflectionProbesResolution
+    {
+        get { return ReflectionProbesResolution; }
+        private set { }
+    }
+    public UnityEngine.Rendering.ReflectionProbeRefreshMode ReflectionProbesRefreshMode 
+    { 
+        get { return ReflectionProbesRefreshMode; } 
+        private set { } 
+    }    
     // Start is called before the first frame update
     void Start()
     {
@@ -50,5 +62,12 @@ public class WorldManager : MonoBehaviour
     public void ChangeScene(string sceneName) 
     {
         SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+    }
+    //Sets the parameters about the reflection probes that are going to be spawned
+    public void SetReflectionProbeSettings(int resolution, bool refreshEveryFrame) 
+    {
+        ReflectionProbesResolution = resolution;
+        if (refreshEveryFrame) ReflectionProbesRefreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.EveryFrame;
+        else ReflectionProbesRefreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.OnAwake;
     }
 }

@@ -387,10 +387,10 @@ public class AStarPathfinder : MonoBehaviour
         gridsizeY = _gridsizeY * Resolution;//Make more nodes int Y
         gridScale = _gridScale / Resolution;//Make scale less
         offset = _offset * Resolution;//Update offset
+        Gizmos.DrawWireCube(new Vector3(offset.x * gridScale, transform.position.y, offset.y * gridScale), new Vector3(gridsizeX * gridScale, 1f, gridsizeY * gridScale));//Draw area of pathfinder
         if (gizmoMode == GizmoMode.Grid && endNode != null)
         {
             Gizmos.DrawWireSphere(endNode.WorldPosition, 1.0f);
-            Gizmos.DrawWireCube(new Vector3(offset.x * gridScale, transform.position.y, offset.y * gridScale), new Vector3(gridsizeX * gridScale, 1f, gridsizeY * gridScale));//Draw area of pathfinder
             if (_nodes == null) return;
             foreach (var node in _nodes)
             {

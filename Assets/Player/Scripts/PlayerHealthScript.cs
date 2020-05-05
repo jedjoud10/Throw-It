@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 //Controls health of player
-public class HealthScript : MonoBehaviour
+public class PlayerHealthScript : MonoBehaviour
 {
     public int MaxHealth;//Maximum health of player
     public int Health;//Current health
     public Text HealthText;//Text showing current health
     public Slider HealthBar;//The health bar
+    public Animation HealthBackAnimation;//The animation "controller"
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +29,7 @@ public class HealthScript : MonoBehaviour
         Health -= damage;//Apply damage to health
         HealthText.text = "Health : " + Health;//Update health text
         HealthBar.value = (float)Health / (float)MaxHealth;//Update health bar
+        HealthBackAnimation.Play();
         if (Health <= 0) 
         {            
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);//Reloads current scene

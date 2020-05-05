@@ -21,7 +21,7 @@ public class TemperatureScript : MonoBehaviour
     public Text temperatureText;//The text for showing temperature
     public Slider temperatureBar;//Temperature bar
 
-    private HealthScript healthScript;//health script of player
+    private PlayerHealthScript healthScript;//health script of player
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +30,7 @@ public class TemperatureScript : MonoBehaviour
         outsideTemperature = targetTemperature;
 
         crystal = GameObject.FindGameObjectWithTag("Objective").transform;//Get crystal from tag
-        healthScript = GetComponent<HealthScript>();//Init health script
+        healthScript = GetComponent<PlayerHealthScript>();//Init health script
         heatEmmiters = new HeatEmmiterScript[0];
         CheckHeatEmmiters();
         DelayedCheckHeatEmmiters(5.0f);

@@ -8,6 +8,7 @@ public class GameConfigHandlerScript : MonoBehaviour
     private GameConfigSaverLoader gameConfigSaverLoader;//Config saver/loader
     private GameConfig currentGameConfig;
     // Start is called before the first frame update
+    //When object is inialized
     void Start()
     {
         gameConfigSaverLoader = new GameConfigSaverLoader();
@@ -60,7 +61,7 @@ public class GameConfigHandlerScript : MonoBehaviour
         outconfig.SoftParticles = QualitySettings.softParticles;
         outconfig.RealtimeReflectionProbes = QualitySettings.realtimeReflectionProbes;
         outconfig.ReflectionProbesResolution = 64;
-        outconfig.ReflectionProbesRefresh = 0;
+        outconfig.ReflectionProbesRefreshEveryFrame = true;
         outconfig.BillboardsFaceCameraPosition = QualitySettings.billboardsFaceCameraPosition;
         outconfig.ResolutionScalingFixedDPI = QualitySettings.resolutionScalingFixedDPIFactor;
         outconfig.TextureStreaming = QualitySettings.streamingMipmapsActive;
@@ -106,8 +107,7 @@ public class GameConfigHandlerScript : MonoBehaviour
         QualitySettings.anisotropicFiltering = (AnisotropicFiltering)System.Enum.Parse(typeof(AnisotropicFiltering), inconfig.AnisotropicTextures);
         QualitySettings.softParticles = inconfig.SoftParticles;
         QualitySettings.realtimeReflectionProbes = inconfig.RealtimeReflectionProbes;
-        SetReflectionProbeResolution(inconfig.ReflectionProbesResolution);
-        SetReflectionRefresh(inconfig.ReflectionProbesRefresh);
+        SetReflectionProbesSettings(inconfig.ReflectionProbesResolution, inconfig.ReflectionProbesRefreshEveryFrame);
         QualitySettings.billboardsFaceCameraPosition = inconfig.BillboardsFaceCameraPosition;
         QualitySettings.resolutionScalingFixedDPIFactor = inconfig.ResolutionScalingFixedDPI;
         QualitySettings.streamingMipmapsActive = inconfig.TextureStreaming;
@@ -122,28 +122,13 @@ public class GameConfigHandlerScript : MonoBehaviour
         QualitySettings.lodBias = inconfig.LODBias;
         QualitySettings.maximumLODLevel = inconfig.MaxLODLevel;
     }
-    //Changes the resolution of every reflection probe in the scene
-    private void SetReflectionProbeResolution(int res)
+    //Changes the settings of every reflection probe that is going to be spawned
+    private void SetReflectionProbesSettings(int res, bool refreshEveryFrame)
     {
         //Just to make sure that res is one of the following numbers. If not then make the default 64
         if (res != 16 && res != 32 && res != 64 && res != 128 && res != 256 && res != 512 && res != 1024 && res != 2048) res = 64;
-        ReflectionProbe[] probes = FindObjectsOfType<ReflectionProbe>();//All probes
-        for (int i = 0; i < probes.Length; i++)
-        {
-            probes[i].resolution = res;
-        }
-    }
-    //Changes the type of refreshion for every reflection prode in the scene
-    private void SetReflectionRefresh(int type)
-    {
-        ReflectionProbe[] probes = FindObjectsOfType<ReflectionProbe>();//All probes
-        for (int i = 0; i < probes.Length; i++)//Set type for every probe
-        {
-            if (type == 0)
-                probes[i].refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.OnAwake;//Higher quality and faster reflections
-            if (type == 1)
-                probes[i].refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.EveryFrame;//Lower quality and static reflection only
-        }
+        WorldManager wm = FindObjectOfType<WorldManager>();
+        wm.SetReflectionProbeSettings(res, refreshEveryFrame);//Apply the settings
     }
     //Changes if we use post-processing or not
     private void SetPostProcessingConfig(bool usepostprocessing, bool fastpostprocessing, bool fog, bool colorgrading, bool chromaticaberration, bool bloom, bool vignette, bool autoexposure, bool motionblur, bool ambientocclusion, bool depthoffield, bool screenspacereflections, bool grain, bool lensdistortion,int antialiasing) 

@@ -12,12 +12,6 @@ public class PathfindObstacle : MonoBehaviour
     {
         Position = transform.position;//Init position
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(Bounds.x, 2.0f, Bounds.y));

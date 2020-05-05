@@ -2411,6 +2411,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 632253684259397395, guid: 784879f366315244a9b4be7a7f0bbcce,
+        type: 3}
+      propertyPath: m_RenderingPath
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5879957929415658994, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2439,7 +2444,7 @@ PrefabInstance:
     - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8926705181555114694, guid: 784879f366315244a9b4be7a7f0bbcce,
         type: 3}

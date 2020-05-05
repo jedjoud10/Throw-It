@@ -44,7 +44,7 @@ public class GameConfig
     public bool SoftParticles = true;
     public bool RealtimeReflectionProbes = true;
     public int ReflectionProbesResolution = 64;
-    public int ReflectionProbesRefresh = 0;
+    public bool ReflectionProbesRefreshEveryFrame = true;
     public bool BillboardsFaceCameraPosition = true;
     public float ResolutionScalingFixedDPI = 1f;
     public bool TextureStreaming = true;
