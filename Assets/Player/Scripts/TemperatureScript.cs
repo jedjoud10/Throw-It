@@ -50,7 +50,7 @@ public class TemperatureScript : MonoBehaviour
             if(timeInHypothermia > hypothermiaReset)//Reset timeInHypothermia
             {
                 timeInHypothermia = 0;
-                healthScript.Damage(damageHypothermia);//Deal damage at this precice interval
+                healthScript.DamagePlayer(damageHypothermia);//Deal damage at this precice interval
             }            
         }
     }

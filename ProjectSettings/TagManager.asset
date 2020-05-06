@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Pathfinder
   - Objective
+  - PlayerSpawnPoint
   layers:
   - Default
   - TransparentFX

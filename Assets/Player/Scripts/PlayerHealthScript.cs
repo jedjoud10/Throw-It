@@ -1,21 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using MLAPI;
+using MLAPI.NetworkedVar;
+using MLAPI.Messaging;
 //Controls health of player
-public class PlayerHealthScript : MonoBehaviour
+public class PlayerHealthScript : NetworkedBehaviour
 {
     public int MaxHealth;//Maximum health of player
-    public int Health;//Current health
-    public Text HealthText;//Text showing current health
-    public Slider HealthBar;//The health bar
-    public Animation HealthBackAnimation;//The animation "controller"
+    public NetworkedVarInt Health;//Current health
+    private PlayerUIManagerScript UIManager;//Handles UI for us
+
     // Start is called before the first frame update
     void Start()
     {
-        //Setup health
-        Health = MaxHealth;
+        UIManager = GetComponent<PlayerUIManagerScript>();
+        if (IsServer)
+        {
+            //Setup health on server
+            Health.Value = MaxHealth;
+        }      
     }
 
     // Update is called once per frame
@@ -23,16 +27,17 @@ public class PlayerHealthScript : MonoBehaviour
     {
         
     }
-    //Damage the player. Remove health out of player
-    public void Damage(int damage) 
+    //Damage the player. Remove health out of player (Only executed on host)
+    public void DamagePlayer(int damage) 
     {
-        Health -= damage;//Apply damage to health
-        HealthText.text = "Health : " + Health;//Update health text
-        HealthBar.value = (float)Health / (float)MaxHealth;//Update health bar
-        HealthBackAnimation.Play();
-        if (Health <= 0) 
-        {            
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);//Reloads current scene
-        }
+        if (!IsServer) return;
+        Health.Value -= damage;//Apply damage to health            
+        InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, Health.Value, MaxHealth, UIManager);
+    }
+    //Executed on the client to update his UI health bar
+    [ClientRPC]
+    private void UpdateClientHealthBar(int currentHealth, int maxHealth, PlayerUIManagerScript _UIManager) 
+    {
+        _UIManager.UpdatePlayerHealth(currentHealth, maxHealth);
     }
 }

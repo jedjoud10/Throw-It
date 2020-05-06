@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 //Controls the behaviour of the snowball movement and collisions
 [RequireComponent(typeof(SnowballProperities))]
-public class SnowballMovementScript : MonoBehaviour
+public class SnowballMovementScript : NetworkedBehaviour
 {
     private SnowballThrowingScript throwingScript;//The throwing script that this snowball got spawned from
     private int Damage;//The base damage the snowball can do
     private float RigidbodyForce;//Force applied to every physics object when we hit it
     private Rigidbody rigidBody;//The rigidbody of the snowball
-    private float DamageVelocityWeight = 1;//How muc the velocity changes the damage
+    private float DamageVelocityWeight = 1;//How much the velocity changes the damage
     private Vector3 LastVelocity;//Last velocity measurement since OnCollisionEnter is called one frame after physics, thius giving us weird yeeting of the physics parts
     // Start is called before the first frame update
     public void InitSnowball(float _Speed, SnowballThrowingScript _throwingScript)//Multiply our base values by those arguments
@@ -19,10 +20,10 @@ public class SnowballMovementScript : MonoBehaviour
         if(_throwingScript != null) throwingScript = _throwingScript;//Init throwingScript
         properities.InitSnowball();//Init snowball properities
         float Speed = properities.Speed;//Use one time float since we wont reuse this float later on
+        Damage = properities.Damage;
 
         //Setup variables from SnowballProperities script
         Vector3 AngularVelocity = properities.AngularVelocity;
-        Damage = properities.Damage;
         RigidbodyForce = properities.RigidbodyForce;
         DamageVelocityWeight = properities.DamageVelocityWeight;
 
@@ -36,7 +37,8 @@ public class SnowballMovementScript : MonoBehaviour
     }
     //When we hit an object (Ex. : Player, Snowman, Ground)
     private void OnCollisionEnter(Collision collision)
-    {        
+    {
+        if (!IsServer) return;
         Damage *= Mathf.RoundToInt(LastVelocity.magnitude * DamageVelocityWeight);//Take account velocity to damage, so if the snowball is fast, it does more damage
         GameObject otherobject = collision.gameObject;//The colision gameobject  
         //Enter collision code handling
@@ -48,7 +50,7 @@ public class SnowballMovementScript : MonoBehaviour
         if(otherobject.GetComponent<PlayerHealthScript>() != null) 
         {
             //Damage player
-            otherobject.GetComponent<PlayerHealthScript>().Damage(Damage);
+            otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(Damage);
         }
         if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint((LastVelocity) * RigidbodyForce, rigidBody.position, Damage);
 
@@ -64,7 +66,7 @@ public class SnowballMovementScript : MonoBehaviour
     //Update method
     private void Update()
     {
-        LastVelocity = rigidBody.velocity;//Set last velocity because of yeeting bug
+        if(IsServer) LastVelocity = rigidBody.velocity;//Set last velocity because of yeeting bug
         /*
          We have the yeeting bug because the OnCollisionEnter is called one frame after the physics calcualtion are, so when the snowball hits a physics part its 
          actually one frame late, and it has time to rebounce in that frame, so the velocity we were getting before was the velocity of the snowball after one 

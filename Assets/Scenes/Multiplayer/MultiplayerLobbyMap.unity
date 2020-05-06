@@ -1215,7 +1215,7 @@ GameObject:
   - component: {fileID: 110745483}
   m_Layer: 0
   m_Name: PlayerSpawn
-  m_TagString: Untagged
+  m_TagString: PlayerSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4144,7 +4144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897476c6b57549b4f8c3b64ff736cedb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerSpawnPoint: {fileID: 110745483}
+  PlayerPrefab: {fileID: 0}
 --- !u!4 &471255370
 Transform:
   m_ObjectHideFlags: 0
@@ -4366,17 +4366,17 @@ PrefabInstance:
     - target: {fileID: 4086196319575697142, guid: bd7b4916b1a3bcd428c6844f582bcf50,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 578.6598
+      value: 575.98
       objectReference: {fileID: 0}
     - target: {fileID: 4086196319575697142, guid: bd7b4916b1a3bcd428c6844f582bcf50,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 24.429214
+      value: 24.52
       objectReference: {fileID: 0}
     - target: {fileID: 4086196319575697142, guid: bd7b4916b1a3bcd428c6844f582bcf50,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 362.49567
+      value: 358.88
       objectReference: {fileID: 0}
     - target: {fileID: 4086196319575697142, guid: bd7b4916b1a3bcd428c6844f582bcf50,
         type: 3}
@@ -4401,7 +4401,7 @@ PrefabInstance:
     - target: {fileID: 4086196319575697142, guid: bd7b4916b1a3bcd428c6844f582bcf50,
         type: 3}
       propertyPath: m_RootOrder
-      value: 74
+      value: 69
       objectReference: {fileID: 0}
     - target: {fileID: 4086196319575697142, guid: bd7b4916b1a3bcd428c6844f582bcf50,
         type: 3}
@@ -5572,11 +5572,11 @@ Transform:
   - {fileID: 1809854465}
   - {fileID: 1792616725}
   - {fileID: 1531825023}
+  - {fileID: 491139250}
   - {fileID: 1409388954}
   - {fileID: 2135844986}
   - {fileID: 676738906}
   - {fileID: 1423232315}
-  - {fileID: 491139250}
   - {fileID: 632954319}
   - {fileID: 61101794}
   - {fileID: 1899834663}

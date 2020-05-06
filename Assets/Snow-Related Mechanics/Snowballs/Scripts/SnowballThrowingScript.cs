@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using MLAPI;
+using MLAPI.Messaging;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 //Snowball throwing for player
-public class SnowballThrowingScript : MonoBehaviour
+public class SnowballThrowingScript : NetworkedBehaviour
 {
+    private PlayerUIManagerScript UIManager;//Handles UI for us
     public GameObject Snowball;//The snowball prefab that we are going to throw
     public Transform ThrowPoint;//The point where the snowball is throwed
     private GameObject InstanceSnowball;//The instance of the Snowball var
@@ -13,18 +15,17 @@ public class SnowballThrowingScript : MonoBehaviour
     public float ChargeTimeThreshold;//How much time before starting the charging of the snowball
     private float ChargeTime;//Variable taking track of the time the user held the mouse button
     public float ChargeLerpSpeed = 1;//The speed of how fast the charge percent should change
-    public Text ChargeText;//UI Text
-    public Slider ChargeBar;//The charge bar
     private bool isHolding;//If we are holding the left mouse button
     // Start is called before the first frame update
     void Start()
     {
-
+        UIManager = GetComponent<PlayerUIManagerScript>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsLocalPlayer) return;
         if (Input.GetMouseButton(0))//Dedect if we are holding the left mouse button
         {
             isHolding = true;
@@ -46,14 +47,23 @@ public class SnowballThrowingScript : MonoBehaviour
             ChargePercent = Mathf.Lerp(ChargePercent, 1.0f, ChargeLerpSpeed * Time.deltaTime);//Make the charge percent go smoothly back to 1.0 since we arent charging the snowball anymore and 1.0 is the base value for throwing
             if (ChargePercent < 1.01f) ChargePercent = 1.0f;//ChargePercent is close enough to 1, so make it 1.0
         }
-        //Set UI
-        ChargeText.text = "Charge : " + (ChargePercent * 100.0f).ToString("F2");
-        ChargeBar.value = ChargePercent - 1;
+        UIManager.UpdatePlayerCharge(ChargePercent);
     }
-    public void ThrowSnowball()//Throw snowball method
+    public void ThrowSnowball()//Throw snowball method (Client side only)
     {
+        /*
         InstanceSnowball = Instantiate(Snowball, ThrowPoint.position, ThrowPoint.rotation);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
         InstanceSnowball.GetComponent<SnowballMovementScript>().InitSnowball(ChargePercent, this);//Init the snowball with taking account the charging
+        */
+        InvokeServerRpc(ThrowSnowballServer, ThrowPoint.position, ThrowPoint.rotation, ChargePercent);
+    }
+    [ServerRPC]
+    private void ThrowSnowballServer(Vector3 pos, Quaternion rot, float chargePercent) //Throw snowball method (On the server)
+    {
+        InstanceSnowball = Instantiate(Snowball, pos, rot);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
+        InstanceSnowball.GetComponent<SnowballMovementScript>().InitSnowball(chargePercent, this);//Init the snowball with taking account the charging
+
+        InstanceSnowball.GetComponent<NetworkedObject>().Spawn();
     }
     //Debug
     public float lastSnowballDamage;

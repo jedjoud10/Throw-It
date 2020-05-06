@@ -164,6 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 632253683242069280}
   - component: {fileID: 632253683242069281}
+  - component: {fileID: 7843227845900033673}
   - component: {fileID: 632253683242069282}
   - component: {fileID: 632253683242069283}
   - component: {fileID: 632253683242069308}
@@ -224,6 +225,24 @@ MonoBehaviour:
   airControllSpeedLoss: 3
   Gravity: 4
   Jump: 2
+--- !u!114 &7843227845900033673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632253683242069309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b398687c90196e4fbe5b01f64647ccb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UICanvas: {fileID: 4554072341038698736}
+  HealthText: {fileID: 5591071598112922934}
+  HealthBar: {fileID: 5456024370327834437}
+  HealthBackAnimation: {fileID: 5514757616393977184}
+  ChargeText: {fileID: 1087404709982179032}
+  ChargeBar: {fileID: 6757347896408227671}
 --- !u!114 &632253683242069282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,8 +261,6 @@ MonoBehaviour:
   ChargeIncrement: 0.5
   ChargeTimeThreshold: 0.25
   ChargeLerpSpeed: 1
-  ChargeText: {fileID: 1087404709982179032}
-  ChargeBar: {fileID: 6757347896408227671}
   lastSnowballDamage: 0
   lastSnowballVelocity: {x: 0, y: 0, z: 0}
   lastSnowballHitObject: 
@@ -297,10 +314,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 100
-  Health: 0
-  HealthText: {fileID: 5591071598112922934}
-  HealthBar: {fileID: 5456024370327834437}
-  HealthBackAnimation: {fileID: 5514757616393977184}
+  Health:
+    InternalValue: 0
 --- !u!114 &7129038014405697034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,8 +385,8 @@ MonoBehaviour:
   InterpolatePosition: 1
   SnapDistance: 10
   InterpolateServer: 1
-  MinMeters: 0.15
-  MinDegrees: 1.5
+  MinMeters: 0.1
+  MinDegrees: 1
   ExtrapolatePosition: 0
   MaxSendsToExtrapolate: 5
   Channel: 
@@ -1947,7 +1962,7 @@ Animation:
   m_Animations:
   - {fileID: 7400000, guid: 3bb2a26945f2e78429db52b2ae26f5d6, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!1 &9174486534573688375
