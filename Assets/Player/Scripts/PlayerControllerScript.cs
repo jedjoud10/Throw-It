@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using MLAPI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Controls the camera and movement of the player from keyboard and mouse
-public class PlayerControllerScript : MonoBehaviour
+public class PlayerControllerScript : NetworkedBehaviour
 {
     [Header("Camera Movements")]
     public float Sensivity;//The sensivity of the camera rotation
@@ -39,10 +40,21 @@ public class PlayerControllerScript : MonoBehaviour
     private float walkingFactor;//Value used to lerp between fov when walking
     private float sprintingFactor;//Value used to lerp between fov when sprinting
     private float camFOV;//Current camera fov
+    private bool singleplayer;//If we are in singleplayer mode
 
     // Start is called before the first frame update
     void Start()
     {
+        singleplayer = !IsServer && !IsClient;
+        Debug.Log("Are we in singleplayer : " + singleplayer);
+        if (IsLocalPlayer)
+        {
+            transform.position = FindObjectOfType<NetworkWorldManagerScript>().PlayerSpawnPoint.position;//Set base position
+        }
+        else
+        {
+            Camera.gameObject.SetActive(false);//Disable camera for non local players
+        }
         #region Cursor Setup
         Cursor.lockState = CursorLockMode.Locked;//Locks the cursor to the middle of the screen
         Cursor.visible = false;//Make the cursor invisible
@@ -55,6 +67,7 @@ public class PlayerControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsLocalPlayer) return;
         #region Camera Control
 
         transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * Sensivity));//Rotate the whole player around and around

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-//Handles communications between multiple scripts and classes
-public class WorldManager : MonoBehaviour
+using MLAPI.SceneManagement;
+using MLAPI;
+using System;
+//Handles communications between multiple scripts and classes (Multiplayer included)
+public class WorldManager : NetworkedBehaviour
 {
     public bool CalculatePathesAtStart = true;//Should we calculate bot pathfinding at the start of the game ?
 
@@ -58,6 +61,10 @@ public class WorldManager : MonoBehaviour
     }
     //Switch to the world map
     public void StartWorldMap() { ChangeScene("TestMap"); }
+
+    //Switch to the MainMenu
+    public void StartMainMenu() { ChangeScene("MainMenuMap"); }
+    
     //Switches to a specific map
     public void ChangeScene(string sceneName) 
     {

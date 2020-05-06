@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a7961aca9915bbf4784b83fe3497ac32
+guid: 4a8aad8562f139c49bfd2c5d3f532e57
 ModelImporter:
   serializedVersion: 20100
   internalIDToNameTable: []
@@ -7,8 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: AntennaDishMat
-    second: {fileID: 2100000, guid: 28cdd88ff58dd7348b58368cae53e9b0, type: 2}
+      name: BranchMAT
+    second: {fileID: 2100000, guid: 02c2373236587354b853c5ad93acfd0f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LeaveMAT
+    second: {fileID: 2100000, guid: 5a538e8e43b40bf4c920d772a069be82, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -69,7 +74,7 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 180
+    normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
