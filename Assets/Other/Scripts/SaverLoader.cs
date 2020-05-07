@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 //Loads and saves contents in files
 public class SaverLoader
 {
     static string datadir = Application.persistentDataPath;
     //Load
-    public static string Load(string file) 
+    public static object Load(string file, Type type) 
     {
         if (!File.Exists(file)) Debug.LogError("File : " + file + " does not exist !");//Uh ohhh...stinkyyyyy...stinkyyyy error...hahahaha
         string data = File.ReadAllText(datadir + "/" + file);

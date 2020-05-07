@@ -49,6 +49,14 @@ public class PlayerControllerScript : NetworkedBehaviour
     private Vector3 desiredClientPosition;//The desired location we want this player to be at
     private Quaternion desiredClientRotation = Quaternion.identity;//The desired rotation we want this player to replicate
 
+
+    /// <summary>
+    /// This counter will increase each time the speed/other values have changed too much
+    /// And if it is bigger than cheatCounterMaximum, then the player can be considired a cheater
+    /// </summary>
+    private int cheatCounter;
+    const int cheatCounterMaximum = 10;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -140,13 +148,20 @@ public class PlayerControllerScript : NetworkedBehaviour
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController by the Movement Vector and the deceleration
-        InvokeServerRpc(UpdatePlayerServer, transform.rotation, transform.position, lastMovement, OwnerClientId);
+        
+        InvokeServerRpc(UpdatePlayerServer, transform.rotation, transform.position, lastMovement, Speed, OwnerClientId);
     }
     [ServerRPC]
     //Update this player on the server
-    private void UpdatePlayerServer(Quaternion rot, Vector3 position, Vector3 velocity, ulong clientID) 
+    private void UpdatePlayerServer(Quaternion rot, Vector3 position, Vector3 velocity, float localClientSpeed, ulong clientID) 
     {
         InvokeClientRpcOnEveryoneExcept(UpdatePlayerClient, clientID, rot, position, velocity);
+        lastMovement = velocity;
+        desiredClientPosition = position;//Set the client side position
+        desiredClientRotation = rot;//Set the client side rotation
+        //If the client and server values are too far appart, then count that
+        if (localClientSpeed > SprintingSpeed) { cheatCounter++; Debug.LogError("Player's " + clientID + " cheat counter is now " + cheatCounter); }
+        if (cheatCounter > cheatCounterMaximum) Debug.LogError("Player " + clientID + " is a hacker !");
     }
     [ClientRPC]
     //Update this player on other clients

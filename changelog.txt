@@ -1,6 +1,6 @@
-Version: TestVersion0.6
+Version: MultiplayerTest1
 
 Changelog: 
--Cleaned some of the asset files
--Switched to newer Unity version
--Added player damage UI animation
+-Added multiplayer support for player movement/health/snowball throwing
+-Added cooler main menu
+-Fixed bug #4
