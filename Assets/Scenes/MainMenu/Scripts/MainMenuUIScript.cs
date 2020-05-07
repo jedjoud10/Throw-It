@@ -27,12 +27,7 @@ public class MainMenuUIScript : MonoBehaviour
     public void JoinServer() 
     {
         transport.ConnectAddress = IPField.text;
-        SocketTasks joinServerTasks = NetworkingManager.Singleton.StartClient();
-        if (!joinServerTasks.Success) 
-        { 
-            NetworkingManager.Singleton.StopClient();
-            Debug.LogError("Error: Invalid IP Adress");
-        }
+        NetworkingManager.Singleton.StartClient();
     }
     //Show multiplayer select screen
     public void ShowMultiplayerUI() { MultiplayerSelectScreen.SetActive(true); }
