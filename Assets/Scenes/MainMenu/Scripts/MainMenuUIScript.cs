@@ -1,4 +1,5 @@
 ﻿using MLAPI;
+using MLAPI.Transports.Tasks;
 using RufflesTransport;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +27,12 @@ public class MainMenuUIScript : MonoBehaviour
     public void JoinServer() 
     {
         transport.ConnectAddress = IPField.text;
-        NetworkingManager.Singleton.StartClient();
+        SocketTasks joinServerTasks = NetworkingManager.Singleton.StartClient();
+        if (!joinServerTasks.Success) 
+        { 
+            NetworkingManager.Singleton.StopClient();
+            Debug.LogError("Error: Invalid IP Adress");
+        }
     }
     //Show multiplayer select screen
     public void ShowMultiplayerUI() { MultiplayerSelectScreen.SetActive(true); }

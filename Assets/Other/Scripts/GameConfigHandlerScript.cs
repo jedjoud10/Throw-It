@@ -1,16 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 //A handler script that handles information flow between GameConfigSaverLoader class and the game config itself
 public class GameConfigHandlerScript : MonoBehaviour
 {
     private GameConfigSaverLoader gameConfigSaverLoader;//Config saver/loader
     private GameConfig currentGameConfig;
+    private GameConfigHandlerScript instance;//Using an instance method to avoid duplicates
+    private WorldManager wm;//The world manager for the current scene
+    public struct CameraConfig 
+    {
+        public bool fastrender;
+        public bool usePostProcessing;
+        public bool fastPostProcessing;
+        public bool useFog;
+        public int  useAntiAliasing;
+    }
+    public struct VolumeConfig 
+    {
+        public bool useColorGrading;
+        public bool useChromaticAberration;
+        public bool useBloom;
+        public bool useVignette;
+        public bool useAutoExposure;
+        public bool useMotionBlur;
+        public bool useAmbientOcclusion;
+        public bool useDepthOfField;
+        public bool useScreenSpaceReflections;
+        public bool useGrain;
+        public bool useLensDistortion;
+    }
     // Start is called before the first frame update
     //When object is inialized
     void Start()
     {
+        SceneManager.sceneLoaded += OnSceneChange;
+        DontDestroyOnLoad(gameObject);
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+
+
+        wm = FindObjectOfType<WorldManager>();
         gameConfigSaverLoader = new GameConfigSaverLoader();
         gameConfigSaverLoader.SetupPathes();//Setup config path
         currentGameConfig = new GameConfig();//Make default config to make sure that default variables are always present
@@ -28,6 +60,12 @@ public class GameConfigHandlerScript : MonoBehaviour
         }
         Debug.Log("Finished reading game config");
         //gameConfigSaverLoader.SaveConfig(SaveConfig());
+    }
+    private void OnSceneChange(Scene scene, LoadSceneMode mode)
+    {
+        wm = FindObjectOfType<WorldManager>();
+        LoadConfig(currentGameConfig);//Load config and apply it to the objects of the current scene
+        Debug.Log("Finished reading game config on scene change");
     }
     //Turn current game config to GameConfig class
     private GameConfig SaveConfig()
@@ -80,8 +118,31 @@ public class GameConfigHandlerScript : MonoBehaviour
     //Turn GameConfig class into current game config
     private void LoadConfig(GameConfig inconfig)
     {
-        //Set post-processing   
-        SetPostProcessingConfig(
+        Screen.SetResolution(inconfig.ScreenWidth, inconfig.ScreenHeight, inconfig.Fullscreen);
+        Application.targetFrameRate = inconfig.TargetFrameRate;
+
+        QualitySettings.pixelLightCount = inconfig.PixelLightCount;
+        QualitySettings.masterTextureLimit = inconfig.TextureQuality;
+        QualitySettings.anisotropicFiltering = (AnisotropicFiltering)System.Enum.Parse(typeof(AnisotropicFiltering), inconfig.AnisotropicTextures);
+        QualitySettings.softParticles = inconfig.SoftParticles;
+        QualitySettings.realtimeReflectionProbes = inconfig.RealtimeReflectionProbes;
+        SetReflectionProbesSettings(inconfig.ReflectionProbesResolution, inconfig.ReflectionProbesRefreshEveryFrame);
+        QualitySettings.billboardsFaceCameraPosition = inconfig.BillboardsFaceCameraPosition;
+        QualitySettings.resolutionScalingFixedDPIFactor = inconfig.ResolutionScalingFixedDPI;
+        QualitySettings.streamingMipmapsActive = inconfig.TextureStreaming;
+
+        QualitySettings.shadows = (ShadowQuality)System.Enum.Parse(typeof(ShadowQuality), inconfig.ShadowsType);
+        QualitySettings.shadowResolution = (ShadowResolution)System.Enum.Parse(typeof(ShadowResolution), inconfig.ShadowsResolution);
+        QualitySettings.shadowDistance = inconfig.ShadowDistance;
+
+        QualitySettings.skinWeights = (SkinWeights)System.Enum.Parse(typeof(SkinWeights), inconfig.SkinWeights);
+        QualitySettings.vSyncCount = inconfig.VSync;
+        QualitySettings.lodBias = inconfig.LODBias;
+        QualitySettings.maximumLODLevel = inconfig.MaxLODLevel;
+
+        SetCamerasConfig(
+            inconfig.FastRendering,
+            //Set post-processing   
             inconfig.usePostProcessing,
             inconfig.fastPostProcessing,
             inconfig.useFog,
@@ -99,28 +160,28 @@ public class GameConfigHandlerScript : MonoBehaviour
             inconfig.useAntiAliasing
         );
 
-        Screen.SetResolution(inconfig.ScreenWidth, inconfig.ScreenHeight, inconfig.Fullscreen);
-        Application.targetFrameRate = inconfig.TargetFrameRate;
+        LoadAlltConfigs();//Load configs for all current scene objects
+    }
+    //Load the configs on all current objects of the scene
+    private void LoadAlltConfigs() 
+    {
+        Camera[] cameras = FindObjectsOfType<Camera>();
+        PostProcessVolume[] volumes = FindObjectsOfType<PostProcessVolume>();
+        ReflectionProbe[] reflectionProbes = FindObjectsOfType<ReflectionProbe>();
 
-        QualitySettings.pixelLightCount = inconfig.PixelLightCount;
-        QualitySettings.masterTextureLimit = inconfig.TextureQuality;
-        QualitySettings.anisotropicFiltering = (AnisotropicFiltering)System.Enum.Parse(typeof(AnisotropicFiltering), inconfig.AnisotropicTextures);
-        QualitySettings.softParticles = inconfig.SoftParticles;
-        QualitySettings.realtimeReflectionProbes = inconfig.RealtimeReflectionProbes;
-        SetReflectionProbesSettings(inconfig.ReflectionProbesResolution, inconfig.ReflectionProbesRefreshEveryFrame);
-        QualitySettings.billboardsFaceCameraPosition = inconfig.BillboardsFaceCameraPosition;
-        QualitySettings.resolutionScalingFixedDPIFactor = inconfig.ResolutionScalingFixedDPI;
-        QualitySettings.streamingMipmapsActive = inconfig.TextureStreaming;
-        SetCamerasConfig(inconfig.FastRendering);
+        foreach (var camera in cameras)
+        {
+            wm.LoadCameraConfig(camera, camera.GetComponent<PostProcessLayer>());//This is indeed very unoptimized
+        }
+        foreach (var volume in volumes)
+        {
+            wm.LoadPostProcessingVolumeConfig(volume);
+        }
+        foreach (var reflectionProbe in reflectionProbes)
+        {
+            wm.LoadReflectionProbeConfig(reflectionProbe);
+        }
 
-        QualitySettings.shadows = (ShadowQuality)System.Enum.Parse(typeof(ShadowQuality), inconfig.ShadowsType);
-        QualitySettings.shadowResolution = (ShadowResolution)System.Enum.Parse(typeof(ShadowResolution), inconfig.ShadowsResolution);
-        QualitySettings.shadowDistance = inconfig.ShadowDistance;
-
-        QualitySettings.skinWeights = (SkinWeights)System.Enum.Parse(typeof(SkinWeights), inconfig.SkinWeights);
-        QualitySettings.vSyncCount = inconfig.VSync;
-        QualitySettings.lodBias = inconfig.LODBias;
-        QualitySettings.maximumLODLevel = inconfig.MaxLODLevel;
     }
     //Changes the settings of every reflection probe that is going to be spawned
     private void SetReflectionProbesSettings(int res, bool refreshEveryFrame)
@@ -128,49 +189,35 @@ public class GameConfigHandlerScript : MonoBehaviour
         //Just to make sure that res is one of the following numbers. If not then make the default 64
         if (res != 16 && res != 32 && res != 64 && res != 128 && res != 256 && res != 512 && res != 1024 && res != 2048) res = 64;
         WorldManager wm = FindObjectOfType<WorldManager>();
-        wm.SetReflectionProbeSettings(res, refreshEveryFrame);//Apply the settings
+        wm.SetReflectionProbeConfig(res, refreshEveryFrame);//Apply the settings
     }
-    //Changes if we use post-processing or not
-    private void SetPostProcessingConfig(bool usepostprocessing, bool fastpostprocessing, bool fog, bool colorgrading, bool chromaticaberration, bool bloom, bool vignette, bool autoexposure, bool motionblur, bool ambientocclusion, bool depthoffield, bool screenspacereflections, bool grain, bool lensdistortion,int antialiasing) 
+    //Sets the cameras settings like whether or not to use fast rendering. Also set postprocessing settings
+    private void SetCamerasConfig(bool fastrender, bool usepostprocessing, bool fastpostprocessing, bool fog, bool colorgrading, bool chromaticaberration, bool bloom, bool vignette, bool autoexposure, bool motionblur, bool ambientocclusion, bool depthoffield, bool screenspacereflections, bool grain, bool lensdistortion, int antialiasing) 
     {
-        PostProcessLayer[] layers = GameObject.FindObjectsOfType<PostProcessLayer>();//Get the cameras post-processing layers
-        foreach (var layer in layers)
-        {
-            if (antialiasing != 1 || antialiasing != 2 || antialiasing != 3) layer.antialiasingMode = PostProcessLayer.Antialiasing.None;
-            if (antialiasing == 1) layer.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
-            if (antialiasing == 2) layer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
-            if (antialiasing == 3) layer.antialiasingMode = PostProcessLayer.Antialiasing.TemporalAntialiasing;
-            layer.fog.enabled = fog;
-            layer.finalBlitToCameraTarget = fastpostprocessing;
-            layer.enabled = usepostprocessing;//Whether or not to use postprocessing effects
-        }
-        PostProcessVolume[] volumes = GameObject.FindObjectsOfType<PostProcessVolume>();//Get all post-processing volumes so we can change every post-processing profile
-        for (int i = 0; i < volumes.Length; i++)
-        {
-            PostProcessProfile postprocess = volumes[i].sharedProfile;
-            //Set post-process effects
-            postprocess.settings[0].active = colorgrading;
-            postprocess.settings[1].active = chromaticaberration;
-            postprocess.settings[2].active = bloom;
-            postprocess.settings[3].active = vignette;
-            postprocess.settings[4].active = autoexposure;
-            postprocess.settings[5].active = motionblur;
-            postprocess.settings[6].active = ambientocclusion;
-            postprocess.settings[7].active = depthoffield;
-            postprocess.settings[8].active = screenspacereflections;
-            postprocess.settings[9].active = grain;
-            postprocess.settings[10].active = lensdistortion;            
-        }
+        //Set config for camera
+        CameraConfig newCameraConfig;
+        newCameraConfig.fastrender = fastrender;
+        newCameraConfig.usePostProcessing = usepostprocessing;
+        newCameraConfig.fastPostProcessing = fastpostprocessing;
+        newCameraConfig.useFog = fog;
+        newCameraConfig.useAntiAliasing = antialiasing;
 
-    }
-    //Sets the cameras settings like whether or not to use fast rendering
-    private void SetCamerasConfig(bool fastrender) 
-    {
-        Camera[] cameras = GameObject.FindObjectsOfType<Camera>();//Find all cameras in current scene
-        foreach (var camera in cameras)
-        {
-            if (fastrender) camera.renderingPath = RenderingPath.Forward;
-            else { camera.renderingPath = RenderingPath.DeferredShading; }
-        }
-    }
-}
+        //Set config for volumes
+        VolumeConfig newVolumeConfig;
+        newVolumeConfig.useColorGrading = colorgrading;
+        newVolumeConfig.useChromaticAberration = chromaticaberration;
+        newVolumeConfig.useBloom = bloom;
+        newVolumeConfig.useVignette = vignette;
+        newVolumeConfig.useAutoExposure = autoexposure;
+        newVolumeConfig.useMotionBlur = motionblur;
+        newVolumeConfig.useAmbientOcclusion = ambientocclusion;
+        newVolumeConfig.useDepthOfField = depthoffield;
+        newVolumeConfig.useScreenSpaceReflections = screenspacereflections;
+        newVolumeConfig.useGrain = grain;
+        newVolumeConfig.useLensDistortion = lensdistortion;
+        //Apply configs
+
+        wm.SetCameraAndVolumesConfig(newCameraConfig, newVolumeConfig);
+    }             
+}                 
+                  

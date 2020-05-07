@@ -81,6 +81,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1186554459980746819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7912742676711761889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6353f9e9caa13a145afb74f34297dccb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StringTag: Camera
 --- !u!1001 &7280494215200309007
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -214,10 +227,18 @@ PrefabInstance:
     - {fileID: 58833311903029485, guid: 784879f366315244a9b4be7a7f0bbcce, type: 3}
     - {fileID: 6231078546033701756, guid: 784879f366315244a9b4be7a7f0bbcce, type: 3}
     - {fileID: 7177156105855909210, guid: 784879f366315244a9b4be7a7f0bbcce, type: 3}
+    - {fileID: 963416071865092114, guid: 784879f366315244a9b4be7a7f0bbcce, type: 3}
+    - {fileID: 6694466751934771018, guid: 784879f366315244a9b4be7a7f0bbcce, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 784879f366315244a9b4be7a7f0bbcce, type: 3}
 --- !u!4 &7912742675627872815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 632253683242069280, guid: 784879f366315244a9b4be7a7f0bbcce,
+    type: 3}
+  m_PrefabInstance: {fileID: 7280494215200309007}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7912742676711761889 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 632253684259395822, guid: 784879f366315244a9b4be7a7f0bbcce,
     type: 3}
   m_PrefabInstance: {fileID: 7280494215200309007}
   m_PrefabAsset: {fileID: 0}

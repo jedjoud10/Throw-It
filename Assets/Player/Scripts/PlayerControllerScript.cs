@@ -1,5 +1,6 @@
 ﻿using MLAPI;
 using MLAPI.Messaging;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,6 +43,12 @@ public class PlayerControllerScript : NetworkedBehaviour
     private float sprintingFactor;//Value used to lerp between fov when sprinting
     private float camFOV;//Current camera fov    
 
+    const float clientSmoothing = 18f;//How much to smooth the location and rotation of the player on the clients
+
+    private bool snapBackPosition;//If the player position on other clients is further away from the actual player position, then snap it back
+    private Vector3 desiredClientPosition;//The desired location we want this player to be at
+    private Quaternion desiredClientRotation = Quaternion.identity;//The desired rotation we want this player to replicate
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,78 +76,85 @@ public class PlayerControllerScript : NetworkedBehaviour
     void Update()
     {
         #region Camera Control
-        if (IsLocalPlayer)
+        if (!IsLocalPlayer) //Only runs this on other client players and not the current one
         {
-            transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * Sensivity));//Rotate the whole player around and around
-            CameraRotationXAxis -= Input.GetAxis("Mouse Y") * Sensivity;//Sets the up-down value of camera rotation
-
-            CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
-            Camera.transform.localEulerAngles = new Vector3(CameraRotationXAxis, 0, 0);//Rotates the camera up-down motion from variable
-            Camera.fieldOfView = GetCameraFOV(IdleFov, WalkingFov, SprintingFov, walkingFactor, sprintingFactor);//Changes the FOV of the player camera if walking
-
-            #endregion
-            #region Player Movement Control
-            inputMovement.x = Input.GetAxis("LeftRight"); inputMovement.y = Input.GetAxis("ForwardBackward");//Set input movement values
-            Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, sprintingFactor);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
-            Movement.x = inputMovement.x * Speed;//Left/right movement
-            Movement.z = inputMovement.y * Speed;//Forward/backwawrd movement
-
-            #region Walking and Sprinting values
-            isWalking = Mathf.Abs(inputMovement.magnitude) > 0;//Are we walking ?
-            isSprinting = isWalking && Input.GetAxis("Sprint") > 0;
-            if (isWalking) walkingFactor += (1 - walkingFactor) * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 1
-            else walkingFactor -= walkingFactor * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 0
-            if (isSprinting) sprintingFactor += (1 - sprintingFactor) * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 1
-            else sprintingFactor -= sprintingFactor * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 0
-
-            if (walkingFactor > 0.99) walkingFactor = 1;//Snap the value since it will never be 1.0
-            if (walkingFactor < 0.01) walkingFactor = 0;//Snap the value since it will never be 0.0
-            if (sprintingFactor > 0.99) sprintingFactor = 1;//Snap the value since it will never be 1.0
-            if (sprintingFactor < 0.01) sprintingFactor = 0;//Snap the value since it will never be 0.0
-            #endregion
-            Movement = transform.TransformDirection(Movement);//Takes account the rotation of the player when moving
-            if (characterController.isGrounded)//Only allows us to jump when we are touching ground
+            characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController only on other clients so we have responsivness and accuracy with the position snapping
+            snapBackPosition = Vector3.Distance(transform.position, desiredClientPosition) > 0.3f;
+            if (snapBackPosition)//Snap back position to correct position
             {
-                Movement.y = 0;//Sets the movement in the Y axis to stop, thus allowing us in-air movement
-                if (Input.GetAxis("Jump") > 0.5)//Jumping by the Jump axis
-                {
-                    Movement.y = Jump;
-                }
+                characterController.enabled = false;
+                transform.position = Vector3.Lerp(transform.position, desiredClientPosition, clientSmoothing * Time.deltaTime);
+                characterController.enabled = true;
             }
-            else
+            if(Movement.magnitude < 0.2f) transform.position = Vector3.Lerp(transform.position, desiredClientPosition, clientSmoothing * Time.deltaTime);//Snap the player position back if the player is not moving
+            transform.rotation = Quaternion.Lerp(transform.rotation, desiredClientRotation, Mathf.Clamp01(clientSmoothing * Time.deltaTime));
+            return;
+        }
+        transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * Sensivity));//Rotate the whole player around and around
+        CameraRotationXAxis -= Input.GetAxis("Mouse Y") * Sensivity;//Sets the up-down value of camera rotation
+
+        CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
+        Camera.transform.localEulerAngles = new Vector3(CameraRotationXAxis, 0, 0);//Rotates the camera up-down motion from variable
+        Camera.fieldOfView = GetCameraFOV(IdleFov, WalkingFov, SprintingFov, walkingFactor, sprintingFactor);//Changes the FOV of the player camera if walking
+
+        #endregion
+        #region Player Movement Control
+        inputMovement.x = Input.GetAxis("LeftRight"); inputMovement.y = Input.GetAxis("ForwardBackward");//Set input movement values
+        Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, sprintingFactor);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
+        Movement.x = inputMovement.x * Speed;//Left/right movement
+        Movement.z = inputMovement.y * Speed;//Forward/backwawrd movement
+
+        #region Walking and Sprinting values
+        isWalking = Mathf.Abs(inputMovement.magnitude) > 0;//Are we walking ?
+        isSprinting = isWalking && Input.GetAxis("Sprint") > 0;
+        if (isWalking) walkingFactor += (1 - walkingFactor) * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 1
+        else walkingFactor -= walkingFactor * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 0
+        if (isSprinting) sprintingFactor += (1 - sprintingFactor) * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 1
+        else sprintingFactor -= sprintingFactor * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 0
+
+        if (walkingFactor > 0.99) walkingFactor = 1;//Snap the value since it will never be 1.0
+        if (walkingFactor < 0.01) walkingFactor = 0;//Snap the value since it will never be 0.0
+        if (sprintingFactor > 0.99) sprintingFactor = 1;//Snap the value since it will never be 1.0
+        if (sprintingFactor < 0.01) sprintingFactor = 0;//Snap the value since it will never be 0.0
+        #endregion
+        Movement = transform.TransformDirection(Movement);//Takes account the rotation of the player when moving
+        if (characterController.isGrounded)//Only allows us to jump when we are touching ground
+        {
+            Movement.y = 0;//Sets the movement in the Y axis to stop, thus allowing us in-air movement
+            if (Input.GetAxis("Jump") > 0.5)//Jumping by the Jump axis
             {
-                _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss * Time.deltaTime);
+                Movement.y = Jump;
             }
         }
-        Movement.y -= Gravity * Time.deltaTime;//Applies gravity as acceleration        
-        lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
-        lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
-        characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController by the Movement Vector and the deceleration
-        if(IsLocalPlayer) InvokeServerRpc(UpdatePlayerServer, Movement, lastMovement, transform.rotation, transform.position, OwnerClientId);
+        else
+        {
+            _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss * Time.deltaTime);
+        }
+        MovePlayerLocally();
         #endregion
+    }
+    //Moves the player on the local client side
+    private void MovePlayerLocally() 
+    {
+        Movement.y -= Gravity * Time.deltaTime;//Applies gravity as acceleration        
+        lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
+        lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
+        characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController by the Movement Vector and the deceleration
+        InvokeServerRpc(UpdatePlayerServer, transform.rotation, transform.position, lastMovement, OwnerClientId);
     }
     [ServerRPC]
     //Update this player on the server
-    public void UpdatePlayerServer(Vector3 velocity, Vector3 lastVelocity, Quaternion rot, Vector3 position, ulong clientID) 
+    private void UpdatePlayerServer(Quaternion rot, Vector3 position, Vector3 velocity, ulong clientID) 
     {
-        InvokeClientRpcOnEveryoneExcept(UpdatePlayerClient, clientID, velocity, lastVelocity, rot, position);
-        if (Vector3.Distance(transform.position, position) > 2)
-        {
-            transform.position = position;
-        }
+        InvokeClientRpcOnEveryoneExcept(UpdatePlayerClient, clientID, rot, position, velocity);
     }
     [ClientRPC]
     //Update this player on other clients
-    public void UpdatePlayerClient(Vector3 velocity, Vector3 lastVelocity, Quaternion rot, Vector3 position) 
+    private void UpdatePlayerClient(Quaternion rot, Vector3 position, Vector3 velocity) 
     {
-        lastMovement = lastVelocity;
-        Movement = velocity;
-        transform.rotation = rot;
-        if(Vector3.Distance(transform.position, position) > 2) 
-        {
-            transform.position = position;
-        }
-        Debug.Log("UpdatePlayerClient distance: " + Vector3.Distance(transform.position, position));
+        lastMovement = velocity;
+        desiredClientPosition = position;//Set the client side position
+        desiredClientRotation = rot;//Set the client side rotation
     }
     //Three value interpolation for idle, walking and sprinting fov values
     private float GetCameraFOV(float idle, float walk, float sprint, float walkfactor, float sprintfactor)
