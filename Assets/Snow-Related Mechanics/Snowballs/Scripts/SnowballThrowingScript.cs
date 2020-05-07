@@ -1,5 +1,7 @@
 ﻿using MLAPI;
 using MLAPI.Messaging;
+using MLAPI.Serialization;
+using MLAPI.Spawning;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,19 +53,24 @@ public class SnowballThrowingScript : NetworkedBehaviour
     }
     public void ThrowSnowball()//Throw snowball method (Client side only)
     {
-        /*
         InstanceSnowball = Instantiate(Snowball, ThrowPoint.position, ThrowPoint.rotation);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
-        InstanceSnowball.GetComponent<SnowballMovementScript>().InitSnowball(ChargePercent, this);//Init the snowball with taking account the charging
-        */
-        InvokeServerRpc(ThrowSnowballServer, ThrowPoint.position, ThrowPoint.rotation, ChargePercent);
+        InstanceSnowball.GetComponent<SnowballMovementScript>().InitSnowball(ChargePercent, this, true);//Init the snowball with taking account the charging
+        SnowballPropertiesScript properties = InstanceSnowball.GetComponent<SnowballPropertiesScript>();
+        InvokeServerRpc(ThrowSnowballServer, ChargePercent, ThrowPoint.position, ThrowPoint.rotation, OwnerClientId, properties.Speed, properties.Size, properties.AngularVelocity, properties.RigidbodyForce, properties.Damage);
     }
     [ServerRPC]
-    private void ThrowSnowballServer(Vector3 pos, Quaternion rot, float chargePercent) //Throw snowball method (On the server)
+    //Spawns the snowball on the server
+    private void ThrowSnowballServer(float chargePercent, Vector3 pos, Quaternion rot, ulong clientID, float _Speed, float _Size, Vector3 _AngularVelocity, float _RigidbodyForce, int _Damage)//Throw snowball method (On the server)
+    {
+        InvokeClientRpcOnEveryoneExcept(ThrowSnowballClient, clientID, chargePercent, pos, rot, _Speed, _Size, _AngularVelocity, _RigidbodyForce, _Damage);
+    }
+    [ClientRPC]
+    //Spawns the snowball on all the clients except the owner
+    private void ThrowSnowballClient(float chargePercent, Vector3 pos, Quaternion rot, float _Speed, float _Size, Vector3 _AngularVelocity, float _RigidbodyForce, int _Damage) 
     {
         InstanceSnowball = Instantiate(Snowball, pos, rot);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
-        InstanceSnowball.GetComponent<SnowballMovementScript>().InitSnowball(chargePercent, this);//Init the snowball with taking account the charging
-
-        InstanceSnowball.GetComponent<NetworkedObject>().Spawn();
+        InstanceSnowball.GetComponent<SnowballPropertiesScript>().SetValues(_Speed, _Size, _AngularVelocity, _RigidbodyForce, _Damage);
+        InstanceSnowball.GetComponent<SnowballMovementScript>().InitSnowball(chargePercent, this, false);//Init the snowball with taking account the charging
     }
     //Debug
     public float lastSnowballDamage;
@@ -71,7 +78,7 @@ public class SnowballThrowingScript : NetworkedBehaviour
     public string lastSnowballHitObject;
     private void OnGUI()
     {
-        if (Debug.isDebugBuild)
+        if (Debug.isDebugBuild && IsLocalPlayer)
         {
             float space = 15;
             float offset = space * 26;

@@ -1,4 +1,5 @@
 ﻿using MLAPI;
+using MLAPI.Messaging;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,53 +68,79 @@ public class PlayerControllerScript : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!IsLocalPlayer ) return;//Only run networking code if we aren't in singleplayer
         #region Camera Control
-
-        transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * Sensivity));//Rotate the whole player around and around
-        CameraRotationXAxis -= Input.GetAxis("Mouse Y") * Sensivity;//Sets the up-down value of camera rotation
-
-        CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
-        Camera.transform.localEulerAngles = new Vector3(CameraRotationXAxis, 0, 0);//Rotates the camera up-down motion from variable
-        Camera.fieldOfView = GetCameraFOV(IdleFov, WalkingFov, SprintingFov, walkingFactor, sprintingFactor);//Changes the FOV of the player camera if walking
-        #endregion
-        #region Player Movement Control
-        inputMovement.x = Input.GetAxis("LeftRight"); inputMovement.y = Input.GetAxis("ForwardBackward");//Set input movement values
-        Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, sprintingFactor);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
-        Movement.x = inputMovement.x * Speed;//Left/right movement
-        Movement.z = inputMovement.y * Speed;//Forward/backwawrd movement
-
-        #region Walking and Sprinting values
-        isWalking = Mathf.Abs(inputMovement.magnitude) > 0;//Are we walking ?
-        isSprinting = isWalking && Input.GetAxis("Sprint") > 0;
-        if (isWalking) walkingFactor += (1 - walkingFactor) * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 1
-        else walkingFactor -= walkingFactor * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 0
-        if (isSprinting) sprintingFactor += (1 - sprintingFactor) * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 1
-        else sprintingFactor -= sprintingFactor * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 0
-
-        if (walkingFactor > 0.99) walkingFactor = 1;//Snap the value since it will never be 1.0
-        if (walkingFactor < 0.01) walkingFactor = 0;//Snap the value since it will never be 0.0
-        if (sprintingFactor > 0.99) sprintingFactor = 1;//Snap the value since it will never be 1.0
-        if (sprintingFactor < 0.01) sprintingFactor = 0;//Snap the value since it will never be 0.0
-        #endregion
-        Movement = transform.TransformDirection(Movement);//Takes account the rotation of the player when moving
-        if (characterController.isGrounded)//Only allows us to jump when we are touching ground
+        if (IsLocalPlayer)
         {
-            Movement.y = 0;//Sets the movement in the Y axis to stop, thus allowing us in-air movement
-            if (Input.GetAxis("Jump") > 0.5)//Jumping by the Jump axis
+            transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * Sensivity));//Rotate the whole player around and around
+            CameraRotationXAxis -= Input.GetAxis("Mouse Y") * Sensivity;//Sets the up-down value of camera rotation
+
+            CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
+            Camera.transform.localEulerAngles = new Vector3(CameraRotationXAxis, 0, 0);//Rotates the camera up-down motion from variable
+            Camera.fieldOfView = GetCameraFOV(IdleFov, WalkingFov, SprintingFov, walkingFactor, sprintingFactor);//Changes the FOV of the player camera if walking
+
+            #endregion
+            #region Player Movement Control
+            inputMovement.x = Input.GetAxis("LeftRight"); inputMovement.y = Input.GetAxis("ForwardBackward");//Set input movement values
+            Speed = Mathf.Lerp(WalkingSpeed, SprintingSpeed, sprintingFactor);//Lerp between walking speed and sprinting speed with the left shift button axis to smooth out the transition
+            Movement.x = inputMovement.x * Speed;//Left/right movement
+            Movement.z = inputMovement.y * Speed;//Forward/backwawrd movement
+
+            #region Walking and Sprinting values
+            isWalking = Mathf.Abs(inputMovement.magnitude) > 0;//Are we walking ?
+            isSprinting = isWalking && Input.GetAxis("Sprint") > 0;
+            if (isWalking) walkingFactor += (1 - walkingFactor) * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 1
+            else walkingFactor -= walkingFactor * walkingFactorSpeed * Time.deltaTime;//Smoothly go to 0
+            if (isSprinting) sprintingFactor += (1 - sprintingFactor) * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 1
+            else sprintingFactor -= sprintingFactor * sprintingFactorSpeed * Time.deltaTime;//Smoothly go to 0
+
+            if (walkingFactor > 0.99) walkingFactor = 1;//Snap the value since it will never be 1.0
+            if (walkingFactor < 0.01) walkingFactor = 0;//Snap the value since it will never be 0.0
+            if (sprintingFactor > 0.99) sprintingFactor = 1;//Snap the value since it will never be 1.0
+            if (sprintingFactor < 0.01) sprintingFactor = 0;//Snap the value since it will never be 0.0
+            #endregion
+            Movement = transform.TransformDirection(Movement);//Takes account the rotation of the player when moving
+            if (characterController.isGrounded)//Only allows us to jump when we are touching ground
             {
-                Movement.y = Jump;
+                Movement.y = 0;//Sets the movement in the Y axis to stop, thus allowing us in-air movement
+                if (Input.GetAxis("Jump") > 0.5)//Jumping by the Jump axis
+                {
+                    Movement.y = Jump;
+                }
             }
-        }
-        else
-        {
-            _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss * Time.deltaTime);
+            else
+            {
+                _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss * Time.deltaTime);
+            }
         }
         Movement.y -= Gravity * Time.deltaTime;//Applies gravity as acceleration        
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
         characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController by the Movement Vector and the deceleration
+        if(IsLocalPlayer) InvokeServerRpc(UpdatePlayerServer, Movement, lastMovement, transform.rotation, transform.position, OwnerClientId);
         #endregion
+    }
+    [ServerRPC]
+    //Update this player on the server
+    public void UpdatePlayerServer(Vector3 velocity, Vector3 lastVelocity, Quaternion rot, Vector3 position, ulong clientID) 
+    {
+        InvokeClientRpcOnEveryoneExcept(UpdatePlayerClient, clientID, velocity, lastVelocity, rot, position);
+        if (Vector3.Distance(transform.position, position) > 2)
+        {
+            transform.position = position;
+        }
+    }
+    [ClientRPC]
+    //Update this player on other clients
+    public void UpdatePlayerClient(Vector3 velocity, Vector3 lastVelocity, Quaternion rot, Vector3 position) 
+    {
+        lastMovement = lastVelocity;
+        Movement = velocity;
+        transform.rotation = rot;
+        if(Vector3.Distance(transform.position, position) > 2) 
+        {
+            transform.position = position;
+        }
+        Debug.Log("UpdatePlayerClient distance: " + Vector3.Distance(transform.position, position));
     }
     //Three value interpolation for idle, walking and sprinting fov values
     private float GetCameraFOV(float idle, float walk, float sprint, float walkfactor, float sprintfactor)
@@ -158,6 +185,7 @@ public class PlayerControllerScript : NetworkedBehaviour
     //When collision happens
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        if (!IsLocalPlayer) return;
         if (hit.normal.y < 0.9f) return;//If object we hit isnt underground us, then discard the collision
         GameObject otherObject = hit.gameObject;
         if (otherObject.GetComponent<PhysicsObjectScript>() != null) //Is physics object

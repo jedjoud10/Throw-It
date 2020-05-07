@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Holds information for the snowball (ex : size, damage, speed) and might randomize them
-public class SnowballProperities : NetworkedBehaviour
+public class SnowballPropertiesScript : NetworkedBehaviour
 {
     [Header("Properities")]
     [HideInInspector]
@@ -14,11 +14,10 @@ public class SnowballProperities : NetworkedBehaviour
     public int Damage;//Damage applied to someone/something when it collides with the snowball
     [HideInInspector]
     public float RigidbodyForce;//Force applied to every physics object when we hit it
-
+    [HideInInspector()]
+    public Vector3 AngularVelocity;//The angular velocity of the snowball at throw 
 
     [Header("Randomness")]
-    [HideInInspector()]
-    public Vector3 AngularVelocity;//The angular velocity of the snowball at throw
     //Speed force applied at start
     public Vector2 SpeedRandomness;//How much randomness to apply to speed
     //Size of snowball
@@ -41,11 +40,24 @@ public class SnowballProperities : NetworkedBehaviour
         //Round to int since damage is int
         Damage = Mathf.RoundToInt(Random.Range(DamageRandomness.x, DamageRandomness.y));
     }
-    //Init snowball
-    public void InitSnowball() //Called from other scripts to init some properities and change them in some way. Also calles other stuff other from properities
+    //Set snowball values
+    public void SetValues(float _Speed, float _Size, Vector3 _AngularVelocity, float _RigidbodyForce, int _Damage) 
     {
-        RandomizeValues();//Randomize snowball values
+        //Set new variables using the struct
+        Speed = _Speed;
+        Size = _Size;
+        AngularVelocity = _AngularVelocity;
+        RigidbodyForce = _RigidbodyForce;
+        Damage = _Damage;
+    }
+    //Init snowball
+    public void InitSnowball(bool randomize)//Called from other scripts to init some properities and change them in some way. Also calles other stuff other from properities
+    {
         SetSnowballWorldProperities();
+        if (randomize)
+        {
+            RandomizeValues();//Randomize snowball values            
+        }
         Destroy(gameObject, LifeTime);//Destroy snowball if lifetime is excedeed
     }
     //Set snowball game values from variables (Ex : size for local size)

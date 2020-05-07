@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 //Controls the behaviour of the snowball movement and collisions
-[RequireComponent(typeof(SnowballProperities))]
+[RequireComponent(typeof(SnowballPropertiesScript))]
 public class SnowballMovementScript : NetworkedBehaviour
 {
     private SnowballThrowingScript throwingScript;//The throwing script that this snowball got spawned from
@@ -13,12 +13,12 @@ public class SnowballMovementScript : NetworkedBehaviour
     private float DamageVelocityWeight = 1;//How much the velocity changes the damage
     private Vector3 LastVelocity;//Last velocity measurement since OnCollisionEnter is called one frame after physics, thius giving us weird yeeting of the physics parts
     // Start is called before the first frame update
-    public void InitSnowball(float _Speed, SnowballThrowingScript _throwingScript)//Multiply our base values by those arguments
+    public void InitSnowball(float _Speed, SnowballThrowingScript _throwingScript, bool randomize)//Multiply our base values by those arguments
     {
         #region Setup properities
-        SnowballProperities properities = GetComponent<SnowballProperities>();//Gets properities from script
+        SnowballPropertiesScript properities = GetComponent<SnowballPropertiesScript>();//Gets properities from script
         if(_throwingScript != null) throwingScript = _throwingScript;//Init throwingScript
-        properities.InitSnowball();//Init snowball properities
+        properities.InitSnowball(randomize);//Init snowball properities
         float Speed = properities.Speed;//Use one time float since we wont reuse this float later on
         Damage = properities.Damage;
 
@@ -38,28 +38,30 @@ public class SnowballMovementScript : NetworkedBehaviour
     //When we hit an object (Ex. : Player, Snowman, Ground)
     private void OnCollisionEnter(Collision collision)
     {
-        if (!IsServer) return;
-        Damage *= Mathf.RoundToInt(LastVelocity.magnitude * DamageVelocityWeight);//Take account velocity to damage, so if the snowball is fast, it does more damage
-        GameObject otherobject = collision.gameObject;//The colision gameobject  
-        //Enter collision code handling
-        if (otherobject.GetComponent<BotHealthScript>() != null) 
+        if (IsServer)
         {
-            //Damage the hit bot
-            otherobject.GetComponent<BotHealthScript>().DamageBot(Damage);
-        }
-        if(otherobject.GetComponent<PlayerHealthScript>() != null) 
-        {
-            //Damage player
-            otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(Damage);
-        }
-        if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint((LastVelocity) * RigidbodyForce, rigidBody.position, Damage);
+            Damage *= Mathf.RoundToInt(LastVelocity.magnitude * DamageVelocityWeight);//Take account velocity to damage, so if the snowball is fast, it does more damage
+            GameObject otherobject = collision.gameObject;//The colision gameobject  
+                                                          //Enter collision code handling
+            if (otherobject.GetComponent<BotHealthScript>() != null)
+            {
+                //Damage the hit bot
+                otherobject.GetComponent<BotHealthScript>().DamageBot(Damage);
+            }
+            if (otherobject.GetComponent<PlayerHealthScript>() != null)
+            {
+                //Damage player
+                otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(Damage);
+            }
+            if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint((LastVelocity) * RigidbodyForce, rigidBody.position, Damage);
 
-        //Debug only
-        if (throwingScript != null)
-        {
-            throwingScript.lastSnowballDamage = Damage;
-            throwingScript.lastSnowballVelocity = LastVelocity;
-            throwingScript.lastSnowballHitObject = collision.gameObject.name;
+            //Debug only
+            if (throwingScript != null)
+            {
+                throwingScript.lastSnowballDamage = Damage;
+                throwingScript.lastSnowballVelocity = LastVelocity;
+                throwingScript.lastSnowballHitObject = collision.gameObject.name;
+            }
         }
         Destroy(gameObject);//Destroys the snowball
     }

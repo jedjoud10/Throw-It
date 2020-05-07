@@ -79,7 +79,8 @@ public class  NetworkWorldManagerScript : NetworkedBehaviour
     [ClientRPC]
     private void ReturnMainMenuClient() 
     {
-        singleton.DisconnectClient(OwnerClientId);
+        //if (IsHost) return;
+        singleton.StopClient();
         ChangeScene("MainMenuMap");
     }
     //Switches to a specific map
