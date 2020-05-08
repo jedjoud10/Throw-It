@@ -4604,7 +4604,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: 3
+  m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -11938,7 +11938,7 @@ MonoBehaviour:
     - TestMap
     AllowRuntimeSceneChanges: 0
     NetworkedPrefabs:
-    - Prefab: {fileID: 7912742675627872818, guid: ce0fe32cc4f7d104bac3cc527cb8c6e9,
+    - Prefab: {fileID: 3713312724342768572, guid: ce0fe32cc4f7d104bac3cc527cb8c6e9,
         type: 3}
       PlayerPrefab: 1
     - Prefab: {fileID: 2592843989083868683, guid: fd2832e91e78b0e4e9a1e5ad933f370b,
@@ -11952,7 +11952,7 @@ MonoBehaviour:
     EventTickrate: 64
     MaxObjectUpdatesPerTick: -1
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
+    ConnectionApproval: 1
     ConnectionData: 
     SecondsHistory: 5
     EnableTimeResync: 0

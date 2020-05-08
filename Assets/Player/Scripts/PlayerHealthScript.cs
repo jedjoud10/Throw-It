@@ -10,15 +10,17 @@ public class PlayerHealthScript : NetworkedBehaviour
     public int MaxHealth;//Maximum health of player
     public NetworkedVarInt Health;//Current health
     private PlayerUIManagerScript UIManager;//Handles UI for us
+    private NetworkWorldManagerScript wm;//Our networked world manager
 
     // Start is called before the first frame update
     void Start()
     {
+        wm = FindObjectOfType<NetworkWorldManagerScript>();
         UIManager = GetComponent<PlayerUIManagerScript>();
         if (IsServer)
         {
             //Setup health on server
-            Health.Value = MaxHealth;
+            SetupPlayerHealth();
         }      
     }
 
@@ -32,6 +34,10 @@ public class PlayerHealthScript : NetworkedBehaviour
     {
         if (!IsServer) return;
         Health.Value -= damage;//Apply damage to health            
+        if(Health.Value < 0) 
+        {
+            wm.RespawnPlayer(GetComponent<PlayerControllerScript>(), this);
+        }
         InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, Health.Value, MaxHealth, UIManager);
     }
     //Executed on the client to update his UI health bar
@@ -39,5 +45,11 @@ public class PlayerHealthScript : NetworkedBehaviour
     private void UpdateClientHealthBar(int currentHealth, int maxHealth, PlayerUIManagerScript _UIManager) 
     {
         _UIManager.UpdatePlayerHealth(currentHealth, maxHealth);
+    }
+    //Reset the player health
+    public void SetupPlayerHealth() 
+    {
+        Health.Value = MaxHealth;
+        InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, MaxHealth, MaxHealth, UIManager);//Update UI
     }
 }

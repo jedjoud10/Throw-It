@@ -134,7 +134,7 @@ MonoBehaviour:
   active: 1
   enabled:
     overrideState: 1
-    value: 1
+    value: 0
   mode:
     overrideState: 1
     value: 0
@@ -164,10 +164,10 @@ MonoBehaviour:
     value: 0
   radius:
     overrideState: 0
-    value: 0.5
+    value: 0.92
   quality:
     overrideState: 1
-    value: 0
+    value: 2
 --- !u!114 &-1044722974756584777
 MonoBehaviour:
   m_ObjectHideFlags: 3

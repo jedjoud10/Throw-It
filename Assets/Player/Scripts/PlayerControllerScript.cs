@@ -1,8 +1,10 @@
 ﻿using MLAPI;
 using MLAPI.Messaging;
+using MLAPI.NetworkedVar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime;
 using UnityEngine;
 //Controls the camera and movement of the player from keyboard and mouse
 public class PlayerControllerScript : NetworkedBehaviour
@@ -10,11 +12,16 @@ public class PlayerControllerScript : NetworkedBehaviour
     [Header("Camera Movements")]
     public float Sensivity;//The sensivity of the camera rotation
     public Camera Camera;//The actual camera gameobject
+    public Transform playerHead;//The player head that is attached to the player and that is going to rotate up or down
     public float MinRotationDown;//The minimun rotation when looking down
     public float MaxRotationUp;//The maximum rotation when looking up
-    private float CameraRotationXAxis;
+    private float CameraRotationXAxis;//Camera rotation in local space (Up-Down)
+    private float LastFrameCameraRotationXAxis;//Last frame value to see if value has changed
+    private float PlayerRotationYAxis;//Player rotation in absolute space (Left-Right)
+    private float LastFramePlayerRotationYAxis;//Last frame value to see if value has changed
     [Header("Player Movement")]
     [Header("----------------")]
+    public GameObject playerModel;
     [Header("FOV Control")]
     public float IdleFov;//The FOV of the camera when the player is not moving (idle)
     public float WalkingFov;//The FOV of the camera when walking
@@ -46,9 +53,9 @@ public class PlayerControllerScript : NetworkedBehaviour
     const float clientSmoothing = 18f;//How much to smooth the location and rotation of the player on the clients
 
     private bool snapBackPosition;//If the player position on other clients is further away from the actual player position, then snap it back
-    private Vector3 desiredClientPosition;//The desired location we want this player to be at
-    private Quaternion desiredClientRotation = Quaternion.identity;//The desired rotation we want this player to replicate
-
+    private NetworkedVarVector3 desiredClientPosition = new NetworkedVarVector3(Vector3.zero);//The desired location we want this player to be at
+    private NetworkedVarFloat desiredClientRotation = new NetworkedVarFloat(0);//The desired rotation we want this player to replicate
+    private NetworkedVarFloat desiredClientCameraRotation = new NetworkedVarFloat(0);//The desired rotation that we want this player camera to replicate
 
     /// <summary>
     /// This counter will increase each time the speed/other values have changed too much
@@ -60,11 +67,11 @@ public class PlayerControllerScript : NetworkedBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform.position;//Set base position
-
         if (IsLocalPlayer)
         {
-
+            //Hide player head and model on the local client because they intersect with the camera
+            playerHead.gameObject.SetActive(false);
+            playerModel.SetActive(false);
         }
         else
         {
@@ -72,6 +79,7 @@ public class PlayerControllerScript : NetworkedBehaviour
         }
         
         #region Cursor Setup
+
         Cursor.lockState = CursorLockMode.Locked;//Locks the cursor to the middle of the screen
         Cursor.visible = false;//Make the cursor invisible
         #endregion
@@ -87,18 +95,24 @@ public class PlayerControllerScript : NetworkedBehaviour
         if (!IsLocalPlayer) //Only runs this on other client players and not the current one
         {
             characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController only on other clients so we have responsivness and accuracy with the position snapping
-            snapBackPosition = Vector3.Distance(transform.position, desiredClientPosition) > 0.3f;
+            snapBackPosition = Vector3.Distance(transform.position, desiredClientPosition.Value) > 0.3f;
             if (snapBackPosition)//Snap back position to correct position
             {
                 characterController.enabled = false;
-                transform.position = Vector3.Lerp(transform.position, desiredClientPosition, clientSmoothing * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, desiredClientPosition.Value, clientSmoothing * Time.deltaTime);
                 characterController.enabled = true;
             }
-            if(Movement.magnitude < 0.2f) transform.position = Vector3.Lerp(transform.position, desiredClientPosition, clientSmoothing * Time.deltaTime);//Snap the player position back if the player is not moving
-            transform.rotation = Quaternion.Lerp(transform.rotation, desiredClientRotation, Mathf.Clamp01(clientSmoothing * Time.deltaTime));
+            if(Movement.magnitude < 0.2f) transform.position = Vector3.Lerp(transform.position, desiredClientPosition.Value, clientSmoothing * Time.deltaTime);//Snap the player position back if the player is not moving
+            
+            //Rotation for player and player camera
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, desiredClientRotation.Value, 0), Mathf.Clamp01(clientSmoothing * Time.deltaTime));
+            playerHead.localRotation = Quaternion.Lerp(playerHead.localRotation, Quaternion.Euler(desiredClientCameraRotation.Value, 0, 0), Mathf.Clamp01(clientSmoothing * Time.deltaTime));
             return;
         }
-        transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * Sensivity));//Rotate the whole player around and around
+        LastFrameCameraRotationXAxis = CameraRotationXAxis;
+        LastFramePlayerRotationYAxis = PlayerRotationYAxis;
+        PlayerRotationYAxis += Input.GetAxis("Mouse X") * Sensivity;
+        transform.rotation = Quaternion.Euler(0, PlayerRotationYAxis, 0);//Rotate the whole player around and around
         CameraRotationXAxis -= Input.GetAxis("Mouse Y") * Sensivity;//Sets the up-down value of camera rotation
 
         CameraRotationXAxis = Mathf.Clamp(CameraRotationXAxis, MinRotationDown, MaxRotationUp);
@@ -141,6 +155,27 @@ public class PlayerControllerScript : NetworkedBehaviour
         MovePlayerLocally();
         #endregion
     }
+    //Resets the velocity and position of the player
+    public void ResetPositionAndVelocity(Vector3 newPosition) 
+    {        
+        //Reset position
+        characterController.enabled = false;
+        transform.position = newPosition;
+        characterController.enabled = true;
+
+        //Reset speed and FOV
+        Speed = WalkingSpeed;
+        camFOV = IdleFov;
+
+        //Reset player and camera rotations
+        CameraRotationXAxis = 0;
+        PlayerRotationYAxis = 0;
+
+        //Reset velocity
+        Movement = Vector3.zero;
+        lastMovement = Vector3.zero;
+    }
+    #region Networking
     //Moves the player on the local client side
     private void MovePlayerLocally() 
     {
@@ -148,29 +183,34 @@ public class PlayerControllerScript : NetworkedBehaviour
         lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
         lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
         characterController.Move(lastMovement * Time.deltaTime);//Moves the characterController by the Movement Vector and the deceleration
-        
-        InvokeServerRpc(UpdatePlayerServer, transform.rotation, transform.position, lastMovement, Speed, OwnerClientId);
+        if(PlayerRotationYAxis != LastFramePlayerRotationYAxis || CameraRotationXAxis != LastFrameCameraRotationXAxis) InvokeServerRpc(UpdatePlayerRotation, PlayerRotationYAxis, CameraRotationXAxis);
+        if(lastMovement.magnitude > 0.05f) InvokeServerRpc(UpdatePlayerServer, transform.position, lastMovement, Speed, OwnerClientId);
+    }
+    [ServerRPC]
+    //Update player rotation and head rotation
+    private void UpdatePlayerRotation(float playerRot, float cameraRotation) 
+    {
+        desiredClientRotation.Value = playerRot;//Set the server side rotation
+        desiredClientCameraRotation.Value = cameraRotation;//Se the server side camera rotation        
     }
     [ServerRPC]
     //Update this player on the server
-    private void UpdatePlayerServer(Quaternion rot, Vector3 position, Vector3 velocity, float localClientSpeed, ulong clientID) 
+    private void UpdatePlayerServer(Vector3 position, Vector3 velocity, float localClientSpeed, ulong clientID) 
     {
-        InvokeClientRpcOnEveryoneExcept(UpdatePlayerClient, clientID, rot, position, velocity);
+        InvokeClientRpcOnEveryoneExcept(UpdatePlayerClient, clientID, position, velocity);
         lastMovement = velocity;
-        desiredClientPosition = position;//Set the client side position
-        desiredClientRotation = rot;//Set the client side rotation
+        desiredClientPosition.Value = position;//Set the server side position
         //If the client and server values are too far appart, then count that
         if (localClientSpeed > SprintingSpeed) { cheatCounter++; Debug.LogError("Player's " + clientID + " cheat counter is now " + cheatCounter); }
         if (cheatCounter > cheatCounterMaximum) Debug.LogError("Player " + clientID + " is a hacker !");
     }
     [ClientRPC]
     //Update this player on other clients
-    private void UpdatePlayerClient(Quaternion rot, Vector3 position, Vector3 velocity) 
+    private void UpdatePlayerClient(Vector3 position, Vector3 velocity) 
     {
-        lastMovement = velocity;
-        desiredClientPosition = position;//Set the client side position
-        desiredClientRotation = rot;//Set the client side rotation
+        lastMovement = velocity;//Set the client side velocity
     }
+    #endregion
     //Three value interpolation for idle, walking and sprinting fov values
     private float GetCameraFOV(float idle, float walk, float sprint, float walkfactor, float sprintfactor)
     {

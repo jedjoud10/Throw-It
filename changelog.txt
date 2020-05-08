@@ -1,6 +1,6 @@
-Version: MultiplayerTest1
+Version: MultiplayerTest2
 
 Changelog: 
--Added multiplayer support for player movement/health/snowball throwing
--Added cooler main menu
--Fixed bug #4
+-Fixed bugs #3 and #6
+-Made the base player model a placeholder snowman model
+-Added respawning for players
