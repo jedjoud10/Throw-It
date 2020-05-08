@@ -21,17 +21,12 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
         singleplayer = !singleton.IsHost && !singleton.IsClient;
         currentScene = SceneManager.GetActiveScene().name;
         //If the player isnt a server and isnt a client
+        PlayerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
         if (singleplayer)
         {
-            if (currentScene == "MultiplayerLobbyMap") //Start hosting if we are in the multiplayer lobby
+            if(currentScene != "MainMenuMap")
             {
-                PlayerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
-                singleton.StartHost(PlayerSpawnPoint.position);//Spawn host in soon to be multiplayer session                
-            }
-            else if(currentScene != "MainMenuMap")
-            {
-                PlayerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
-                singleton.StartHost(PlayerSpawnPoint.position);//Spawn host in singleplayer
+                singleton.StartHost(PlayerSpawnPoint.position);//Spawn host in singleplayer/multiplayer
             }
         }       
     }
