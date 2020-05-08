@@ -1,6 +1,6 @@
-Version: MultiplayerTest2
+Version: MultiplayerTest3
 
 Changelog: 
--Fixed bugs #3 and #6
--Made the base player model a placeholder snowman model
--Added respawning for players
+-Fixed bugs #12 and #1 (Kinda)
+-Added timeout when player tries to connect to un-hosted game
+-Made the game run at 60fps on my potato. This is a huge accomplishment

@@ -67,6 +67,11 @@ public class PlayerControllerScript : NetworkedBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        characterController = GetComponent<CharacterController>();//Sets the CharachterController from the component
+
+        MovePlayer(GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform.position);
+        if (IsServer) desiredClientPosition.Value = transform.position;
+
         if (IsLocalPlayer)
         {
             //Hide player head and model on the local client because they intersect with the camera
@@ -83,7 +88,6 @@ public class PlayerControllerScript : NetworkedBehaviour
         Cursor.lockState = CursorLockMode.Locked;//Locks the cursor to the middle of the screen
         Cursor.visible = false;//Make the cursor invisible
         #endregion
-        characterController = GetComponent<CharacterController>();//Sets the CharachterController from the component
         _decelerationFactor = decelerationFactor;//Setup decelerationFactor
         InvokeRepeating("updateFPS", 0.0f, 0.1f);//Update FPS counter each 1/10 a second
     }
@@ -155,13 +159,18 @@ public class PlayerControllerScript : NetworkedBehaviour
         MovePlayerLocally();
         #endregion
     }
+    //Moves the player to a position
+    private void MovePlayer(Vector3 pos) 
+    {
+        characterController.enabled = false;
+        transform.position = pos;
+        characterController.enabled = true;
+    }
     //Resets the velocity and position of the player
     public void ResetPositionAndVelocity(Vector3 newPosition) 
-    {        
+    {
         //Reset position
-        characterController.enabled = false;
-        transform.position = newPosition;
-        characterController.enabled = true;
+        MovePlayer(newPosition);
 
         //Reset speed and FOV
         Speed = WalkingSpeed;

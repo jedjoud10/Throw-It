@@ -107,16 +107,9 @@ public class WorldManager : MonoBehaviour
     }
     #region Scene Management
     //Switch to the world map
-    public void StartWorldMap() { ChangeScene("TestMap"); }
+    public void StartWorldMap() { SceneManager.LoadScene("TestMap", LoadSceneMode.Single); }
     //Switch to the MainMenu
-    public void StartMainMenu() { ChangeScene("MainMenuMap"); }    
-    //Switches to a specific map
-    public void ChangeScene(string sceneName) 
-    {
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
-    }
-    //Are we in that scene ?
-    public bool IsScene(string sceneName) { return SceneManager.GetActiveScene().name == sceneName; }
+    public void StartMainMenu() { SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single); ; }    
     #endregion
 
     //Detects when an object has spawned using the ObjectSpawnDetectionScript

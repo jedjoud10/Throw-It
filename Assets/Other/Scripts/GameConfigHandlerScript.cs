@@ -38,26 +38,18 @@ public class GameConfigHandlerScript : MonoBehaviour
     {
         SceneManager.sceneLoaded += OnSceneChange;
         DontDestroyOnLoad(gameObject);
-        if (instance == null) instance = this;
-        else Destroy(gameObject);
 
 
         wm = FindObjectOfType<WorldManager>();
         gameConfigSaverLoader = new GameConfigSaverLoader();
         gameConfigSaverLoader.SetupPathes();//Setup config path
         currentGameConfig = new GameConfig();//Make default config to make sure that default variables are always present
-        currentGameConfig = gameConfigSaverLoader.LoadConfig();
-        gameConfigSaverLoader.SaveConfig(currentGameConfig);
-        if (currentGameConfig != null)
-        {
-            LoadConfig(currentGameConfig);
-        }
-        else 
-        {
-            currentGameConfig = new GameConfig();
-            gameConfigSaverLoader.SaveConfig(currentGameConfig);
-            LoadConfig(currentGameConfig);
-        }
+        GameConfig loadedConfig = gameConfigSaverLoader.LoadConfig();//Load config file
+        if (loadedConfig == null) currentGameConfig = new GameConfig();//Make a new game config if there isnt one
+        else currentGameConfig = loadedConfig;//Set the game config to use the config.txt data
+
+        gameConfigSaverLoader.SaveConfig(currentGameConfig);//Save the config file to set default values if they didnt exist yet
+        LoadConfig(currentGameConfig);
         Debug.Log("Finished reading game config");
         //gameConfigSaverLoader.SaveConfig(SaveConfig());
     }
@@ -66,6 +58,8 @@ public class GameConfigHandlerScript : MonoBehaviour
         wm = FindObjectOfType<WorldManager>();
         LoadConfig(currentGameConfig);//Load config and apply it to the objects of the current scene
         Debug.Log("Finished reading game config on scene change");
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
     }
     //Turn current game config to GameConfig class
     private GameConfig SaveConfig()
@@ -160,10 +154,10 @@ public class GameConfigHandlerScript : MonoBehaviour
             inconfig.useAntiAliasing
         );
 
-        LoadAlltConfigs();//Load configs for all current scene objects
+        LoadAllConfigs();//Load configs for all current scene objects
     }
     //Load the configs on all current objects of the scene
-    private void LoadAlltConfigs() 
+    private void LoadAllConfigs() 
     {
         Camera[] cameras = FindObjectsOfType<Camera>();
         PostProcessVolume[] volumes = FindObjectsOfType<PostProcessVolume>();

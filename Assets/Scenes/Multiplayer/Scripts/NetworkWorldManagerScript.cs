@@ -8,41 +8,36 @@ using System;
 //Well, a world manager, but for multiplayer. Yea, pretty epic
 public class NetworkWorldManagerScript : NetworkedBehaviour
 {
-    private Transform PlayerSpawnPoint;//Position where the players will spawn
+    public Transform PlayerSpawnPoint;//Position where the players will spawn
     public GameObject PlayerPrefab;//Prefab of the player
     private NetworkingManager singleton;
-    private WorldManager worldManager;//The world manager
     private bool singleplayer;//Is the game in singleplayer ?
+    private string currentScene;//The current scene that we are in
     // Start is called before the first frame update
     void Start()
     {
-        worldManager = FindObjectOfType<WorldManager>();
         singleton = NetworkingManager.Singleton;
         singleton.OnClientDisconnectCallback += OnClientDisconnect;//When a client disconnects callback
-        singleton.ConnectionApprovalCallback += OnApprovalCheck;//When a client tries to approve and connect
         singleplayer = !singleton.IsHost && !singleton.IsClient;
+        currentScene = SceneManager.GetActiveScene().name;
         //If the player isnt a server and isnt a client
         if (singleplayer)
         {
-            if (worldManager.IsScene("MultiplayerLobbyMap")) //Start hosting if we are in the multiplayer lobby
+            if (currentScene == "MultiplayerLobbyMap") //Start hosting if we are in the multiplayer lobby
             {
                 PlayerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
                 singleton.StartHost(PlayerSpawnPoint.position);//Spawn host in soon to be multiplayer session                
             }
-            else if(!worldManager.IsScene("MainMenuMap"))
+            else if(currentScene != "MainMenuMap")
             {
                 PlayerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
                 singleton.StartHost(PlayerSpawnPoint.position);//Spawn host in singleplayer
             }
-        }
-        else
-        {
-            PlayerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
-        }
+        }       
     }
     #region Scene management
     //Start the host
-    public void HostMultiplayerLobby() { worldManager.ChangeScene("MultiplayerLobbyMap"); }
+    public void HostMultiplayerLobby() { SceneManager.LoadScene("MultiplayerLobbyMap", LoadSceneMode.Single); }
     //Return to the MainMenu (Tell all clients to return to main menu first, then wait to fully disconnect)
     public void ReturnMainMenu() 
     {
@@ -51,7 +46,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
         if(singleton.ConnectedClientsList.Count == 1) //Run this code when the host is the only client in the session
         {
             singleton.StopHost();
-            worldManager.ChangeScene("MainMenuMap");
+            SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);
         }
         InvokeClientRpcOnEveryoneExcept(ReturnMainMenuClient, OwnerClientId);
     }
@@ -60,26 +55,21 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     private void ReturnMainMenuClient() 
     {
         singleton.StopClient();
-        worldManager.ChangeScene("MainMenuMap");
+        SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);
     }
-
     #endregion
+
     #region Callbacks
-    //When a client disconnects
+    //When a client disconnects (ran on server and on local client machine)
     private void OnClientDisconnect(ulong clientID) 
     {
         if (singleton.ConnectedClientsList.Count == 1 && IsHost) //Return to the main menu map only when the host is the only client in the session
         {
             singleton.StopHost();
-            worldManager.ChangeScene("MainMenuMap");
+            SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);
         }
     }
-    //When a client wants to connect
-    private void OnApprovalCheck(byte[] connectionData, ulong clientId, MLAPI.NetworkingManager.ConnectionApprovedDelegate callback) 
-    {
-        //If approve is true, the connection gets added. If it's false. The client gets disconnected
-        callback(true, null, true, PlayerSpawnPoint.position, Quaternion.identity);
-    }
+    //Move player to correct position
     #endregion
     //Respawns a certain player
     public void RespawnPlayer(PlayerControllerScript playerController, PlayerHealthScript playerHealth) 

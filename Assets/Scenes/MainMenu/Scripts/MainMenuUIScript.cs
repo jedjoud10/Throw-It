@@ -3,6 +3,8 @@ using MLAPI.Transports.Tasks;
 using RufflesTransport;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.UI;
 //Handler for main menu UI
@@ -11,6 +13,7 @@ public class MainMenuUIScript : MonoBehaviour
     public GameObject MultiplayerSelectScreen;
     public RufflesTransport.RufflesTransport transport;//The networking transport to use
     public InputField IPField;//Field where we will write the ip we want to connect to
+    public float autoDisconnectTimout;//If a player has started an accidental client and there was no host, then disconnect after this ammount of seconds
     // Start is called before the first frame update
     void Start()
     {
@@ -26,8 +29,32 @@ public class MainMenuUIScript : MonoBehaviour
     //Join a server
     public void JoinServer() 
     {
-        transport.ConnectAddress = IPField.text;
-        NetworkingManager.Singleton.StartClient();
+        string address = IPField.text;
+        System.Net.NetworkInformation.Ping pingSender = new System.Net.NetworkInformation.Ping();
+        PingOptions options = new PingOptions();
+
+        // Use the default Ttl value which is 128,
+        // but change the fragmentation behavior.
+        options.DontFragment = true;
+
+        // Create a buffer of 32 bytes of data to be transmitted.
+        string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        byte[] buffer = System.Text.Encoding.ASCII.GetBytes(data);
+        int timeout = 120;
+        PingReply reply = pingSender.Send(address, timeout, buffer, options);
+        if (reply.Status == IPStatus.Success)
+        {
+            Debug.Log("RoundTrip time: " + reply.RoundtripTime);
+            transport.ConnectAddress = address;
+            NetworkingManager.Singleton.StartClient();
+            Invoke("DisconnectClientTimeout", autoDisconnectTimout);
+        }
+    }
+    //Disconnect the player because they started a client and there was no host
+    private void DisconnectClientTimeout() 
+    {
+        NetworkingManager.Singleton.StopClient();
+        Debug.LogError("There was no host to connect to !");
     }
     //Show multiplayer select screen
     public void ShowMultiplayerUI() { MultiplayerSelectScreen.SetActive(true); }

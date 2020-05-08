@@ -2925,6 +2925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897476c6b57549b4f8c3b64ff736cedb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerSpawnPoint: {fileID: 0}
   PlayerPrefab: {fileID: 0}
 --- !u!4 &519323381
 Transform:
@@ -4723,6 +4724,7 @@ MonoBehaviour:
   MultiplayerSelectScreen: {fileID: 1782950327}
   transport: {fileID: 1216209670}
   IPField: {fileID: 139582577}
+  autoDisconnectTimout: 100
 --- !u!1001 &840733062
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11952,7 +11954,7 @@ MonoBehaviour:
     EventTickrate: 64
     MaxObjectUpdatesPerTick: -1
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 1
+    ConnectionApproval: 0
     ConnectionData: 
     SecondsHistory: 5
     EnableTimeResync: 0
