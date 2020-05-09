@@ -4,5 +4,5 @@ using UnityEngine;
 //Object that changes the decelerationFactor of character controllers that are above it
 public class PhysicsObjectScript : MonoBehaviour
 {
-    public float DecelerationFactor;//The deceleration factor to override the touching's character controller's decelerationFactor
+    public float Friction;//The friction to override the touching's character controller's friction
 }

@@ -42,7 +42,7 @@ public class SnowballMovementScript : NetworkedBehaviour
         {
             Damage *= Mathf.RoundToInt(LastVelocity.magnitude * DamageVelocityWeight);//Take account velocity to damage, so if the snowball is fast, it does more damage
             GameObject otherobject = collision.gameObject;//The colision gameobject  
-                                                          //Enter collision code handling
+            //---Collision code handling---\\
             if (otherobject.GetComponent<BotHealthScript>() != null)
             {
                 //Damage the hit bot
@@ -54,14 +54,6 @@ public class SnowballMovementScript : NetworkedBehaviour
                 otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(Damage);
             }
             if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint((LastVelocity) * RigidbodyForce, rigidBody.position, Damage);
-
-            //Debug only
-            if (throwingScript != null)
-            {
-                throwingScript.lastSnowballDamage = Damage;
-                throwingScript.lastSnowballVelocity = LastVelocity;
-                throwingScript.lastSnowballHitObject = collision.gameObject.name;
-            }
         }
         Destroy(gameObject);//Destroys the snowball
     }

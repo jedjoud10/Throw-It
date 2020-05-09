@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
-//A script that handles comunication between the Charachter Controller and other scripts. It allows us to move this gameObject into a specified position
+//A script that handles communications between the Charachter Controller and other scripts. It allows us to move this gameObject to specified position
+//TODO : Reprogram this boi
 public class BotMovementScript : MonoBehaviour
 {
     [Header("Bot Movement")]
@@ -90,7 +91,7 @@ public class BotMovementScript : MonoBehaviour
         GameObject otherObject = hit.gameObject;
         if (otherObject.GetComponent<PhysicsObjectScript>() != null) //Is physics object
         {
-            _decelerationFactor = otherObject.gameObject.GetComponent<PhysicsObjectScript>().DecelerationFactor;//Set new deceleration factor
+            _decelerationFactor = otherObject.gameObject.GetComponent<PhysicsObjectScript>().Friction;//Set new deceleration factor
         }
         else
         {

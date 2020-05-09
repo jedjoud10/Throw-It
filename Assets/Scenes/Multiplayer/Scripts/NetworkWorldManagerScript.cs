@@ -15,21 +15,23 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     private string currentScene;//The current scene that we are in
     // Start is called before the first frame update
     void Start()
-    {
+    {   
         singleton = NetworkingManager.Singleton;
         singleton.OnClientDisconnectCallback += OnClientDisconnect;//When a client disconnects callback
         singleplayer = !singleton.IsHost && !singleton.IsClient;
+        //If the player isnt a server and isnt a client (The only client (Basically in singleplayer))
         currentScene = SceneManager.GetActiveScene().name;
-        //If the player isnt a server and isnt a client
-        PlayerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
         if (singleplayer)
         {
             if(currentScene != "MainMenuMap")
             {
-                singleton.StartHost(PlayerSpawnPoint.position);//Spawn host in singleplayer/multiplayer
+                //If we arent in the main menu, then start the game as a host
+                //MLAPI cant send any data if we are the only player, so we are going to be in singleplayer then
+                singleton.StartHost(PlayerSpawnPoint.position);
             }
         }       
     }
+
     #region Scene management
     //Start the host
     public void HostMultiplayerLobby() { SceneManager.LoadScene("MultiplayerLobbyMap", LoadSceneMode.Single); }
@@ -66,12 +68,14 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     }
     //Move player to correct position
     #endregion
+
+    #region  Player
     //Respawns a certain player
     public void RespawnPlayer(PlayerControllerScript playerController, PlayerHealthScript playerHealth) 
     {
         if (!IsServer) return;
         //Reset position and velocity
-        playerController.ResetPositionAndVelocity(PlayerSpawnPoint.position);
+        playerController.ResetPlayer();
         //Reset player health
         playerHealth.SetupPlayerHealth();
 
@@ -81,8 +85,9 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     //Respawns a certain player on all clients
     private void RespawnPlayerOnClients(PlayerControllerScript playerController, PlayerHealthScript playerHealth) 
     {
-        playerController.ResetPositionAndVelocity(PlayerSpawnPoint.position);
+        playerController.ResetPlayer();
     }
+    #endregion
     // Update is called once per frame
     void Update()
     {

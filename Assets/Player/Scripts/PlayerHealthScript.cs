@@ -29,7 +29,7 @@ public class PlayerHealthScript : NetworkedBehaviour
     {
         
     }
-    //Damage the player. Remove health out of player (Only executed on host)
+    //Damage the player. Remove health out of player (Only executed on server)
     public void DamagePlayer(int damage) 
     {
         if (!IsServer) return;

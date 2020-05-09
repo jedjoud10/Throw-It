@@ -1,6 +1,4 @@
-Version: MultiplayerTest3
+Version: MultiplayerTest4
 
 Changelog: 
--Fixed bugs #12 and #1 (Kinda)
--Added timeout when player tries to connect to un-hosted game
--Made the game run at 60fps on my potato. This is a huge accomplishment
+-Reprogrammed the whole player controller for smoother movements and cleaner code. The new player controller also saves on bandwidth

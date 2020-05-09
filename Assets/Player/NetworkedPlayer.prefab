@@ -2046,24 +2046,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db065ee2fc360214bae5bc59624f9e8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Sensivity: 1.3
-  Camera: {fileID: 3713312724342768534}
-  playerHead: {fileID: 6734431246949930375}
-  MinRotationDown: -90
-  MaxRotationUp: 90
-  playerModel: {fileID: 4947533645565814336}
-  IdleFov: 60
-  WalkingFov: 70
-  SprintingFov: 90
-  WalkingSpeed: 5.5
+  MouseSensivity: 1
+  WalkingSpeed: 5
   SprintingSpeed: 7
-  walkingFactorSpeed: 6
-  sprintingFactorSpeed: 6
-  decelerationFactor: 5
-  airControlDecelerationFactor: 2
-  airControllSpeedLoss: 3
-  Gravity: 4
-  Jump: 2
+  Jump: 4
+  FactorSmoothingSpeed: 2
+  AirFriction: 1
+  BaseFriction: 7
+  MinMoveDistance: 0
+  MaxDistance: 0.4
+  playerCamera: {fileID: 3713312724342768534}
+  HeadObject: {fileID: 4461263076445192020}
+  PlayerObject: {fileID: 4947533645565814336}
+  IdleFOV: 60
+  WalkingFOV: 75
+  SprintingFOV: 90
 --- !u!114 &3713312724342768470
 MonoBehaviour:
   m_ObjectHideFlags: 0
