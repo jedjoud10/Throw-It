@@ -26,6 +26,7 @@ public class PlayerControllerScript : NetworkedBehaviour
     public float SprintingFOV;
 
     #region Literal Hell - Don't open
+    #region Local player stuff
     private float localPlayerRotationY;//The Y rotation of the player on the local machine
     private float localCameraRotationX;//The X rotation of the camera on the local machine
     private Vector3 InputVelocity;//The velocity that we are using to move the player
@@ -34,16 +35,17 @@ public class PlayerControllerScript : NetworkedBehaviour
     private CharacterController cr;//The character controller that will move the player based on velocity
     const float Gravity = 9.8f;//The gravity force applied to the player that pushes them down (Using real world gravity acceleration)
     private float Friction;//How fast the changes of velocity are (This isnt a networked var because it also changes on the server, so no need to make a ServerRPC)
-
+    private float WalkingFactor, SprintingFactor;//Two factors for the player to smoothly transition between values
+    private float Speed;//The current speed smoothed from WalkingSpeed and SprintingSpeed
+    #endregion
+    #region Networking
     private NetworkedVarFloat ServerPlayerRotationY = new NetworkedVarFloat(0.0f);//The Y rotation (Left-Right) of the player on the server
     private NetworkedVarFloat ServerCameraRotationX = new NetworkedVarFloat(0.0f);//The X rotation (Up-Down) of the camera on the server
     private NetworkedVarVector3 ServerPlayerPosition = new NetworkedVarVector3(Vector3.zero);//The position that we want this clients's player to be at
     private NetworkedVarVector3 ServerPlayerInputVelocity = new NetworkedVarVector3(Vector3.zero);//The input velocity of the player on the server
     private NetworkedVarBool ServerPlayerJumping = new NetworkedVarBool(false);//If the player is jumping on the server
-
-    private float Speed;//The current speed smoothed from WalkingSpeed and SprintingSpeed
+    #endregion
     private Transform playerSpawn;//The position that this player will spawn at
-    private float WalkingFactor, SprintingFactor;//Two factors for the player to smoothly transition between values
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -82,21 +84,13 @@ public class PlayerControllerScript : NetworkedBehaviour
         {
             //Move this player object on the other clients using the velocity that the server gave us
             InputVelocity = ServerPlayerInputVelocity.Value;
-
-            //Overwrite the gravity and the jumping
-
-            //Make the player jump when the server says so  
-            //Smooth the InputVelociy.y because when we hit the ground the player has a "bouncing" effect. Smoothing it makes it more natural
-            if (cr.isGrounded) { InputVelocity.y = Mathf.Lerp(InputVelocity.y, 0, 2 * Time.deltaTime); ; if (ServerPlayerJumping.Value) InputVelocity.y = Jump; }
-            //Apply gravity
-            else { InputVelocity.y -= Gravity * Time.deltaTime; }
-
+            
             //Snap the player back to the right position if they are too far away (Smoothed)
             if (Vector3.Distance(transform.position, ServerPlayerPosition.Value) > MaxDistance) MovePlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
 
             //Snap the player back to the right position if they aren't moving (Smoothed)
             if (InputVelocity.magnitude < 0.2f) MovePlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
-
+            
             //Move the player on other clients
             cr.Move(InputVelocity * Time.deltaTime);
 
@@ -218,9 +212,7 @@ public class PlayerControllerScript : NetworkedBehaviour
     //Moves the player to a certain position
     private void MovePlayerToPosition(Vector3 position)
     {
-        cr.enabled = false;
-        transform.position = position;
-        cr.enabled = true;
+        cr.Move(position - transform.position);//Move using velocity
     }
     #endregion
     //When the player hits something
