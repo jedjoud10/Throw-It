@@ -71,7 +71,7 @@ MonoBehaviour:
     value: {x: 62.496338, y: 92.62775}
   minLuminance:
     overrideState: 1
-    value: -3
+    value: -0.5
   maxLuminance:
     overrideState: 1
     value: 3
@@ -131,11 +131,11 @@ MonoBehaviour:
     overrideState: 0
     value: 0
   radius:
-    overrideState: 0
+    overrideState: 1
     value: 1
   quality:
     overrideState: 1
-    value: 0
+    value: 4
 --- !u!114 &-1072209663165068128
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -341,7 +341,7 @@ MonoBehaviour:
     value: 0
   postExposure:
     overrideState: 1
-    value: -0.1
+    value: 0.4
   contrast:
     overrideState: 0
     value: 0

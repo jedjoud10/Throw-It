@@ -3,7 +3,17 @@ guid: 9152aedaa7ee2f842a18df7805f74828
 ModelImporter:
   serializedVersion: 20100
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LogMat
+    second: {fileID: 2100000, guid: 02c2373236587354b853c5ad93acfd0f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PineMat
+    second: {fileID: 2100000, guid: 5a538e8e43b40bf4c920d772a069be82, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

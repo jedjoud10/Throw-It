@@ -8,7 +8,7 @@ QualitySettings:
   m_QualitySettings:
   - serializedVersion: 2
     name: Very Low
-    pixelLightCount: 0
+    pixelLightCount: 1
     shadows: 0
     shadowResolution: 0
     shadowProjection: 1
@@ -196,7 +196,7 @@ QualitySettings:
     shadowDistance: 500
     shadowNearPlaneOffset: 3
     shadowCascade2Split: 0.33333334
-    shadowCascade4Split: {x: 0.08197279, y: 0.19999996, z: 0.4666666}
+    shadowCascade4Split: {x: 0.045455962, y: 0.19999996, z: 0.4666666}
     shadowmaskMode: 1
     skinWeights: 255
     textureQuality: 0
