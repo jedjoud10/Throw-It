@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4086196319575697142}
   - component: {fileID: 3061436163160287749}
-  - component: {fileID: 4844136764451739905}
   - component: {fileID: 1831990820096103086}
   m_Layer: 0
   m_Name: Tree4
@@ -47,20 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0, z: 0}
-  Bounds: {x: 3, y: 3}
---- !u!65 &4844136764451739905
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6864558973800341688}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 3, y: 11.205688, z: 3}
-  m_Center: {x: 0, y: 11.669052, z: 0}
+  Bounds: {x: 0, y: 0, z: 0}
+  ObstacleBounds: {x: 0, y: 0, z: 0}
 --- !u!65 &1831990820096103086
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -89,7 +76,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 4a8aad8562f139c49bfd2c5d3f532e57,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.69
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 4a8aad8562f139c49bfd2c5d3f532e57,
         type: 3}
@@ -140,6 +127,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tree4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551014577142218206, guid: 4a8aad8562f139c49bfd2c5d3f532e57,
+        type: 3}
+      propertyPath: m_LODs.Array.data[1].screenRelativeHeight
+      value: 0.030887755
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551014577142218206, guid: 4a8aad8562f139c49bfd2c5d3f532e57,
+        type: 3}
+      propertyPath: m_LODs.Array.data[0].screenRelativeHeight
+      value: 0.12837969
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a8aad8562f139c49bfd2c5d3f532e57, type: 3}

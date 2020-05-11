@@ -32,9 +32,8 @@ public class PlayerControllerScript : NetworkedBehaviour
     private Vector3 InputVelocity;//The velocity that we are using to move the player
     private Vector2 InputData;//The input velocity plane (x, z) from the keyboard
     private bool Jumping;//If the local player is jumping
-    private CharacterController cr;//The character controller that will move the player based on velocity
     const float Gravity = 9.8f;//The gravity force applied to the player that pushes them down (Using real world gravity acceleration)
-    private float Friction;//How fast the changes of velocity are (This isnt a networked var because it also changes on the server, so no need to make a ServerRPC)
+    private float Friction;//How fast the changes of velocity are (This isnt a networked var because we trust the cliant's velocity)
     private float WalkingFactor, SprintingFactor;//Two factors for the player to smoothly transition between values
     private float Speed;//The current speed smoothed from WalkingSpeed and SprintingSpeed
     #endregion
@@ -46,11 +45,11 @@ public class PlayerControllerScript : NetworkedBehaviour
     private NetworkedVarBool ServerPlayerJumping = new NetworkedVarBool(false);//If the player is jumping on the server
     #endregion
     private Transform playerSpawn;//The position that this player will spawn at
+    private CharacterController cr;//The character controller that will move the player based on velocity
     #endregion
     // Start is called before the first frame update
     void Start()
     {
-        //Setup the character controller
         cr = GetComponent<CharacterController>();
 
         //Set the default player position
@@ -85,14 +84,17 @@ public class PlayerControllerScript : NetworkedBehaviour
             //Move this player object on the other clients using the velocity that the server gave us
             InputVelocity = ServerPlayerInputVelocity.Value;
             
+            //This can be optimized by making the player go faster to the correct position the more they are away from it
+            
             //Snap the player back to the right position if they are too far away (Smoothed)
-            if (Vector3.Distance(transform.position, ServerPlayerPosition.Value) > MaxDistance) MovePlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
+            if (Vector3.Distance(transform.position, ServerPlayerPosition.Value) > MaxDistance) TeleportPlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
 
             //Snap the player back to the right position if they aren't moving (Smoothed)
-            if (InputVelocity.magnitude < 0.2f) MovePlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
-            
+            if (InputVelocity.magnitude < 0.2f) TeleportPlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
+
             //Move the player on other clients
-            cr.Move(InputVelocity * Time.deltaTime);
+            //Transform the direction to world space on the clients
+            cr.Move(transform.TransformDirection(InputVelocity) * Time.deltaTime);
 
             //Rotate the player on the other clients (Smoothed)
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, ServerPlayerRotationY.Value, 0), ClientSmoothing * Time.deltaTime);
@@ -111,10 +113,6 @@ public class PlayerControllerScript : NetworkedBehaviour
         Jumping = Input.GetAxis("Jump") > 0.0f;//Determine if the player is jumping
         InputData.x = Input.GetAxis("LeftRight");//Set input X axis
         InputData.y = Input.GetAxis("ForwardBackward");//Set input Y axis
-
-        //Inverse transform this when we try to Lerp from the current InputVelocity to the InputData
-        //Because the InputVelocity is world-space and the InputData is local-space
-        InputVelocity = transform.InverseTransformDirection(InputVelocity);
 
         //Move the player forward/backward/left/right using the keyboard
         //Smooth this to have like a acceleration effect and a sliding effect when friction is smaller
@@ -147,17 +145,15 @@ public class PlayerControllerScript : NetworkedBehaviour
         //Make the player jump when we press the "Jump" button    
         //Smooth the InputVelociy.y because when we hit the ground the player has a "bouncing" effect so smoothing it makes it more natural
         if (cr.isGrounded) { InputVelocity.y = Mathf.Lerp(InputVelocity.y, 0, 2 * Time.deltaTime); if (Jumping) InputVelocity.y = Jump; }
-        //Apply the gravity as an acceleration if we are in the air. Set the air friction since we are in air
+        //Apply the gravity as an acceleration since we are in the air. Set the air friction since we are in the air
         else { InputVelocity.y -= Gravity * Time.deltaTime; Friction = AirFriction; }
         #endregion
         #region Updating
         //------Updating the player------\\
 
-        //Transform local velocity into world velocity (Take account the rotation of the player)
-        InputVelocity = transform.TransformDirection(InputVelocity);
-
         //Move the character controller using the InputVelocity on the local client
-        cr.Move(InputVelocity * Time.deltaTime);
+        //Transform local velocity into world velocity (Take account the rotation of the player)
+        cr.Move(transform.TransformDirection(InputVelocity) * Time.deltaTime);
 
         //Rotate the player on the local client
         transform.rotation = Quaternion.Euler(0, localPlayerRotationY, 0);
@@ -205,12 +201,12 @@ public class PlayerControllerScript : NetworkedBehaviour
     public void ResetPlayer()
     {
         //Reset the position
-        MovePlayerToPosition(playerSpawn.position);
+        TeleportPlayerToPosition(playerSpawn.position);
 
         InputVelocity = Vector3.zero;
     }
-    //Moves the player to a certain position
-    private void MovePlayerToPosition(Vector3 position)
+    //Teleports the player to a certain position
+    private void TeleportPlayerToPosition(Vector3 position)
     {
         cr.Move(position - transform.position);//Move using velocity
     }

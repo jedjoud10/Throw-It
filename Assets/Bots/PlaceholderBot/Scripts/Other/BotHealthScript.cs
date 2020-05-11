@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using MLAPI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Handles the health and death of bot
-public class BotHealthScript : MonoBehaviour
+public class BotHealthScript : NetworkedBehaviour
 {
     [HideInInspector]
     public BotScript botScript;//The script for our bot

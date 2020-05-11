@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using MLAPI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Script for a physics part of bot. Gets yeeted when hit
-public class BotPhysicsScript : MonoBehaviour
+public class BotPhysicsScript : NetworkedBehaviour
 {
     public BotScript botscript;//The script for this bot
     public int damageThreshold;//Minimum damage this part can receive before disconnecting from the bot
@@ -32,7 +33,7 @@ public class BotPhysicsScript : MonoBehaviour
                 //Bot : y am i ded now
                 //Bot 2 : bro that's cringe
                 //Armor bot : you guys are dying?
-                //Factory guys : Wtf no dont waste the fucking materials
+                //Factory guys : What no dont waste the fricking materials
                 //Amalgam bot: don't worry I'm eating it
                 if (gameObject.name == "Head") botscript.healthScript.Death();                
             }

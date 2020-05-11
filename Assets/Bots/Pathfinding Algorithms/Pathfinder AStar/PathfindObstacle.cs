@@ -6,14 +6,20 @@ public class PathfindObstacle : MonoBehaviour
 {
     [HideInInspector]
     public Vector3 Position;//The position of this gameObject transform
-    public Vector2 Bounds = new Vector2(0, 0);//Radius to avoid this obstalce
+    [HideInInspector]
+    public Vector3 Bounds = new Vector3(0, 0, 0);//The actual bounds of the obstalce (scaled by the transform.scale)
+    public Vector3 ObstacleBounds = new Vector3(0, 0, 0);//The bounds of this obstalce (unscaled)
     // Start is called before the first frame update
     void Start()
     {
+        //Scale by transform.scale
+        Bounds = Vector3.Scale(ObstacleBounds, transform.localScale);
         Position = transform.position;//Init position
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(Bounds.x, 2.0f, Bounds.y));
+        //Scale by transform.scale
+        Bounds = Vector3.Scale(ObstacleBounds, transform.localScale);
+        Gizmos.DrawWireCube(transform.position, Bounds);
     }
 }

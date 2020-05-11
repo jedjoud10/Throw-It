@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using MLAPI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Throws pellet for the scrap bot
-public class PelletThrowingScript : MonoBehaviour
+
+//TODO : Networking support
+public class PelletThrowingScript : NetworkedBehaviour
 {
     public float throwDelay;//Delay between each throw
     public bool isThrowing;//Are we throwing ?

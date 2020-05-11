@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using MLAPI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Tilts the bot in the slope that the terrain or object it is under so it is at always flat with the slope
-public class BotTiltingScript : MonoBehaviour
+
+//TODO : Networking support
+public class BotTiltingScript : NetworkedBehaviour
 {
     private BotScript botscript;//Script for this specific bot
     private float tiltingPositionY;//How much to tilt the bot by the Quaternion.lookAt() function
@@ -23,7 +26,7 @@ public class BotTiltingScript : MonoBehaviour
         if(Physics.Raycast(getPointTransformed() + transform.position, Vector3.down * 100, out hit)) 
         {
             tiltingPositionY = Mathf.Lerp(tiltingPositionY, hit.point.y - transform.position.y, Speed * Time.deltaTime);//Get end point height and give it to the movement script to handle tilting
-            botscript.movementScript.TiltPositionY = tiltingPositionY + Offset;
+            //botscript.movementScript.TiltPositionY = tiltingPositionY + Offset;
         }
     }
     //Gizmos

@@ -1,102 +1,116 @@
-﻿using System.Collections;
+﻿using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkedVar;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 //A script that handles communications between the Charachter Controller and other scripts. It allows us to move this gameObject to specified position
-//TODO : Reprogram this boi
-public class BotMovementScript : MonoBehaviour
+//TODO : Reprogram this boi. Networking support
+//I might've made this work, not sure though
+public class BotMovementScript : NetworkedBehaviour
 {
-    [Header("Bot Movement")]
-    public bool move = true;//Are we allowed to move ?
-    public float Speed = 1;//How fast does the bot move
-    public float RotationSpeed = 1;//How fast does the bot turn directions
-    const float Gravity = 4.0f;//How much gravity is applied to this bot
-    public float decelerationFactor;//Variable as base variable so we can always reset the decelerationFactor
-    public float airControlDecelerationFactor;//The deceleration factor in air
-    public float airControllSpeedLoss;//How fast we loose control (smaller decelerationFactor) when we are in air
+    [Header("Movement")]
+    public bool Move = true;//If the bot is able to move ?
+    public float Speed;//How fast this bot is going to it's destination
+    public float AirFriction;//The friction in air (Realisticly, it is close to 0)
+    public float BaseFriction;//How fast the changes of velocity are
 
-    const float MoveSmoothness = 0.8f;//Smoothness when changing from idle to moving or vice versa
-    private CharacterController cr;//The character controller of this bot
-    private Vector3 position;//The chosen position to head to
-    private Vector3 currentPosition;//The current position of the bot
-    private Vector3 Movement;//The movement applied to the character controller
-    private Vector2 UnscaledMovement;//The movement unscaled from the time.deltaTime
-    private Vector3 HeadingMovement = Vector3.zero;//The x and z movement in a vector 2d
-    public float TiltPositionY;//how much the bot is currently tilting
-    private Quaternion Rotation;//The target rotation of the bot
-    private float _decelerationFactor;//How much you decelerate in general (Used for ice and other physics materials)
-    private Vector3 lastMovement;//Movement last fram
+    [Header("Netorking")]
+    public float MaxDistance = 0.1f;//The maximum distance the bot can get away from the actual server bot before snapping back
+    public float ClientSmoothing = 15;//How much to smooth the bot's position and rotation on the clients
+
+    #region Literal Hell : The Sequel
+    #region Networking
+    private NetworkedVarVector3 ServerBotVelocity = new NetworkedVarVector3(Vector3.zero);//The velocity of the bot (On the server)
+    private NetworkedVarVector3 ServerBotPosition = new NetworkedVarVector3(Vector3.zero);//The current position of the bot (On the server)
+    #endregion
+    #region Client
+    const float Gravity = 9.8f;//The gravity force applied to the bot that pushes it down (Using real world gravity acceleration)
+    private Vector3 InputVelocity;//The velocity that we are using to move the bot
+    private float Friction;//How fast the changes of velocity are (This isnt a networked var because we trust the cliant's velocity)
+    private Vector3 Direction;//The direction from the current bot position to the destination
+    #endregion
+    private CharacterController cr;//The CharacterController for this bot
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
-        position = transform.position;//Sets the target pos as our own so we dont go to the middle of the world
-        cr = GetComponent<CharacterController>();//Set the character controller to our own
-        _decelerationFactor = decelerationFactor;//Setup decelerationFactor
+        cr = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
     void Update()
-    {
-        #region Movement & Rotation
-        #region Normalization of position & movement
-        currentPosition = transform.position;//Save to variable to save on performence
-        //We use the normalized value so when the bot gets closer to the position, it's speed stays constant and does not decrease
-        if (move)
+    {        
+        if (!IsServer) 
         {
-            Vector3 posNorm = new Vector2((position - currentPosition).normalized.x, (position - currentPosition).normalized.z);
-            Movement.x = posNorm.normalized.x * Speed;//Delta movement of the position that we want to go in X axis
-            Movement.z = posNorm.normalized.y * Speed;//Delta movement of the position that we want to go in Z axis
+            //Move the bot on the clients using the velocity that the server gave us
+            InputVelocity = ServerBotVelocity.Value;
+
+            //This can be optimized by making the player go faster to the correct position the more they are away from it
+
+            //Snap the bot back to the right position if they are too far away (Smoothed)
+            if (Vector3.Distance(transform.position, ServerBotPosition.Value) > MaxDistance) TeleportBotToPosition(Vector3.Lerp(transform.position, ServerBotPosition.Value, ClientSmoothing * Time.deltaTime));
+
+            //Snap the bot back to the right position if they aren't moving (Smoothed)
+            if (InputVelocity.magnitude < 0.2f) TeleportBotToPosition(Vector3.Lerp(transform.position, ServerBotPosition.Value, ClientSmoothing * Time.deltaTime));
+
+            //Move the player on other clients
+            //Transform the direction to world space on the clients
+            cr.Move(transform.TransformDirection(InputVelocity) * Time.deltaTime);
+            return;
         }
-        else Movement.x = Mathf.Lerp(Movement.x, 0, MoveSmoothness * Time.deltaTime); Movement.z = Mathf.Lerp(Movement.z, 0, MoveSmoothness * Time.deltaTime);//Stop moving but allow gravity. Also it is smoothed out
+
+        //----------This code is only ran on the server/host----------\\
+
+        #region Input
+        //Smooth this to have like a acceleration effect and a sliding effect when friction is smaller
+        //Only go forward, not left nor right.
+        InputVelocity.z = Mathf.Lerp(InputVelocity.z, Direction.z * Speed, Friction * Time.deltaTime);//Set inputVelocity Y axis
+
+        //----We can set NetworkedVars because we are executing as server----\\
+        //Set the server velocity of the bot (local space)
+        ServerBotVelocity.Value = InputVelocity;
+        //Set the server position of the bot
+        ServerBotPosition.Value = transform.position;
         #endregion
-        HeadingMovement.x = Movement.x;
-        HeadingMovement.z = Movement.z;
-        if(move) HeadingMovement.y = TiltPositionY;
-        else HeadingMovement.y = 0.0f;//So the bot doesnt flip 90 degrees when it has stopped moving
-        Debug.DrawRay(transform.position, HeadingMovement*5.0f, Color.gray);
-        if(HeadingMovement.normalized != Vector3.zero) 
-        {
-            Rotation = Quaternion.LookRotation(HeadingMovement.normalized);//Target rotation with Y axis
-        }
-        
-        transform.rotation = Quaternion.Slerp(Rotation, transform.rotation, RotationSpeed);//Smoothes the rotation
-        if (cr.isGrounded)
-        {
-            Movement.y = 0;//Dont apply gravity if already in ground
-            _decelerationFactor = decelerationFactor;
-        }
-        else 
-        {
-            _decelerationFactor = Mathf.Lerp(_decelerationFactor, airControlDecelerationFactor, airControllSpeedLoss * Time.deltaTime);
-            Movement.y -= Gravity * Time.deltaTime;//Apply gravity
-        }
-        Debug.DrawRay(currentPosition, Movement.normalized * 2);
-        Debug.DrawLine(currentPosition, position, Color.red);
-        lastMovement.y = Movement.y;//Same gravity so it doesnt lerp between gravities
-        lastMovement = Vector3.Lerp(lastMovement, Movement, _decelerationFactor * Time.deltaTime);//Set last frame movement
-        cr.Move(lastMovement * Time.deltaTime);//Apply gravity & position direction movement to charachter controller. Also with deceleration
-        UnscaledMovement.x = cr.velocity.x; UnscaledMovement.y = cr.velocity.z;//Unscaled movement from velocity 
+        #region Gravity
+        if (cr.isGrounded) { InputVelocity.y = Mathf.Lerp(InputVelocity.y, 0, 2 * Time.deltaTime); }
+        //Apply the gravity as an acceleration since we are in the air. Set the air friction since we are in the air
+        else { InputVelocity.y -= Gravity * Time.deltaTime; Friction = AirFriction; }
+        #endregion
+        #region Updating
+        //Move the character controller using the InputVelocity on the local client
+        //Transform local velocity into world velocity (Take account the rotation of the player)
+        cr.Move(transform.TransformDirection(InputVelocity) * Time.deltaTime);
+
+        transform.rotation = Quaternion.LookRotation(Direction);
         #endregion
     }
-    public void MoveToPosition(Vector3 _position) 
-    {
-        position = _position;//set the position
+    //Moves the bot to a specified position with a constant speed (Only on server)
+    public void MoveToPosition(Vector3 NewPosition) 
+    { 
+        if (!IsServer) return;
+        Direction = (transform.position - NewPosition);//nOOOOO YOU CANT JUST NOT NORMALIZE THE INPUT VECTOR.   hehe unnormalized vector go Y E S
+        Direction.y = 0;//Reset the Y axis because it would mess up the normalized vector
+        Direction = Direction.normalized;//Set the new destination
     }
-    #region Collisions
-    //When collision happens
-    
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    //Teleports the bot to a certain position
+    private void TeleportBotToPosition(Vector3 position)
     {
-        if (hit.normal.y < 0.9f) return;//If object we hit isnt underground us, then discard the collision
-        GameObject otherObject = hit.gameObject;
-        if (otherObject.GetComponent<PhysicsObjectScript>() != null) //Is physics object
+        cr.Move(position - transform.position);//Move using velocity
+    }
+
+    //When the bots hits something
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.normal.y < 0.9) return;//Discard the collision if it wasn't under the bot
+        Friction = BaseFriction;//Since we are on the ground, reset the friction (The friction changes if we are in air)
+        //If we hit a PhysicsObject
+        if (hit.gameObject.GetComponent<PhysicsObjectScript>())
         {
-            _decelerationFactor = otherObject.gameObject.GetComponent<PhysicsObjectScript>().Friction;//Set new deceleration factor
-        }
-        else
-        {
-            _decelerationFactor = decelerationFactor;//Reset the decelerationFactor to base
+            //Override the current friction
+            Friction = hit.gameObject.GetComponent<PhysicsObjectScript>().Friction;
         }
     }
-    #endregion
 }

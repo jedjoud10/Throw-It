@@ -90,8 +90,8 @@ public class WorldManager : MonoBehaviour
         BotPathfinderScript[] pathfinders = FindObjectsOfType<BotPathfinderScript>();
         if (pathfinders != null || pathfinders.Length != 0)//Recalculate pathes since we have valid pathfinding bots
         {
-            FindObjectOfType<AStarPathfinder>().MakeGrid();//Recalculate grid
             yield return new WaitForSecondsRealtime(1.0f);
+            FindObjectOfType<AStarPathfinder>().MakeGrid();//Recalculate grid
             for (int i = 0; i < pathfinders.Length; i++)
             {
                 yield return new WaitForSecondsRealtime(1.0f);

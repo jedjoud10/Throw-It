@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 //Handler for main menu UI
@@ -14,17 +15,27 @@ public class MainMenuUIScript : MonoBehaviour
     public RufflesTransport.RufflesTransport transport;//The networking transport to use
     public InputField IPField;//Field where we will write the ip we want to connect to
     public float autoDisconnectTimout;//If a player has started an accidental client and there was no host, then disconnect after this ammount of seconds
+    public List<string> SelectableScenes;//Scene names that the player can select that will cahnge the map when they host a game
+    public Dropdown SelectHostScene;//The selection menu to select a scene that the player will go to when they start hosting
     // Start is called before the first frame update
     void Start()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        SetupSceneChoices();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+    //Setup the scene choices
+    private void SetupSceneChoices() 
+    {
+        SelectHostScene.ClearOptions();//Clear the selection options
+        SelectHostScene.AddOptions(SelectableScenes);
+        SelectHostScene.RefreshShownValue();//Refresh the value just in case
     }
     //Join a server
     public void JoinServer() 
@@ -50,11 +61,16 @@ public class MainMenuUIScript : MonoBehaviour
             Invoke("DisconnectClientTimeout", autoDisconnectTimout);
         }
     }
+    //Start as host
+    public void StartHost() 
+    {
+        SceneManager.LoadScene(SelectableScenes[SelectHostScene.value]);
+    }
     //Disconnect the player because they started a client and there was no host
     private void DisconnectClientTimeout() 
     {
         NetworkingManager.Singleton.StopClient();
-        Debug.LogError("There was no host to connect to !");
+        Debug.LogError("Timeout. No host found.");
     }
     //Show multiplayer select screen
     public void ShowMultiplayerUI() { MultiplayerSelectScreen.SetActive(true); }

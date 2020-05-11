@@ -4,10 +4,11 @@ using UnityEngine;
 //Script only used for bot "ScrapBot"
 
 //Auto add scripts if they are not already on the gameobject
+//TODO : Networking support
 [RequireComponent(typeof(BotMovementScript))]
 public class ScrapBotScript : BotScript
 {
-    private BotStraightPathScript straightpathScript;//Goes straight to the destination specified
+    private BotStraightPathScript straightpathScript;//Goes straight to the specified destination
     private PelletThrowingScript pelletThrowingScript;//The pellet throwing script that throws pellet
     public Animator animator;//The animator of the scrapbot
     public float animatorSlowdownSpeed;//The speed of how fast we are going to slowdown the animator's playback speed

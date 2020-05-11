@@ -1,12 +1,15 @@
-﻿using System.Collections;
+﻿using MLAPI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Parent script that will be inherited from other scripts
 
 //Auto add scripts if they are not already on the gameobject
+
+//TODO : Networking support
 [RequireComponent(typeof(BotMovementScript))]
 [RequireComponent(typeof(BotHealthScript))]
-public class BotScript : MonoBehaviour
+public class BotScript : NetworkedBehaviour
 {
     //Internal variables for children classes to use
     public BotMovementScript movementScript;
@@ -28,7 +31,7 @@ public class BotScript : MonoBehaviour
     virtual public void Death() 
     {
         //Slow down movement and bobbing
-        movementScript.move = false;
+        movementScript.Move = false;
         bobbingScript.applybobbing = false;
 
         isDead = true;//well, he is dead

@@ -31,10 +31,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
             }
         }       
     }
-
     #region Scene management
-    //Start the host
-    public void HostMultiplayerLobby() { SceneManager.LoadScene("MultiplayerLobbyMap", LoadSceneMode.Single); }
     //Return to the MainMenu (Tell all clients to return to main menu first, then wait to fully disconnect)
     public void ReturnMainMenu() 
     {
