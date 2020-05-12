@@ -6,7 +6,6 @@ using MLAPI;
 [RequireComponent(typeof(SnowballPropertiesScript))]
 public class SnowballMovementScript : NetworkedBehaviour
 {
-    private SnowballThrowingScript throwingScript;//The throwing script that this snowball got spawned from
     private int Damage;//The base damage the snowball can do
     private float RigidbodyForce;//Force applied to every physics object when we hit it
     private Rigidbody rigidBody;//The rigidbody of the snowball
@@ -17,7 +16,6 @@ public class SnowballMovementScript : NetworkedBehaviour
     {
         #region Setup properities
         SnowballPropertiesScript properities = GetComponent<SnowballPropertiesScript>();//Gets properities from script
-        if(_throwingScript != null) throwingScript = _throwingScript;//Init throwingScript
         properities.InitSnowball(randomize);//Init snowball properities
         float Speed = properities.Speed;//Use one time float since we wont reuse this float later on
         Damage = properities.Damage;
@@ -53,7 +51,7 @@ public class SnowballMovementScript : NetworkedBehaviour
                 //Damage player
                 otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(Damage);
             }
-            if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint((LastVelocity) * RigidbodyForce, rigidBody.position, Damage);
+            if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint(LastVelocity * RigidbodyForce, rigidBody.position, Damage);
         }
         Destroy(gameObject);//Destroys the snowball
     }

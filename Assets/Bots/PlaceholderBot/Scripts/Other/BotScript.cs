@@ -28,12 +28,17 @@ public class BotScript : NetworkedBehaviour
         
     }
     //Called when bot dies
-    virtual public void Death() 
+    virtual public void OnBotDeath() 
     {
         //Slow down movement and bobbing
         movementScript.Move = false;
         bobbingScript.applybobbing = false;
 
         isDead = true;//well, he is dead
+    }
+    //Called when bot gets damaged
+    virtual public void OnBotDamage(int damage, int newHealth) 
+    {
+        Debug.LogError("Bot was damaged");
     }
 }

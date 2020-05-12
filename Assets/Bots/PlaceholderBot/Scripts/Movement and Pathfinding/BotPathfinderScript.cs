@@ -12,18 +12,25 @@ public class BotPathfinderScript : NetworkedBehaviour
     private Vector3 CurrentDestinationPoint;//The current destination point that the bot is heading to
     private BotScript bot;//The bot script for this specific bot
     private AStarPathfinder pathfinder;//The global pathfinder for this current scene
+    private Vector3 ObjectivePosition;//The end position we want this bot to pathfind to
     // Start is called before the first frame update
     void Start()
     {
         bot = GetComponent<BotScript>();
+        bot.movementScript.Move = false;//Make the bot not able to move until we find a valid path
+        ObjectivePosition = GameObject.FindGameObjectWithTag("Objective").transform.position;
+        pathfinder = FindObjectOfType<AStarPathfinder>();
     }
 
     // Update is called once per frame
     void Update()
-    {
-        for (int i = 0; i < DestinationPoints.Length; i++)
+    {   
+        if (DestinationPoints != null)
         {
-            if(Vector3.Distance(DestinationPoints[i], transform.position) < MinDistance && i != DestinationPoints.Length - 1) { CurrentDestinationPoint = DestinationPoints[i+1]; }//Set the current destination point
+            for (int i = 0; i < DestinationPoints.Length; i++)
+            {
+                if (Vector3.Distance(DestinationPoints[i], transform.position) < MinDistance && i != DestinationPoints.Length - 1) { CurrentDestinationPoint = DestinationPoints[i + 1]; }//Set the current destination point
+            }
         }
         bot.movementScript.MoveToPosition(CurrentDestinationPoint);//Move to the correct position
     }
@@ -32,6 +39,23 @@ public class BotPathfinderScript : NetworkedBehaviour
     public void SetDestinationPoints(List<Vector3> points) 
     {
         DestinationPoints = points.ToArray();//List to array
+        bot.movementScript.Move = true;//Let the bot move since we have a valid path
     }
     //Recalculate the bot's path
+    public void Pathfind()
+    {
+        if (pathfinder == null) return;//Bro cringe
+        Debug.Log("Pathfind call for bot : " + gameObject.name);
+        pathfinder.Pathfind(transform.position, ObjectivePosition, this);
+    }
+    private void OnDrawGizmos()
+    {
+        if (DestinationPoints != null)
+        {
+            for (int i = 0; i < DestinationPoints.Length; i++)
+            {
+                Gizmos.DrawSphere(DestinationPoints[i], 1);
+            }
+        }        
+    }
 }

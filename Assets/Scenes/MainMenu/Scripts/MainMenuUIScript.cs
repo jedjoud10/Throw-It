@@ -14,7 +14,7 @@ public class MainMenuUIScript : MonoBehaviour
     public GameObject MultiplayerSelectScreen;
     public RufflesTransport.RufflesTransport transport;//The networking transport to use
     public InputField IPField;//Field where we will write the ip we want to connect to
-    public float autoDisconnectTimout;//If a player has started an accidental client and there was no host, then disconnect after this ammount of seconds
+    public float autoDisconnectTimeout;//If a player has started an accidental client and there was no host, then disconnect after this ammount of seconds
     public List<string> SelectableScenes;//Scene names that the player can select that will cahnge the map when they host a game
     public Dropdown SelectHostScene;//The selection menu to select a scene that the player will go to when they start hosting
     // Start is called before the first frame update
@@ -41,6 +41,17 @@ public class MainMenuUIScript : MonoBehaviour
     public void JoinServer() 
     {
         string address = IPField.text;
+        PingReply ping = Ping(address);
+        if (ping != null)
+        {
+            Debug.Log("RoundTrip time: " + ping.RoundtripTime);
+            transport.ConnectAddress = address;
+            NetworkingManager.Singleton.StartClient();
+            Invoke("DisconnectClientTimeout", autoDisconnectTimeout);
+        }
+    }
+    private PingReply Ping(string address) 
+    {
         System.Net.NetworkInformation.Ping pingSender = new System.Net.NetworkInformation.Ping();
         PingOptions options = new PingOptions();
 
@@ -53,12 +64,13 @@ public class MainMenuUIScript : MonoBehaviour
         byte[] buffer = System.Text.Encoding.ASCII.GetBytes(data);
         int timeout = 120;
         PingReply reply = pingSender.Send(address, timeout, buffer, options);
-        if (reply.Status == IPStatus.Success)
+        if(reply.Status == IPStatus.Success) 
         {
-            Debug.Log("RoundTrip time: " + reply.RoundtripTime);
-            transport.ConnectAddress = address;
-            NetworkingManager.Singleton.StartClient();
-            Invoke("DisconnectClientTimeout", autoDisconnectTimout);
+            return reply;
+        }
+        else
+        {
+            return null;
         }
     }
     //Start as host

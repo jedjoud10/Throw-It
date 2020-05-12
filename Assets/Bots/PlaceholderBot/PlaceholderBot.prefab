@@ -68,13 +68,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd8c7be4d1ec4941953706eca95c457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  move: 1
+  Move: 1
   Speed: 1.5
-  RotationSpeed: 0.98
-  decelerationFactor: 5
-  airControlDecelerationFactor: 2
-  airControllSpeedLoss: 5
-  TiltPositionY: 0
+  AirFriction: 0.1
+  BaseFriction: 1
+  RotationSmoothing: 2
+  MaxDistance: 0.1
+  ClientSmoothing: 15
 --- !u!114 &5320872013909586124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +89,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   botScript: {fileID: 0}
   MaxHealth: 100
-  Health: 0
+  Health:
+    InternalValue: 0
   DelayDeath: 3.5
 --- !u!114 &7809379998080732962
 MonoBehaviour:
@@ -103,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0270affd646eff84eae94ad58dbfb7ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointThreshold: 0.5
+  MinDistance: 1
 --- !u!114 &521999159713424166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +269,23 @@ FixedJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &1556842792931810053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8747465472712605522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 209037615, guid: 01701b64234b4d523d8045142cbc73fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkedInstanceId: 0
+  PrefabHash: 16046327114031759015
+  PrefabHashGenerator: Head
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!114 &6239037415469877406
 MonoBehaviour:
   m_ObjectHideFlags: 0

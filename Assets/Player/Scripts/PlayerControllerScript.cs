@@ -3,6 +3,7 @@ using MLAPI.Messaging;
 using MLAPI.NetworkedVar;
 using UnityEngine;
 //Controls the camera and movement of the player from keyboard and mouse (V2)
+//TODO : Make the local client snap back to the correct position
 public class PlayerControllerScript : NetworkedBehaviour
 {
     [Header("Control")]
@@ -32,10 +33,12 @@ public class PlayerControllerScript : NetworkedBehaviour
     private Vector3 InputVelocity;//The velocity that we are using to move the player
     private Vector2 InputData;//The input velocity plane (x, z) from the keyboard
     private bool Jumping;//If the local player is jumping
+    private CharacterController cr;//The character controller that will move the player based on velocity
     const float Gravity = 9.8f;//The gravity force applied to the player that pushes them down (Using real world gravity acceleration)
-    private float Friction;//How fast the changes of velocity are (This isnt a networked var because we trust the cliant's velocity)
+    private float Friction;//How fast the changes of velocity are (This isnt a networked var because it also changes on the server, so no need to make a ServerRPC)
     private float WalkingFactor, SprintingFactor;//Two factors for the player to smoothly transition between values
     private float Speed;//The current speed smoothed from WalkingSpeed and SprintingSpeed
+    private Vector3 WorldVelocity;//The world velocity of the player (Rotation is taken account)
     #endregion
     #region Networking
     private NetworkedVarFloat ServerPlayerRotationY = new NetworkedVarFloat(0.0f);//The Y rotation (Left-Right) of the player on the server
@@ -45,11 +48,11 @@ public class PlayerControllerScript : NetworkedBehaviour
     private NetworkedVarBool ServerPlayerJumping = new NetworkedVarBool(false);//If the player is jumping on the server
     #endregion
     private Transform playerSpawn;//The position that this player will spawn at
-    private CharacterController cr;//The character controller that will move the player based on velocity
     #endregion
     // Start is called before the first frame update
     void Start()
     {
+        //Setup the character controller
         cr = GetComponent<CharacterController>();
 
         //Set the default player position
@@ -75,26 +78,21 @@ public class PlayerControllerScript : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug
-        Debug.DrawRay(transform.position, InputVelocity);
 
         //If we aren't the local client 
         if (!IsLocalPlayer)
         {
             //Move this player object on the other clients using the velocity that the server gave us
             InputVelocity = ServerPlayerInputVelocity.Value;
-            
-            //This can be optimized by making the player go faster to the correct position the more they are away from it
-            
+
             //Snap the player back to the right position if they are too far away (Smoothed)
-            if (Vector3.Distance(transform.position, ServerPlayerPosition.Value) > MaxDistance) TeleportPlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
+            if (Vector3.Distance(transform.position, ServerPlayerPosition.Value) > MaxDistance) MovePlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
 
             //Snap the player back to the right position if they aren't moving (Smoothed)
-            if (InputVelocity.magnitude < 0.2f) TeleportPlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
+            if (InputVelocity.magnitude < 0.2f) MovePlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
 
             //Move the player on other clients
-            //Transform the direction to world space on the clients
-            cr.Move(transform.TransformDirection(InputVelocity) * Time.deltaTime);
+            cr.Move(InputVelocity * Time.deltaTime);
 
             //Rotate the player on the other clients (Smoothed)
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, ServerPlayerRotationY.Value, 0), ClientSmoothing * Time.deltaTime);
@@ -107,17 +105,22 @@ public class PlayerControllerScript : NetworkedBehaviour
         //----------This code is only ran on the local client machine----------\\
 
         #region Input
-        //------Input from keyboard and mouse------\\
 
         //Read the input
-        Jumping = Input.GetAxis("Jump") > 0.0f;//Determine if the player is jumping
-        InputData.x = Input.GetAxis("LeftRight");//Set input X axis
-        InputData.y = Input.GetAxis("ForwardBackward");//Set input Y axis
+        Jumping = Input.GetAxis("Jump") > 0.0f;
+        InputData.x = Input.GetAxis("LeftRight");
+        InputData.y = Input.GetAxis("ForwardBackward");
+
+        //Set the world velocity (rotation is taken account for this one)
+        WorldVelocity.x = InputData.x; WorldVelocity.z = InputData.y;
+        WorldVelocity = transform.TransformDirection(WorldVelocity);
+        WorldVelocity.Normalize();
 
         //Move the player forward/backward/left/right using the keyboard
         //Smooth this to have like a acceleration effect and a sliding effect when friction is smaller
-        InputVelocity.x = Mathf.Lerp(InputVelocity.x, InputData.x * Speed, Friction * Time.deltaTime);//Set inputVelocity X axis 
-        InputVelocity.z = Mathf.Lerp(InputVelocity.z, InputData.y * Speed, Friction * Time.deltaTime);//Set inputVelocity Y axis
+        InputVelocity.x = Mathf.Lerp(InputVelocity.x, WorldVelocity.x * Speed, Friction * Time.deltaTime);//Set inputVelocity X axis 
+        InputVelocity.z = Mathf.Lerp(InputVelocity.z, WorldVelocity.z * Speed, Friction * Time.deltaTime);//Set inputVelocity Z axis
+        Debug.DrawRay(transform.position, InputVelocity);
         //Rotate the player left and right
         localPlayerRotationY += Input.GetAxis("Mouse X") * MouseSensivity;
         //Rotate the camera up and down
@@ -126,7 +129,6 @@ public class PlayerControllerScript : NetworkedBehaviour
         localCameraRotationX = Mathf.Clamp(localCameraRotationX, -90, 90);
         #endregion
         #region Walking/Sprinting factors
-        //------Walking/Sprinting factors------\\
 
         //WalkingFactor smoothly goes to 1 when we are walking
         WalkingFactor = Mathf.Lerp(WalkingFactor, (InputData.magnitude > 0.0f) ? 1 : 0, FactorSmoothingSpeed * Time.deltaTime);
@@ -140,24 +142,19 @@ public class PlayerControllerScript : NetworkedBehaviour
         playerCamera.fieldOfView = Mathf.Lerp(IdleFOV, Mathf.Lerp(WalkingFOV, SprintingFOV, SprintingFactor), WalkingFactor);
         #endregion
         #region Gravity
-        //------Gravity------\\
 
         //Make the player jump when we press the "Jump" button    
         //Smooth the InputVelociy.y because when we hit the ground the player has a "bouncing" effect so smoothing it makes it more natural
         if (cr.isGrounded) { InputVelocity.y = Mathf.Lerp(InputVelocity.y, 0, 2 * Time.deltaTime); if (Jumping) InputVelocity.y = Jump; }
-        //Apply the gravity as an acceleration since we are in the air. Set the air friction since we are in the air
+        //Apply the gravity as an acceleration if we are in the air. Set the air friction since we are in air
         else { InputVelocity.y -= Gravity * Time.deltaTime; Friction = AirFriction; }
         #endregion
         #region Updating
-        //------Updating the player------\\
-
         //Move the character controller using the InputVelocity on the local client
-        //Transform local velocity into world velocity (Take account the rotation of the player)
-        cr.Move(transform.TransformDirection(InputVelocity) * Time.deltaTime);
+        cr.Move(InputVelocity * Time.deltaTime);
 
         //Rotate the player on the local client
         transform.rotation = Quaternion.Euler(0, localPlayerRotationY, 0);
-
         //Rotate the camera on the local client
         playerCamera.transform.localRotation = Quaternion.Euler(localCameraRotationX, 0, 0);
 
@@ -166,9 +163,9 @@ public class PlayerControllerScript : NetworkedBehaviour
         //Send that data to the server so it can relay it to the other clients
         //Send the velocity, position and if the player is jumping or not
         //When the player is moving, send the data each frame
-        if (InputVelocity.magnitude > 0) InvokeServerRpc(UpdatePlayerPositionOnServer, InputVelocity, transform.position, Jumping);
+        if (InputVelocity.magnitude > 0) InvokeServerRpc(UpdatePlayerPositionOnServer, InputVelocity, transform.position, Jumping, OwnerClientId);
         //When the player isn't moving, send the data each 5 frames
-        else if (Time.frameCount % 5 == 0) { InvokeServerRpc(UpdatePlayerPositionOnServer, InputVelocity, transform.position, Jumping); }
+        else if (Time.frameCount % 5 == 0) { InvokeServerRpc(UpdatePlayerPositionOnServer, InputVelocity, transform.position, Jumping, OwnerClientId); }
         //Only update the rotation if the mouse moved
         if (Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y")) > 0.0f) InvokeServerRpc(UpdatePlayerRotationsOnServer, localPlayerRotationY, localCameraRotationX);
         #endregion
@@ -176,16 +173,12 @@ public class PlayerControllerScript : NetworkedBehaviour
     #region Networking
     //Update the player position and velocity on the server
     [ServerRPC]
-    private void UpdatePlayerPositionOnServer(Vector3 velocity, Vector3 position, bool jumping)
+    private void UpdatePlayerPositionOnServer(Vector3 velocity, Vector3 position, bool jumping, ulong clientID)
     {
         //---Set server variables---\\
-        //TODO: Check if the player is hacking
-        if (true)
-        {
-            ServerPlayerInputVelocity.Value = velocity;
-            ServerPlayerPosition.Value = position;
-            ServerPlayerJumping.Value = jumping;
-        }
+        ServerPlayerInputVelocity.Value = velocity;
+        ServerPlayerPosition.Value = position;
+        ServerPlayerJumping.Value = jumping;
     }
     //Update the player rotation and camera rotation on the server
     [ServerRPC]
@@ -201,12 +194,12 @@ public class PlayerControllerScript : NetworkedBehaviour
     public void ResetPlayer()
     {
         //Reset the position
-        TeleportPlayerToPosition(playerSpawn.position);
+        MovePlayerToPosition(playerSpawn.position);
 
         InputVelocity = Vector3.zero;
     }
-    //Teleports the player to a certain position
-    private void TeleportPlayerToPosition(Vector3 position)
+    //Moves the player to a certain position
+    private void MovePlayerToPosition(Vector3 position)
     {
         cr.Move(position - transform.position);//Move using velocity
     }

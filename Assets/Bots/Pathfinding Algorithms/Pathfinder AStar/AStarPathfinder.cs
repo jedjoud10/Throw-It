@@ -8,33 +8,21 @@ using UnityEditor;
 public class AStarPathfinder : MonoBehaviour
 {
     [Header("Main settings")]
-    [Tooltip("The max number of iterations that you are allowed")]
     public int maxIterations;//The max number of iterations that you are allowed
-
     [Header("Grid settings")]
-    [Tooltip("The max number of nodes in the X direction")]
     public int _gridsizeX = 0;//The max number of nodes in the X direction
-    [Tooltip("The max number of nodes in the Y direction (Z direction in WorldPosition)")]
     public int _gridsizeY = 0;//The max number of nodes in the Y direction
-    [Tooltip("The scale of the grid")]
     public float _gridScale;//The scale of the grid
-    [Tooltip("Pathfinder Offset")]
     public Vector2 _offset;//Offset in 2d direction
     [Range(1, 10)]
-    [Tooltip("How much detail can we allow")]
     public int Resolution = 1;//How much detail can we allow
-
     [Header("Collisions")]
-    [Tooltip("Is this walkable terrain ?")]
+
     public Collider terrainCollider;//Walkable terrain the ai can use
-    [Tooltip("The water height for masking walkable nodes")]
     public float waterHeight;//Water height
-    [Tooltip("Radius to add to avoid more obstacles")]
     public float ObstacleAvoidanceRadius;//Radius to add to avoid more obstacles
-    [Tooltip("The maximum height difference between nodes to be considered a walkable node")]
     public float MaxSlope;//The maximum height difference between nodes to be considered a walkable node
 
-    [Tooltip("How to use gizmos")]
     public GizmoMode gizmoMode;//How to use gizmos
     //The box size to use for displaying gizmos
     public float GizmoSize;
@@ -241,6 +229,7 @@ public class AStarPathfinder : MonoBehaviour
     private void PathfindThread(Vector3 botPosition, Vector3 endPostition, BotPathfinderScript bot) 
     {
         AStarNode[,] nodes = _nodes;
+        if (nodes == null) return;
         endNode = NodeFromWorldPosition(endPostition, nodes);
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();//Using a stopwatch to get how much time did we spent calculating path
         stopwatch.Start();
@@ -256,7 +245,7 @@ public class AStarPathfinder : MonoBehaviour
         int GCostMovePenalty = 1;//How much do we add GCost to the current node to calculate the neighbour's GCost
 
         AStarNode currentNeighbour;//The current neighbour node
-        //First part of pathfinder. Get visited nodes with nodes FCosts
+        //First part of pathfinder. Get visited nodes with nodes's FCosts
         //Debug.Log("PART 1 A* PATHFINDER");
         visitedNodes.Add(currentNode);//Add start node so we dont pass by it again
         for (int i = 0; i < maxIterations; i++)
@@ -339,15 +328,15 @@ public class AStarPathfinder : MonoBehaviour
             }
             else 
             {
-                Debug.Log("Final reverse iteration is " + i);
+                //Debug.Log("Final reverse iteration is " + i);
                 break;
             }
         }
         
         overallPaths.Add(path);//We calculated one more path
         stopwatch.Stop();
-        Debug.Log("Took " + stopwatch.ElapsedMilliseconds/1000.0f + " seconds to calculate a " + gridsizeX + "*" + gridsizeY + " map");
-        bot.SetNewPoints(OptimizePath(TransformPathToPoints(path)));
+        Debug.Log("Took " + stopwatch.ElapsedMilliseconds/1000.0f + " seconds to calculate path");
+        bot.SetDestinationPoints(OptimizePath(TransformPathToPoints(path)));
     }
     //Transforms a path to 3D vector points
     private List<Vector3> TransformPathToPoints(List<AStarNode> path) 

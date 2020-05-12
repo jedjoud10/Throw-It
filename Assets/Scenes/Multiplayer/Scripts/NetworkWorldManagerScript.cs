@@ -18,6 +18,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     {   
         singleton = NetworkingManager.Singleton;
         singleton.OnClientDisconnectCallback += OnClientDisconnect;//When a client disconnects callback
+        singleton.OnServerStarted += OnServerStarted;//When the server starts callback
         singleplayer = !singleton.IsHost && !singleton.IsClient;
         //If the player isnt a server and isnt a client (The only client (Basically in singleplayer))
         currentScene = SceneManager.GetActiveScene().name;
@@ -57,11 +58,17 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     //When a client disconnects (ran on server and on local client machine)
     private void OnClientDisconnect(ulong clientID) 
     {
+        if(IsClient) SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);//Return to main menu when a client disconnects
         if (singleton.ConnectedClientsList.Count == 1 && IsHost) //Return to the main menu map only when the host is the only client in the session
         {
             singleton.StopHost();
             SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);
         }
+    }
+    //When the server starts
+    private void OnServerStarted() 
+    {
+        
     }
     //Move player to correct position
     #endregion

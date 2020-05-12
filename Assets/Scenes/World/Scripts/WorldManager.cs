@@ -5,11 +5,12 @@ using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Rendering;
+using MLAPI;
 //Handles communications between multiple scripts and classes (Multiplayer included)
-public class WorldManager : MonoBehaviour
+public class WorldManager : NetworkedBehaviour
 {
     public bool CalculatePathesAtStart = true;//Should we calculate bot pathfinding at the start of the game ?
-
+    private AStarPathfinder pathfinder;//The pathfinder used for bot path calculations
 
     //Reflection probes
     private int ReflectionProbesResolution;
@@ -20,10 +21,16 @@ public class WorldManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        NetworkingManager.Singleton.OnServerStarted += OnServerStart;//On server start is like the start method, but only on the server
+    }
+    void OnServerStart() 
+    {
+        //Run the world update only on the server  
         if (CalculatePathesAtStart)
         {
-            FindObjectOfType<AStarPathfinder>().MakeTerrainGrid();//Init base terrain
-            StartCoroutine("WorldUpdateCoroutine");
+            pathfinder = FindObjectOfType<AStarPathfinder>();//Init base terrain
+            pathfinder.MakeTerrainGrid();
+            WorldUpdate();
         }
     }
 
@@ -90,12 +97,12 @@ public class WorldManager : MonoBehaviour
         BotPathfinderScript[] pathfinders = FindObjectsOfType<BotPathfinderScript>();
         if (pathfinders != null || pathfinders.Length != 0)//Recalculate pathes since we have valid pathfinding bots
         {
-            yield return new WaitForSecondsRealtime(1.0f);
-            FindObjectOfType<AStarPathfinder>().MakeGrid();//Recalculate grid
+            pathfinder.MakeGrid();//Recalculate grid
+            yield return new WaitForSecondsRealtime(1f);//Wait before calculating the bot path to make it seem cool hehe
             for (int i = 0; i < pathfinders.Length; i++)
             {
-                yield return new WaitForSecondsRealtime(1.0f);
-                pathfinders[i].FindPath();
+                yield return new WaitForSecondsRealtime(0.5f);//Wait before calculating the bot path to make it seem cool hehe
+                pathfinders[i].Pathfind();
             }
         }
         #endregion
@@ -103,14 +110,9 @@ public class WorldManager : MonoBehaviour
     //Called externally by scripts to start coroutine to start map update
     public void WorldUpdate() 
     {
+        Debug.Log("World Update");
         StartCoroutine("WorldUpdateCoroutine");
     }
-    #region Scene Management
-    //Switch to the world map
-    public void StartWorldMap() { SceneManager.LoadScene("TestMap", LoadSceneMode.Single); }
-    //Switch to the MainMenu
-    public void StartMainMenu() { SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single); ; }    
-    #endregion
 
     //Detects when an object has spawned using the ObjectSpawnDetectionScript
     public void OnObjectSpawn(GameObject otherGameObject, string StringTag)
