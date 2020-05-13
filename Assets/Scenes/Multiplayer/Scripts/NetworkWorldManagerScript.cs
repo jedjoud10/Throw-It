@@ -114,7 +114,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
         if (SceneManager.GetActiveScene().name != "MainMenuMap")//If we arent in the main menu / In single player
         {
             singleton.StopClient();
-            if (IsHost) singleton.StopHost();
+            if (IsHost) ReturnMainMenu();
         }
     }
 }

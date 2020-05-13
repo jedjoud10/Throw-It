@@ -38,18 +38,27 @@ public class PlayerHealthScript : NetworkedBehaviour
         {
             wm.RespawnPlayer(GetComponent<PlayerControllerScript>(), this);
         }
-        InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, health.Value, maxHealth, UIManager);
+        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, health.Value, maxHealth, UIManager);
+        InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, health.Value, maxHealth, UIManager);
     }
     //Executed on the client to update his UI health bar
     [ClientRPC]
-    private void UpdateClientHealthBar(int currentHealth, int maxHealth, PlayerUIManagerScript _UIManager) 
+    private void UpdateHealthbarOnClient(int currentHealth, int maxHealth, PlayerUIManagerScript _UIManager) 
     {
         _UIManager.UpdatePlayerHealth(currentHealth, maxHealth);
+    }
+    //Executed on the clients to update the player health billboard
+    [ClientRPC]
+    private void UpdateBillboardHealthbarOnClients(int currentHealth, int maxHealth, PlayerUIManagerScript _UIManager) 
+    {
+        _UIManager.UpdatePlayerHealthBillboard(currentHealth, maxHealth);
     }
     //Reset the player health
     public void SetupPlayerHealth() 
     {
         health.Value = maxHealth;
-        InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, maxHealth, maxHealth, UIManager);//Update UI
+        //Setup UI
+        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, maxHealth, maxHealth, UIManager);
+        InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, maxHealth, maxHealth, UIManager);
     }
 }

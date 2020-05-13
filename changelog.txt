@@ -1,5 +1,6 @@
-Version: MultiplayerTest7
+Version: MultiplayerTest8
 
 Changelog: 
--Added crosshair
--Added 2 tree models, made a color palette for trees
+-Added networking support to bot health
+-Added networking support to bot movement
+-Players will now show their current health and nickname (nickname from playerconfig.json)

@@ -1938,10 +1938,10 @@ MonoBehaviour:
   Resolution: 5
   terrainCollider: {fileID: 1104929376}
   waterHeight: -100
-  ObstacleAvoidanceRadius: 0
-  MaxSlope: 100
+  obstacleAvoidanceRadius: 0
+  maxSlope: 0
   gizmoMode: 1
-  GizmoSize: 0.2
+  gizmoSize: 0
 --- !u!4 &363270277
 Transform:
   m_ObjectHideFlags: 0
@@ -9083,7 +9083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb59f9726a7fcdd4f9166950fd615d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Friction: 0.8
+  friction: 0.7
 --- !u!65 &2121739570
 BoxCollider:
   m_ObjectHideFlags: 0

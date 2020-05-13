@@ -6980,6 +6980,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4965688556500510481, guid: c33782e7d467b4d40b053334a4f96cb2,
+        type: 3}
+      propertyPath: calculatePathesAtStart
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8980734265699462310, guid: c33782e7d467b4d40b053334a4f96cb2,
         type: 3}
       propertyPath: m_Name
@@ -9543,7 +9548,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0, z: 0}
-  Bounds: {x: 28.42, y: 13.5}
+  Bounds: {x: 0, y: 0, z: 0}
+  ObstacleBounds: {x: 0, y: 0, z: 0}
 --- !u!114 &1836714533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9556,7 +9562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb59f9726a7fcdd4f9166950fd615d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Friction: 0
+  friction: 0
 --- !u!65 &1836714534
 BoxCollider:
   m_ObjectHideFlags: 0
