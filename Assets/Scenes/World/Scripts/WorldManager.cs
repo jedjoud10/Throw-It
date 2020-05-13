@@ -9,15 +9,15 @@ using MLAPI;
 //Handles communications between multiple scripts and classes (Multiplayer included)
 public class WorldManager : NetworkedBehaviour
 {
-    public bool CalculatePathesAtStart = true;//Should we calculate bot pathfinding at the start of the game ?
+    public bool calculatePathesAtStart = true;//Should we calculate bot pathfinding at the start of the game ?
     private AStarPathfinder pathfinder;//The pathfinder used for bot path calculations
 
     //Reflection probes
-    private int ReflectionProbesResolution;
-    private ReflectionProbeRefreshMode ReflectionProbesRefreshMode;
+    private int reflectionProbesResolution;
+    private ReflectionProbeRefreshMode reflectionProbesRefreshMode;
     //Cameras and postprocessing
-    private GameConfigHandlerScript.CameraConfig CameraConfig;
-    private GameConfigHandlerScript.VolumeConfig VolumeConfig;
+    private GameConfigHandlerScript.CameraConfig cameraConfig;
+    private GameConfigHandlerScript.VolumeConfig volumeConfig;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +27,7 @@ public class WorldManager : NetworkedBehaviour
     {
         base.NetworkStart();   
         //Run the world update only on the server  
-        if (CalculatePathesAtStart && IsServer)
+        if (calculatePathesAtStart && IsServer)
         {
             pathfinder = FindObjectOfType<AStarPathfinder>();//Init base terrain
             pathfinder.MakeTerrainGrid();
@@ -44,26 +44,26 @@ public class WorldManager : NetworkedBehaviour
     //Sets the parameters about the reflection probes that are going to be spawned
     public void SetReflectionProbeConfig(int resolution, bool refreshEveryFrame)
     {
-        ReflectionProbesResolution = resolution;
-        if (refreshEveryFrame) ReflectionProbesRefreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.EveryFrame;
-        else ReflectionProbesRefreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.OnAwake;
+        reflectionProbesResolution = resolution;
+        if (refreshEveryFrame) reflectionProbesRefreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.EveryFrame;
+        else reflectionProbesRefreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.OnAwake;
     }
     //Set camera and postprocessing configs
-    public void SetCameraAndVolumesConfig(GameConfigHandlerScript.CameraConfig cameraConfig, GameConfigHandlerScript.VolumeConfig volumeConfig)
+    public void SetCameraAndVolumesConfig(GameConfigHandlerScript.CameraConfig _cameraConfig, GameConfigHandlerScript.VolumeConfig _volumeConfig)
     {
-        CameraConfig = cameraConfig; VolumeConfig = volumeConfig;
+        cameraConfig = _cameraConfig; volumeConfig = _volumeConfig;
     }
     //Loads the camera config
     public void LoadCameraConfig(Camera camera, PostProcessLayer cameraLayer) 
     {
         cameraLayer.antialiasingMode = PostProcessLayer.Antialiasing.None;
-        if (CameraConfig.useAntiAliasing == 1) cameraLayer.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
-        if (CameraConfig.useAntiAliasing == 2) cameraLayer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
-        if (CameraConfig.useAntiAliasing == 3) cameraLayer.antialiasingMode = PostProcessLayer.Antialiasing.TemporalAntialiasing;
-        cameraLayer.fog.enabled = CameraConfig.useFog;
-        cameraLayer.finalBlitToCameraTarget = CameraConfig.fastPostProcessing;
-        cameraLayer.enabled = CameraConfig.usePostProcessing;//Whether or not to use postprocessing effects
-        if (CameraConfig.fastrender) camera.renderingPath = RenderingPath.Forward;
+        if (cameraConfig.useAntiAliasing == 1) cameraLayer.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
+        if (cameraConfig.useAntiAliasing == 2) cameraLayer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
+        if (cameraConfig.useAntiAliasing == 3) cameraLayer.antialiasingMode = PostProcessLayer.Antialiasing.TemporalAntialiasing;
+        cameraLayer.fog.enabled = cameraConfig.useFog;
+        cameraLayer.finalBlitToCameraTarget = cameraConfig.fastPostProcessing;
+        cameraLayer.enabled = cameraConfig.usePostProcessing;//Whether or not to use postprocessing effects
+        if (cameraConfig.fastrender) camera.renderingPath = RenderingPath.Forward;
         else { camera.renderingPath = RenderingPath.DeferredShading; }
     }
     //Loads the postprocessing config for a volume
@@ -71,23 +71,23 @@ public class WorldManager : NetworkedBehaviour
     {
         //Change what post processing effects are enabled
         PostProcessProfile profile = volume.sharedProfile;
-        profile.settings[0].active = VolumeConfig.useColorGrading;
-        profile.settings[1].active = VolumeConfig.useChromaticAberration;
-        profile.settings[2].active = VolumeConfig.useBloom;
-        profile.settings[3].active = VolumeConfig.useVignette;
-        profile.settings[4].active = VolumeConfig.useAutoExposure;
-        profile.settings[5].active = VolumeConfig.useMotionBlur;
-        profile.settings[6].active = VolumeConfig.useAmbientOcclusion;
-        profile.settings[7].active = VolumeConfig.useDepthOfField;
-        profile.settings[8].active = VolumeConfig.useScreenSpaceReflections;
-        profile.settings[9].active = VolumeConfig.useGrain;
-        profile.settings[10].active = VolumeConfig.useLensDistortion;
+        profile.settings[0].active = volumeConfig.useColorGrading;
+        profile.settings[1].active = volumeConfig.useChromaticAberration;
+        profile.settings[2].active = volumeConfig.useBloom;
+        profile.settings[3].active = volumeConfig.useVignette;
+        profile.settings[4].active = volumeConfig.useAutoExposure;
+        profile.settings[5].active = volumeConfig.useMotionBlur;
+        profile.settings[6].active = volumeConfig.useAmbientOcclusion;
+        profile.settings[7].active = volumeConfig.useDepthOfField;
+        profile.settings[8].active = volumeConfig.useScreenSpaceReflections;
+        profile.settings[9].active = volumeConfig.useGrain;
+        profile.settings[10].active = volumeConfig.useLensDistortion;
     }
     //Loads the reflection probe configs
     public void LoadReflectionProbeConfig(ReflectionProbe reflectionProbe) 
     {
-        reflectionProbe.resolution = ReflectionProbesResolution;
-        reflectionProbe.refreshMode = ReflectionProbesRefreshMode;
+        reflectionProbe.resolution = reflectionProbesResolution;
+        reflectionProbe.refreshMode = reflectionProbesRefreshMode;
     }
     #endregion
     //Called internally when map has changed
@@ -116,12 +116,12 @@ public class WorldManager : NetworkedBehaviour
     }
 
     //Detects when an object has spawned using the ObjectSpawnDetectionScript
-    public void OnObjectSpawn(GameObject otherGameObject, string StringTag)
+    public void OnObjectSpawn(GameObject otherGameObject, string stringTag)
     {
-        Debug.Log("Object with tag " + StringTag + " has been spawned");
-        if (StringTag == "Camera") { LoadCameraConfig(otherGameObject.GetComponent<Camera>(), otherGameObject.GetComponent<PostProcessLayer>()); return; }
-        if (StringTag == "PostProcessVolume") { LoadPostProcessingVolumeConfig(otherGameObject.GetComponent<PostProcessVolume>()); return; }
-        if (StringTag == "ReflectionProbe") { LoadReflectionProbeConfig(otherGameObject.GetComponent<ReflectionProbe>()); return; }
+        Debug.Log("Object with tag " + stringTag + " has been spawned");
+        if (stringTag == "Camera") { LoadCameraConfig(otherGameObject.GetComponent<Camera>(), otherGameObject.GetComponent<PostProcessLayer>()); return; }
+        if (stringTag == "PostProcessVolume") { LoadPostProcessingVolumeConfig(otherGameObject.GetComponent<PostProcessVolume>()); return; }
+        if (stringTag == "ReflectionProbe") { LoadReflectionProbeConfig(otherGameObject.GetComponent<ReflectionProbe>()); return; }
     }
 
 }

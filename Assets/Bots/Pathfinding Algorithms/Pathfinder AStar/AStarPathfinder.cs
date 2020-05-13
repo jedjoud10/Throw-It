@@ -20,12 +20,12 @@ public class AStarPathfinder : MonoBehaviour
 
     public Collider terrainCollider;//Walkable terrain the ai can use
     public float waterHeight;//Water height
-    public float ObstacleAvoidanceRadius;//Radius to add to avoid more obstacles
-    public float MaxSlope;//The maximum height difference between nodes to be considered a walkable node
+    public float obstacleAvoidanceRadius;//Radius to add to avoid more obstacles
+    public float maxSlope;//The maximum height difference between nodes to be considered a walkable node
 
     public GizmoMode gizmoMode;//How to use gizmos
     //The box size to use for displaying gizmos
-    public float GizmoSize;
+    public float gizmoSize;
 
     private AStarNode endNode;//The node of the end object
     private List<Vector2Int> directions = new List<Vector2Int>();//Allowed directions to search for neighbours
@@ -111,7 +111,7 @@ public class AStarPathfinder : MonoBehaviour
                     continue;//Skiping since it is already not walkable
                 }
                 //Is it too steep ?
-                if (GetSlope(_nodes[x, y], _nodes) > MaxSlope) 
+                if (GetSlope(_nodes[x, y], _nodes) > maxSlope) 
                 {
                     _nodes[x, y].IsWalkable = false;//cannot walk since the node is too steep
                     continue;//Skiping since it is already not walkable
@@ -119,7 +119,7 @@ public class AStarPathfinder : MonoBehaviour
                 _nodes[x, y].IsWalkable = true;//Init state since we are doing another loop, so we must have like a rest/reset state
                 for (int o = 0; o < obstacles.Length; o++) 
                 {
-                    if(DistanceBox(_nodes[x, y].WorldPosition, obstacles[o].Bounds, obstacles[o].Position, ObstacleAvoidanceRadius)) 
+                    if(DistanceBox(_nodes[x, y].WorldPosition, obstacles[o].Bounds, obstacles[o].Position, obstacleAvoidanceRadius)) 
                     {
                         _nodes[x, y].IsWalkable = false;
                         break;//We finished the task early since we found an obstacle already. No need to continue
@@ -132,19 +132,14 @@ public class AStarPathfinder : MonoBehaviour
     //Gets slope of specific node on grid based off y position value
     private float GetSlope(AStarNode node, AStarNode[,] nodes) 
     {
-        float posY = node.WorldPosition.y;//Init slope output
-        float maxposY = 0.0f;
-        float minposY = 0.0f;
         List<float> heights = new List<float>();
+        //Calculate max and min points from 4 neighbouring nodes
         heights.Add(GetNeighbour(node, 0, 1, nodes).WorldPosition.y);
         heights.Add(GetNeighbour(node, 0, -1, nodes).WorldPosition.y);
         heights.Add(GetNeighbour(node, 1, 0, nodes).WorldPosition.y);
         heights.Add(GetNeighbour(node, -1, 0, nodes).WorldPosition.y);
-        //Calculate max and min points from 4 neighbouring nodes
-        maxposY = Mathf.Max(heights.ToArray());
-        minposY = Mathf.Min(heights.ToArray());
 
-        return maxposY - minposY;//Calculate change in altitude between highest point and lowest point and use that as slope value
+        return Mathf.Max(heights.ToArray()) - Mathf.Min(heights.ToArray());//Calculate change in altitude between highest point and lowest point and use that as slope value
     }
     //Called from outside scripts to recalulate the grid using multithreading
     public void MakeGrid() 
@@ -390,7 +385,7 @@ public class AStarPathfinder : MonoBehaviour
                 if (node.IsWalkable)
                 {
                     //Handles.Label(node.WorldPosition, node.Iteration.ToString());//Shows the iteration number ontop of the node
-                    Gizmos.DrawCube(node.WorldPosition, new Vector3(GizmoSize, GizmoSize, GizmoSize));//Visualizing each node who is walkable
+                    Gizmos.DrawCube(node.WorldPosition, new Vector3(gizmoSize, gizmoSize, gizmoSize));//Visualizing each node who is walkable
                 }
             }
         }        

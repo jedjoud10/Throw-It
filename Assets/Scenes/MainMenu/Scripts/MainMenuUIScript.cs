@@ -11,12 +11,12 @@ using UnityEngine.UI;
 //Handler for main menu UI
 public class MainMenuUIScript : MonoBehaviour
 {
-    public GameObject MultiplayerSelectScreen;
+    public GameObject multiplayerSelectScreen;
     public RufflesTransport.RufflesTransport transport;//The networking transport to use
     public InputField IPField;//Field where we will write the ip we want to connect to
     public float autoDisconnectTimeout;//If a player has started an accidental client and there was no host, then disconnect after this ammount of seconds
-    public List<string> SelectableScenes;//Scene names that the player can select that will cahnge the map when they host a game
-    public Dropdown SelectHostScene;//The selection menu to select a scene that the player will go to when they start hosting
+    public List<string> selectableScenes;//Scene names that the player can select that will cahnge the map when they host a game
+    public Dropdown selectHostScene;//The selection menu to select a scene that the player will go to when they start hosting
     // Start is called before the first frame update
     void Start()
     {
@@ -33,9 +33,9 @@ public class MainMenuUIScript : MonoBehaviour
     //Setup the scene choices
     private void SetupSceneChoices() 
     {
-        SelectHostScene.ClearOptions();//Clear the selection options
-        SelectHostScene.AddOptions(SelectableScenes);
-        SelectHostScene.RefreshShownValue();//Refresh the value just in case
+        selectHostScene.ClearOptions();//Clear the selection options
+        selectHostScene.AddOptions(selectableScenes);
+        selectHostScene.RefreshShownValue();//Refresh the value just in case
     }
     //Join a server
     public void JoinServer() 
@@ -76,7 +76,7 @@ public class MainMenuUIScript : MonoBehaviour
     //Start as host
     public void StartHost() 
     {
-        SceneManager.LoadScene(SelectableScenes[SelectHostScene.value]);
+        SceneManager.LoadScene(selectableScenes[selectHostScene.value]);
     }
     //Exit the game
     public void ExitGame() { Application.Quit(); }
@@ -87,7 +87,7 @@ public class MainMenuUIScript : MonoBehaviour
         Debug.LogError("Timeout. No host found.");
     }
     //Show multiplayer select screen
-    public void ShowMultiplayerUI() { MultiplayerSelectScreen.SetActive(true); }
+    public void ShowMultiplayerUI() { multiplayerSelectScreen.SetActive(true); }
     //Hides multiplayer select screen
-    public void HideMultiplayerUI() { MultiplayerSelectScreen.SetActive(false); }
+    public void HideMultiplayerUI() { multiplayerSelectScreen.SetActive(false); }
 }

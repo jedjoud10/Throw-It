@@ -7,8 +7,8 @@ using MLAPI.Messaging;
 //Controls health of player
 public class PlayerHealthScript : NetworkedBehaviour
 {
-    public int MaxHealth;//Maximum health of player
-    public NetworkedVarInt Health;//Current health
+    public int maxHealth;//Maximum health of player
+    public NetworkedVarInt health;//Current health
     private PlayerUIManagerScript UIManager;//Handles UI for us
     private NetworkWorldManagerScript wm;//Our networked world manager
 
@@ -33,12 +33,12 @@ public class PlayerHealthScript : NetworkedBehaviour
     public void DamagePlayer(int damage) 
     {
         if (!IsServer) return;
-        Health.Value -= damage;//Apply damage to health            
-        if(Health.Value < 0) 
+        health.Value -= damage;//Apply damage to health            
+        if(health.Value < 0) 
         {
             wm.RespawnPlayer(GetComponent<PlayerControllerScript>(), this);
         }
-        InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, Health.Value, MaxHealth, UIManager);
+        InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, health.Value, maxHealth, UIManager);
     }
     //Executed on the client to update his UI health bar
     [ClientRPC]
@@ -49,7 +49,7 @@ public class PlayerHealthScript : NetworkedBehaviour
     //Reset the player health
     public void SetupPlayerHealth() 
     {
-        Health.Value = MaxHealth;
-        InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, MaxHealth, MaxHealth, UIManager);//Update UI
+        health.Value = maxHealth;
+        InvokeClientRpcOnClient(UpdateClientHealthBar, OwnerClientId, maxHealth, maxHealth, UIManager);//Update UI
     }
 }

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
-//A handler script that handles information flow between GameConfigSaverLoader class and the game config itself
+//A handler script that loads and saves game configs and applies it
 public class GameConfigHandlerScript : MonoBehaviour
 {
-    private GameConfigSaverLoader gameConfigSaverLoader;//Config saver/loader
     private GameConfig currentGameConfig;
     private GameConfigHandlerScript instance;//Using an instance method to avoid duplicates
     private WorldManager wm;//The world manager for the current scene
@@ -39,78 +38,22 @@ public class GameConfigHandlerScript : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneChange;
         DontDestroyOnLoad(gameObject);
 
-
         wm = FindObjectOfType<WorldManager>();
-        gameConfigSaverLoader = new GameConfigSaverLoader();
-        gameConfigSaverLoader.SetupPathes();//Setup config path
-        currentGameConfig = new GameConfig();//Make default config to make sure that default variables are always present
-        GameConfig loadedConfig = gameConfigSaverLoader.LoadConfig();//Load config file
-        if (loadedConfig == null) currentGameConfig = new GameConfig();//Make a new game config if there isnt one
-        else currentGameConfig = loadedConfig;//Set the game config to use the config.txt data
+        currentGameConfig = (GameConfig) SaverLoader.Load("config.json", new GameConfig(), typeof(GameConfig));//Load config file
 
-        gameConfigSaverLoader.SaveConfig(currentGameConfig);//Save the config file to set default values if they didnt exist yet
-        LoadConfig(currentGameConfig);
+        ApplyConfig(currentGameConfig);
         Debug.Log("Finished reading game config");
-        //gameConfigSaverLoader.SaveConfig(SaveConfig());
     }
     private void OnSceneChange(Scene scene, LoadSceneMode mode)
     {
         wm = FindObjectOfType<WorldManager>();
-        LoadConfig(currentGameConfig);//Load config and apply it to the objects of the current scene
+        ApplyConfig(currentGameConfig);//Load config and apply it to the objects of the current scene
         Debug.Log("Finished reading game config on scene change");
         if (instance == null) instance = this;
         else Destroy(gameObject);
-    }
-    //Turn current game config to GameConfig class
-    private GameConfig SaveConfig()
-    {
-        GameConfig outconfig = new GameConfig();
-        //Post-processing
-        outconfig.usePostProcessing = true;
-        outconfig.fastPostProcessing = false;
-        outconfig.useFog = true;
-        outconfig.useColorGrading = true;
-        outconfig.useChromaticAberration = true;
-        outconfig.useBloom = true;
-        outconfig.useVignette = true;
-        outconfig.useAutoExposure = true;
-        outconfig.useMotionBlur = true;
-        outconfig.useAmbientOcclusion = true;
-        outconfig.useDepthOfField = true;
-        outconfig.useScreenSpaceReflections = true;
-        outconfig.useGrain = true;
-        outconfig.useLensDistortion = true;
-        outconfig.useAntiAliasing = 1;
-
-        outconfig.ScreenWidth = 1920;
-        outconfig.ScreenHeight = 1080;
-        outconfig.TargetFrameRate = 60;
-        outconfig.Fullscreen = true;
-
-        outconfig.PixelLightCount = QualitySettings.pixelLightCount;
-        outconfig.TextureQuality = QualitySettings.masterTextureLimit;
-        outconfig.AnisotropicTextures = QualitySettings.anisotropicFiltering.ToString();
-        outconfig.SoftParticles = QualitySettings.softParticles;
-        outconfig.RealtimeReflectionProbes = QualitySettings.realtimeReflectionProbes;
-        outconfig.ReflectionProbesResolution = 64;
-        outconfig.ReflectionProbesRefreshEveryFrame = true;
-        outconfig.BillboardsFaceCameraPosition = QualitySettings.billboardsFaceCameraPosition;
-        outconfig.ResolutionScalingFixedDPI = QualitySettings.resolutionScalingFixedDPIFactor;
-        outconfig.TextureStreaming = QualitySettings.streamingMipmapsActive;
-        outconfig.FastRendering = false;
-
-        outconfig.ShadowsType = QualitySettings.shadows.ToString();
-        outconfig.ShadowsResolution = QualitySettings.shadowResolution.ToString();
-        outconfig.ShadowDistance = QualitySettings.shadowDistance;
-
-        outconfig.SkinWeights = QualitySettings.skinWeights.ToString();
-        outconfig.VSync = QualitySettings.vSyncCount;
-        outconfig.LODBias = QualitySettings.lodBias;
-        outconfig.MaxLODLevel = QualitySettings.maximumLODLevel;
-        return outconfig;
-    }
+    }    
     //Turn GameConfig class into current game config
-    private void LoadConfig(GameConfig inconfig)
+    private void ApplyConfig(GameConfig inconfig)
     {
         Screen.SetResolution(inconfig.ScreenWidth, inconfig.ScreenHeight, inconfig.Fullscreen);
         Application.targetFrameRate = inconfig.TargetFrameRate;
@@ -213,5 +156,56 @@ public class GameConfigHandlerScript : MonoBehaviour
 
         wm.SetCameraAndVolumesConfig(newCameraConfig, newVolumeConfig);
     }             
-}                 
-                  
+}
+//Class that holds information about the game configuration
+public class GameConfig
+{
+    #region QualitySettings
+    //Rendering    
+    public bool Fullscreen = true; public int TargetFrameRate = 60;
+    public int ScreenHeight = 1080; public int ScreenWidth = 1920;
+    public int PixelLightCount = 5;
+    public int TextureQuality = 2;
+    public string AnisotropicTextures = "ForceEnable";
+    public bool SoftParticles = true;
+    public bool RealtimeReflectionProbes = true;
+    public int ReflectionProbesResolution = 64;
+    public bool ReflectionProbesRefreshEveryFrame = true;
+    public bool BillboardsFaceCameraPosition = true;
+    public float ResolutionScalingFixedDPI = 1f;
+    public bool TextureStreaming = true;
+    public bool FastRendering = false;
+    #endregion
+    #region Post-processing
+    //Post-processing
+    public bool usePostProcessing = true;
+    public bool fastPostProcessing = false;
+    public bool useFog = true;
+    public bool useColorGrading = true;
+    public bool useChromaticAberration = true;
+    public bool useBloom = true;
+    public bool useVignette = true;
+    public bool useAutoExposure = true;
+    public bool useMotionBlur = true;
+    public bool useAmbientOcclusion = true;
+    public bool useDepthOfField = true;
+    public bool useScreenSpaceReflections = true;
+    public bool useGrain = true;
+    public bool useLensDistortion = true;
+    public int useAntiAliasing = 1;
+    #endregion
+    #region Shadows
+    //Shadows
+    public string ShadowsType = "All";
+    public string ShadowsResolution = "VeryHigh";
+    public float ShadowDistance = 100;
+    #endregion
+    #region Other
+    //Other
+    public string SkinWeights = "Unlimited";
+    public int VSync = 1;
+    public float LODBias = 3;
+    public int MaxLODLevel = 0;
+    #endregion
+}
+

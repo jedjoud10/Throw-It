@@ -7,62 +7,62 @@ public class SnowballPropertiesScript : NetworkedBehaviour
 {
     [Header("Properities")]
     [HideInInspector]
-    public float Speed;//Speed force applied at start
+    public float speed;//Speed force applied at start
     [HideInInspector]
-    public float Size;//Size of snowball
+    public float size;//Size of snowball
     [HideInInspector]
-    public int Damage;//Damage applied to someone/something when it collides with the snowball
+    public int damage;//Damage applied to someone/something when it collides with the snowball
     [HideInInspector]
-    public float RigidbodyForce;//Force applied to every physics object when we hit it
+    public float rigidbodyForce;//Force applied to every physics object when we hit it
     [HideInInspector()]
-    public Vector3 AngularVelocity;//The angular velocity of the snowball at throw 
+    public Vector3 angularVelocity;//The angular velocity of the snowball at throw 
 
     [Header("Randomness")]
     //Speed force applied at start
-    public Vector2 SpeedRandomness;//How much randomness to apply to speed
+    public Vector2 speedRandomness;//How much randomness to apply to speed
     //Size of snowball
-    public Vector2 SizeRandomness;//How much randomness to apply to speed
+    public Vector2 sizeRandomness;//How much randomness to apply to speed
     //Damage applied to someone/something when it collides with the snowball
-    public Vector2 DamageRandomness;//How much randomness to apply to speed
+    public Vector2 damageRandomness;//How much randomness to apply to speed
 
-    public float DamageVelocityWeight;//How much the velocity changes the damage
-    public float LifeTime;//time the snowball is allowed to exist
-    public float AngularVelocityRange;//How much randomness to apply to angular velocity
-    public Vector2 RigidbodyForceRange;//How much randomness to apply to rigidbody hit force
+    public float damageVelocityWeight;//How much the velocity changes the damage
+    public float lifetime;//time the snowball is allowed to exist
+    public float angularVelocityRange;//How much randomness to apply to angular velocity
+    public Vector2 rigidbodyForceRange;//How much randomness to apply to rigidbody hit force
     //Randomizes the values
     private void RandomizeValues() 
     {
         //Randomize
-        Speed = Random.Range(SpeedRandomness.x, SpeedRandomness.y);
-        Size = Random.Range(SizeRandomness.x, SizeRandomness.y);
-        AngularVelocity = Random.insideUnitSphere * AngularVelocityRange;//Random vector for angular velocity
-        RigidbodyForce = Random.Range(RigidbodyForceRange.x, RigidbodyForceRange.y);
+        speed = Random.Range(speedRandomness.x, speedRandomness.y);
+        size = Random.Range(sizeRandomness.x, sizeRandomness.y);
+        angularVelocity = Random.insideUnitSphere * angularVelocityRange;//Random vector for angular velocity
+        rigidbodyForce = Random.Range(rigidbodyForceRange.x, rigidbodyForceRange.y);
         //Round to int since damage is int
-        Damage = Mathf.RoundToInt(Random.Range(DamageRandomness.x, DamageRandomness.y));
+        damage = Mathf.RoundToInt(Random.Range(damageRandomness.x, damageRandomness.y));
     }
     //Set snowball values
-    public void SetValues(float _Speed, float _Size, Vector3 _AngularVelocity, float _RigidbodyForce, int _Damage) 
+    public void SetValues(float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage) 
     {
         //Set new variables using the struct
-        Speed = _Speed;
-        Size = _Size;
-        AngularVelocity = _AngularVelocity;
-        RigidbodyForce = _RigidbodyForce;
-        Damage = _Damage;
+        speed = _speed;
+        size = _size;
+        angularVelocity = _angularVelocity;
+        rigidbodyForce = _rigidbodyForce;
+        damage = _damage;
     }
     //Init snowball
     public void InitSnowball(bool randomize)//Called from other scripts to init some properities and change them in some way. Also calles other stuff other from properities
     {
-        SetSnowballWorldProperities();
         if (randomize)
         {
             RandomizeValues();//Randomize snowball values            
         }
-        Destroy(gameObject, LifeTime);//Destroy snowball if lifetime is excedeed
+        SetSnowballWorldProperities();
+        Destroy(gameObject, lifetime);//Destroy snowball if lifetime is excedeed
     }
     //Set snowball game values from variables (Ex : size for local size)
     private void SetSnowballWorldProperities() 
     {
-        transform.localScale = new Vector3(Size, Size, Size);//Set world scale with size variable
+        transform.localScale = new Vector3(size, size, size);//Set world scale with size variable
     }
 }

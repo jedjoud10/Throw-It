@@ -2482,21 +2482,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db065ee2fc360214bae5bc59624f9e8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MouseSensivity: 1
-  WalkingSpeed: 5
-  SprintingSpeed: 7
-  Jump: 4
-  FactorSmoothingSpeed: 2
-  AirFriction: 1
-  BaseFriction: 7
-  MaxDistance: 0.4
-  ClientSmoothing: 15
+  mouseSensivity: 1
+  walkingSpeed: 5
+  sprintingSpeed: 7
+  jump: 4
+  factorSmoothingSpeed: 2
+  airFriction: 1
+  baseFriction: 7
+  maxDistance: 0.4
+  clientSmoothing: 15
   playerCamera: {fileID: 3713312724342768534}
-  HeadObject: {fileID: 4461263076445192020}
-  PlayerObject: {fileID: 4947533645565814336}
-  IdleFOV: 60
-  WalkingFOV: 75
-  SprintingFOV: 90
+  headObject: {fileID: 4461263076445192020}
+  playerObject: {fileID: 4947533645565814336}
+  idleFOV: 60
+  walkingFOV: 75
+  sprintingFOV: 90
 --- !u!114 &3713312724342768470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2527,12 +2527,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 675a7c67d5020db47a80f39a0852f00f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Snowball: {fileID: 2592843989083868683, guid: fd2832e91e78b0e4e9a1e5ad933f370b,
+  snowball: {fileID: 2592843989083868683, guid: fd2832e91e78b0e4e9a1e5ad933f370b,
     type: 3}
-  ThrowPoint: {fileID: 3713312724342768533}
-  ChargeIncrement: 0.5
-  ChargeTimeThreshold: 0.25
-  ChargeLerpSpeed: 1
+  throwPoint: {fileID: 3713312724342768533}
+  chargeIncrement: 0.5
+  chargeTimeThreshold: 0.25
+  chargeLerpSpeed: 1
 --- !u!114 &9077358469510247965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2545,10 +2545,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc205c7fe0528f4dba637a2d529f715, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BotHealth: {fileID: 7314114166445804112}
-  BotName: {fileID: 190319542466944796}
-  BotDebugPanel: {fileID: 5049765864897128432}
-  Camera: {fileID: 3713312724342768532}
+  botHealth: {fileID: 7314114166445804112}
+  botName: {fileID: 190319542466944796}
+  _camera: {fileID: 3713312724342768532}
 --- !u!143 &3713312724342768537
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2579,8 +2578,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47f5009d662a8f24f9254e4cdf925bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 100
-  Health:
+  maxHealth: 100
+  health:
     InternalValue: 0
 --- !u!114 &3713312724342768487
 MonoBehaviour:
@@ -2757,7 +2756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6353f9e9caa13a145afb74f34297dccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StringTag: Camera
+  stringTag: Camera
 --- !u!1 &3713312724342768574
 GameObject:
   m_ObjectHideFlags: 0
@@ -3518,7 +3517,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8282808541013120083}
   m_Layer: 0
-  m_Name: snowmantenna
+  m_Name: PlayerModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -68,13 +68,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd8c7be4d1ec4941953706eca95c457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Move: 1
-  Speed: 1.5
-  AirFriction: 0.9
-  BaseFriction: 1
-  RotationSmoothing: 2
-  MaxDistance: 0.1
-  ClientSmoothing: 15
+  move: 1
+  speed: 1.5
+  airFriction: 0.9
+  baseFriction: 1
+  rotationSmoothing: 2
+  maxDistance: 0.1
+  clientSmoothing: 15
 --- !u!114 &5320872013909586124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,12 +88,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   botScript: {fileID: 0}
-  MaxHealth: 100
-  Health:
+  maxHealth: 100
+  health:
     InternalValue: 0
-  HealthPercentage:
+  healthPercentage:
     InternalValue: 0
-  DelayDeath: 3.5
+  delayDeath: 3.5
 --- !u!114 &7809379998080732962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0270affd646eff84eae94ad58dbfb7ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MinDistance: 1
+  minDistance: 1
 --- !u!114 &521999159713424166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementScript: {fileID: 2528547628184728748}
-  bobbingScript: {fileID: 0}
+  bobbingScript: {fileID: 3435280815435834230}
   healthScript: {fileID: 5320872013909586124}
 --- !u!114 &5380061989886548917
 MonoBehaviour:

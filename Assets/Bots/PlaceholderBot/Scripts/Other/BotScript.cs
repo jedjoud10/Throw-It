@@ -2,11 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//Parent script that will be inherited from other scripts
-
+//Parent script that will be inherited from other scripts for bot creation
 //Auto add scripts if they are not already on the gameobject
-
-//TODO : Networking support
 [RequireComponent(typeof(BotMovementScript))]
 [RequireComponent(typeof(BotHealthScript))]
 public class BotScript : NetworkedBehaviour
@@ -31,8 +28,8 @@ public class BotScript : NetworkedBehaviour
     virtual public void OnBotDeath() 
     {
         //Slow down movement and bobbing
-        movementScript.Move = false;
-        if(bobbingScript != null) bobbingScript.applybobbing = false;
+        movementScript.move = false;
+        bobbingScript.applybobbing = false;
 
         isDead = true;//well, he is dead
     }

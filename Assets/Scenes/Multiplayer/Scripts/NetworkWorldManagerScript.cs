@@ -8,8 +8,7 @@ using System;
 //Well, a world manager, but for multiplayer. Yea, pretty epic
 public class NetworkWorldManagerScript : NetworkedBehaviour
 {
-    public Transform PlayerSpawnPoint;//Position where the players will spawn
-    public GameObject PlayerPrefab;//Prefab of the player
+    public Transform playerSpawnPoint;//Position where the players will spawn
     private NetworkingManager singleton;
     private bool singleplayer;//Is the game in singleplayer ?
     private string currentScene;//The current scene that we are in
@@ -28,7 +27,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
             {
                 //If we arent in the main menu, then start the game as a host
                 //MLAPI cant send any data if we are the only player, so we are going to be in singleplayer then
-                singleton.StartHost(PlayerSpawnPoint.position);
+                singleton.StartHost(playerSpawnPoint.position);
             }
         }       
     }

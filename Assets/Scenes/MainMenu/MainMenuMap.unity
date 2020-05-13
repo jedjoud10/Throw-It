@@ -3995,17 +3995,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da36fa6b2f0b9fc4ca8ac9cc74e62e7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MultiplayerSelectScreen: {fileID: 1782950327}
+  multiplayerSelectScreen: {fileID: 1782950327}
   transport: {fileID: 1216209673}
   IPField: {fileID: 139582577}
   autoDisconnectTimeout: 1000
-  SelectableScenes:
+  selectableScenes:
   - TestMap
-  - MultiplayerLobbyMap
   - Map1
   - Map2
   - Map3
-  SelectHostScene: {fileID: 381481669}
+  - MultiplayerLobbyMap
+  selectHostScene: {fileID: 381481669}
 --- !u!1001 &796559772
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15623,6 +15623,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4965688556500510481, guid: c33782e7d467b4d40b053334a4f96cb2,
+        type: 3}
+      propertyPath: calculatePathesAtStart
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8980734265699462310, guid: c33782e7d467b4d40b053334a4f96cb2,
         type: 3}

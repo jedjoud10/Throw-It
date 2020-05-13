@@ -63,18 +63,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a3db2cfed81aa5468cf0b82deaf7deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 600
-  Size: 0.5
-  Damage: 20
-  RigidbodyForce: 150
-  AngularVelocity: {x: 0, y: 0, z: 0}
-  SpeedRandomness: {x: 500, y: 600}
-  SizeRandomness: {x: 0.45, y: 0.6}
-  DamageRandomness: {x: 3, y: 6}
-  DamageVelocityWeight: 0.125
-  LifeTime: 8
-  AngularVelocityRange: 10
-  RigidbodyForceRange: {x: 5, y: 10}
+  speed: 0
+  size: 0
+  damage: 0
+  rigidbodyForce: 0
+  angularVelocity: {x: 0, y: 0, z: 0}
+  speedRandomness: {x: 500, y: 600}
+  sizeRandomness: {x: 0.45, y: 0.6}
+  damageRandomness: {x: 3, y: 6}
+  damageVelocityWeight: 0.125
+  lifetime: 8
+  angularVelocityRange: 10
+  rigidbodyForceRange: {x: 5, y: 10}
 --- !u!114 &6734747142790766063
 MonoBehaviour:
   m_ObjectHideFlags: 0
