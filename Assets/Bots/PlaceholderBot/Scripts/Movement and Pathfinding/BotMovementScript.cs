@@ -21,21 +21,19 @@ public class BotMovementScript : NetworkedBehaviour
     public float MaxDistance = 0.1f;//The maximum distance the bot can get away from the actual server bot before snapping back
     public float ClientSmoothing = 15;//How much to smooth the bot's position and rotation on the clients
 
-    #region Literal Hell : The Sequel
-    #region Networking
-    private NetworkedVarVector3 ServerBotInputVelocity = new NetworkedVarVector3(Vector3.zero);//The velocity of the bot (On the server) (Take account the rotation of the bot)
-    private NetworkedVarVector3 ServerBotPosition = new NetworkedVarVector3(Vector3.zero);//The current position of the bot (On the server)
-    private NetworkedVarQuaternion ServerBotRotation = new NetworkedVarQuaternion(Quaternion.identity);//The current rotation of the bot (On the server)
-    #endregion
+    #region Literal Hell : The Sequel    
     #region Client
     const float Gravity = 9.8f;//The gravity force applied to the bot that pushes it down (Using real world gravity acceleration)
     private Vector3 InputVelocity;//The velocity that we are using to move the bot
+    private Vector3 Position;//The position of the bot
+    private Quaternion Rotation;//The rotation of the bot
     private float Friction;//How fast the changes of velocity are (This isnt a networked var because we trust the cliant's velocity)
     private Vector3 Direction;//The direction from the current bot position to the destination
     private Vector3 Destination;//The position that we want this bot to go to
     private Vector3 WorldVelocity;//The world velocity of the bot (Rotation is taken account)
     #endregion
     private CharacterController cr;//The CharacterController for this bot
+    const string sendChannel = "UnreliableOrdered";//The channel where we are going to send the bot data
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -50,23 +48,21 @@ public class BotMovementScript : NetworkedBehaviour
 
         if (!IsServer) 
         {
-            //Move the bot on the clients using the velocity that the server gave us
-            InputVelocity = ServerBotInputVelocity.Value;
 
             //This can be optimized by making the player go faster to the correct position the more they are away from it
 
             //Snap the bot back to the right position if they are too far away (Smoothed)
-            if (Vector3.Distance(transform.position, ServerBotPosition.Value) > MaxDistance) TeleportBotToPosition(Vector3.Lerp(transform.position, ServerBotPosition.Value, ClientSmoothing * Time.deltaTime));
+            if (Vector3.Distance(transform.position, Position) > MaxDistance) TeleportBotToPosition(Vector3.Lerp(transform.position, Position, ClientSmoothing * Time.deltaTime));
 
             //Snap the bot back to the right position if they aren't moving (Smoothed)
-            if (InputVelocity.magnitude < 0.2f) TeleportBotToPosition(Vector3.Lerp(transform.position, ServerBotPosition.Value, ClientSmoothing * Time.deltaTime));
+            if (InputVelocity.magnitude < 0.2f) TeleportBotToPosition(Vector3.Lerp(transform.position, Position, ClientSmoothing * Time.deltaTime));
 
             //Move the player on other clients
             //Transform the direction to world space on the clients
             cr.Move(InputVelocity * Time.deltaTime);
 
             //Rotate the bot on the clients (Smoothed)
-            transform.rotation = Quaternion.Lerp(transform.rotation, ServerBotRotation.Value, ClientSmoothing * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Rotation, ClientSmoothing * Time.deltaTime);
             return;
         }
 
@@ -89,19 +85,16 @@ public class BotMovementScript : NetworkedBehaviour
             InputVelocity.x = Mathf.Lerp(InputVelocity.x, WorldVelocity.x * Speed, Friction * Time.deltaTime);//Set inputVelocity X axis
             InputVelocity.z = Mathf.Lerp(InputVelocity.z, WorldVelocity.z * Speed, Friction * Time.deltaTime);//Set inputVelocity Z axis
         }
+        else
+        {
+            //Stop the bot
+            InputVelocity.x = Mathf.Lerp(InputVelocity.x, 0, Friction * Time.deltaTime);
+            InputVelocity.z = Mathf.Lerp(InputVelocity.z, 0, Friction * Time.deltaTime);
+        }
 
         //Smooth out the rotation of the bot
         //Invert the direction because the bot is looking backwards when it is not inverted
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(-Direction), RotationSmoothing * Time.deltaTime);
-
-        //----We can set NetworkedVars because we are executing as server----\\
-        //Set the server velocity of the bot (world space)
-        ServerBotInputVelocity.Value = InputVelocity;
-        //Set the server position of the bot
-        ServerBotPosition.Value = transform.position;
-        //Set the rotation of the bot on the server
-        ServerBotRotation.Value = transform.rotation;
-
         #endregion        
         #region Gravity
         if (cr.isGrounded) { InputVelocity.y = Mathf.Lerp(InputVelocity.y, 0, 2 * Time.deltaTime); }
@@ -112,6 +105,13 @@ public class BotMovementScript : NetworkedBehaviour
         //Move the character controller using the InputVelocity on the local client
         //Transform local velocity into world velocity (Take account the rotation of the bot)
         cr.Move(InputVelocity * Time.deltaTime);
+
+        //Update the rotation/position on the clients
+
+        //Update the bot position and velocity if it moved
+        if (Position != transform.position) Position = transform.position; InvokeServerRpc(UpdateBotPositionOnServer, Position, InputVelocity, sendChannel);
+        //Update the bot rotation if it changed
+        if (Rotation != transform.rotation) Rotation = transform.rotation; InvokeServerRpc(UpdateBotRotationOnServer, Rotation, sendChannel);
         #endregion
     }
     #region Positioning
@@ -125,6 +125,43 @@ public class BotMovementScript : NetworkedBehaviour
     private void TeleportBotToPosition(Vector3 position)
     {
         cr.Move(position - transform.position);//Move using velocity
+    }
+    #endregion
+    #region Networking
+    //Updates the bot's position and velocity on the server
+    [ServerRPC]
+    private void UpdateBotPositionOnServer(Vector3 position, Vector3 velocity) 
+    {
+        //Update on the server
+        Position = position;
+        InputVelocity = velocity;
+
+        InvokeClientRpcOnEveryone(UpdateBotPositionOnClient, position, velocity, sendChannel);
+    }
+    //Updates the bot's position and velocity on the clients
+    [ClientRPC]
+    private void UpdateBotPositionOnClient(Vector3 position, Vector3 velocity) 
+    {
+        //Update on the client
+        Position = position;
+        InputVelocity = velocity;
+    }
+
+    //Updates the bot's rotation on the server
+    [ServerRPC]
+    private void UpdateBotRotationOnServer(Quaternion rotation)
+    {
+        //Update on the server
+        Rotation = rotation;
+
+        InvokeClientRpcOnEveryone(UpdateBotRotationOnClient, rotation, sendChannel);
+    }
+    //Updates the bot's rotation on the clients
+    [ClientRPC]
+    private void UpdateBotRotationOnClient(Quaternion rotation)
+    {
+        //Update on the client
+        Rotation = rotation;
     }
     #endregion
     //When the bots hits something

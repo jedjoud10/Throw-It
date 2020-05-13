@@ -90,7 +90,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     private void RespawnPlayerOnClients(PlayerControllerScript playerController, PlayerHealthScript playerHealth) 
     {
         playerController.ResetPlayer();
-    }
+    }    
     #endregion
     // Update is called once per frame
     void Update()
@@ -108,5 +108,14 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
                 return;
             }
         }        
+    }
+    //When the user closes the game
+    private void OnApplicationQuit()
+    {
+        if (SceneManager.GetActiveScene().name != "MainMenuMap")//If we arent in the main menu / In single player
+        {
+            singleton.StopClient();
+            if (IsHost) singleton.StopHost();
+        }
     }
 }

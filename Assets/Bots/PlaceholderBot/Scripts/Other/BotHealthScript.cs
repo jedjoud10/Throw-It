@@ -9,14 +9,17 @@ public class BotHealthScript : NetworkedBehaviour
     [HideInInspector]
     public BotScript botScript;//The script for our bot
     public int MaxHealth;//Maximum health
-    public NetworkedVarInt Health ;//Current health
+    public NetworkedVarInt Health;//Current health
+    public NetworkedVarFloat HealthPercentage;//Curent health, but from 0 to 1
     public float DelayDeath = 3.5f;//Delay before dying
     // Start is called before the first frame update
     void Start()
     {
         if (IsServer)
         {
-            Health.Value = MaxHealth;//Setup health 
+            //Setup health 
+            Health.Value = MaxHealth;
+            HealthPercentage.Value = 1;
         }
     }
     //Called from snowballs to damage bot
@@ -24,6 +27,7 @@ public class BotHealthScript : NetworkedBehaviour
     {
         if (!IsServer) return;
         Health.Value -= damage;
+        HealthPercentage.Value =  (float) Health.Value / (float) MaxHealth;
         botScript.OnBotDamage(damage, Health.Value);
         if(Health.Value <= 0)//Bot is dead 
         {

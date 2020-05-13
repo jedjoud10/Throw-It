@@ -21,12 +21,13 @@ public class WorldManager : NetworkedBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        NetworkingManager.Singleton.OnServerStarted += OnServerStart;//On server start is like the start method, but only on the server
+
     }
-    void OnServerStart() 
+    public override void NetworkStart()
     {
+        base.NetworkStart();   
         //Run the world update only on the server  
-        if (CalculatePathesAtStart)
+        if (CalculatePathesAtStart && IsServer)
         {
             pathfinder = FindObjectOfType<AStarPathfinder>();//Init base terrain
             pathfinder.MakeTerrainGrid();

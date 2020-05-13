@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7809379998080732962}
   - component: {fileID: 521999159713424166}
   - component: {fileID: 5380061989886548917}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: PlaceholderBot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Move: 1
   Speed: 1.5
-  AirFriction: 0.1
+  AirFriction: 0.9
   BaseFriction: 1
   RotationSmoothing: 2
   MaxDistance: 0.1
@@ -90,6 +90,8 @@ MonoBehaviour:
   botScript: {fileID: 0}
   MaxHealth: 100
   Health:
+    InternalValue: 0
+  HealthPercentage:
     InternalValue: 0
   DelayDeath: 3.5
 --- !u!114 &7809379998080732962
@@ -118,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementScript: {fileID: 2528547628184728748}
-  bobbingScript: {fileID: 3435280815435834230}
+  bobbingScript: {fileID: 0}
   healthScript: {fileID: 5320872013909586124}
 --- !u!114 &5380061989886548917
 MonoBehaviour:

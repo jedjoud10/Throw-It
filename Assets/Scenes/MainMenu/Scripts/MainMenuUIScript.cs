@@ -78,6 +78,8 @@ public class MainMenuUIScript : MonoBehaviour
     {
         SceneManager.LoadScene(SelectableScenes[SelectHostScene.value]);
     }
+    //Exit the game
+    public void ExitGame() { Application.Quit(); }
     //Disconnect the player because they started a client and there was no host
     private void DisconnectClientTimeout() 
     {

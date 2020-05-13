@@ -28,25 +28,20 @@ public class PlayerControllerScript : NetworkedBehaviour
 
     #region Literal Hell - Don't open
     #region Local player stuff
-    private float localPlayerRotationY;//The Y rotation of the player on the local machine
-    private float localCameraRotationX;//The X rotation of the camera on the local machine
+    private float PlayerRotationY;//The Y rotation of the player
+    private float CameraRotationX;//The X rotation of the camera
     private Vector3 InputVelocity;//The velocity that we are using to move the player
     private Vector2 InputData;//The input velocity plane (x, z) from the keyboard
+    private Vector3 Position;//The position of the player
     private bool Jumping;//If the local player is jumping
-    private CharacterController cr;//The character controller that will move the player based on velocity
     const float Gravity = 9.8f;//The gravity force applied to the player that pushes them down (Using real world gravity acceleration)
     private float Friction;//How fast the changes of velocity are (This isnt a networked var because it also changes on the server, so no need to make a ServerRPC)
     private float WalkingFactor, SprintingFactor;//Two factors for the player to smoothly transition between values
     private float Speed;//The current speed smoothed from WalkingSpeed and SprintingSpeed
     private Vector3 WorldVelocity;//The world velocity of the player (Rotation is taken account)
     #endregion
-    #region Networking
-    private NetworkedVarFloat ServerPlayerRotationY = new NetworkedVarFloat(0.0f);//The Y rotation (Left-Right) of the player on the server
-    private NetworkedVarFloat ServerCameraRotationX = new NetworkedVarFloat(0.0f);//The X rotation (Up-Down) of the camera on the server
-    private NetworkedVarVector3 ServerPlayerPosition = new NetworkedVarVector3(Vector3.zero);//The position that we want this clients's player to be at
-    private NetworkedVarVector3 ServerPlayerInputVelocity = new NetworkedVarVector3(Vector3.zero);//The input velocity of the player on the server
-    private NetworkedVarBool ServerPlayerJumping = new NetworkedVarBool(false);//If the player is jumping on the server
-    #endregion
+    private CharacterController cr;//The character controller that will move the player based on velocity
+    const string sendChannel = "UnreliableOrdered";//The channel where we are going to send the player data
     private Transform playerSpawn;//The position that this player will spawn at
     #endregion
     // Start is called before the first frame update
@@ -82,22 +77,20 @@ public class PlayerControllerScript : NetworkedBehaviour
         //If we aren't the local client 
         if (!IsLocalPlayer)
         {
-            //Move this player object on the other clients using the velocity that the server gave us
-            InputVelocity = ServerPlayerInputVelocity.Value;
 
             //Snap the player back to the right position if they are too far away (Smoothed)
-            if (Vector3.Distance(transform.position, ServerPlayerPosition.Value) > MaxDistance) MovePlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
+            if (Vector3.Distance(transform.position, Position) > MaxDistance) MovePlayerToPosition(Vector3.Lerp(transform.position, Position, ClientSmoothing * Time.deltaTime));
 
             //Snap the player back to the right position if they aren't moving (Smoothed)
-            if (InputVelocity.magnitude < 0.2f) MovePlayerToPosition(Vector3.Lerp(transform.position, ServerPlayerPosition.Value, ClientSmoothing * Time.deltaTime));
+            if (InputVelocity.magnitude < 0.2f) MovePlayerToPosition(Vector3.Lerp(transform.position, Position, ClientSmoothing * Time.deltaTime));
 
             //Move the player on other clients
             cr.Move(InputVelocity * Time.deltaTime);
 
             //Rotate the player on the other clients (Smoothed)
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, ServerPlayerRotationY.Value, 0), ClientSmoothing * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, PlayerRotationY, 0), ClientSmoothing * Time.deltaTime);
             //Rotate the player head on other clients (Smoothed)
-            HeadObject.transform.localRotation = Quaternion.Lerp(HeadObject.transform.localRotation, Quaternion.Euler(ServerCameraRotationX.Value, 0, 0), ClientSmoothing * Time.deltaTime);
+            HeadObject.transform.localRotation = Quaternion.Lerp(HeadObject.transform.localRotation, Quaternion.Euler(CameraRotationX, 0, 0), ClientSmoothing * Time.deltaTime);
 
             return;
         }
@@ -122,11 +115,11 @@ public class PlayerControllerScript : NetworkedBehaviour
         InputVelocity.z = Mathf.Lerp(InputVelocity.z, WorldVelocity.z * Speed, Friction * Time.deltaTime);//Set inputVelocity Z axis
         Debug.DrawRay(transform.position, InputVelocity);
         //Rotate the player left and right
-        localPlayerRotationY += Input.GetAxis("Mouse X") * MouseSensivity;
+        PlayerRotationY += Input.GetAxis("Mouse X") * MouseSensivity;
         //Rotate the camera up and down
-        localCameraRotationX -= Input.GetAxis("Mouse Y") * MouseSensivity;
+        CameraRotationX -= Input.GetAxis("Mouse Y") * MouseSensivity;
         //Clamp the head rotation because necks can absolutely bend over infinitely
-        localCameraRotationX = Mathf.Clamp(localCameraRotationX, -90, 90);
+        CameraRotationX = Mathf.Clamp(CameraRotationX, -90, 90);
         #endregion
         #region Walking/Sprinting factors
 
@@ -154,39 +147,57 @@ public class PlayerControllerScript : NetworkedBehaviour
         cr.Move(InputVelocity * Time.deltaTime);
 
         //Rotate the player on the local client
-        transform.rotation = Quaternion.Euler(0, localPlayerRotationY, 0);
+        transform.rotation = Quaternion.Euler(0, PlayerRotationY, 0);
         //Rotate the camera on the local client
-        playerCamera.transform.localRotation = Quaternion.Euler(localCameraRotationX, 0, 0);
+        playerCamera.transform.localRotation = Quaternion.Euler(CameraRotationX, 0, 0);
 
         //HeadObject.transform.localRotation = playerCamera.transform.localRotation;//This is useless since the local player never sees their head, but eh why not
 
         //Send that data to the server so it can relay it to the other clients
         //Send the velocity, position and if the player is jumping or not
         //When the player is moving, send the data each frame
-        if (InputVelocity.magnitude > 0) InvokeServerRpc(UpdatePlayerPositionOnServer, InputVelocity, transform.position, Jumping, OwnerClientId);
+        if (InputVelocity.sqrMagnitude > 0) InvokeServerRpc(UpdatePlayerPositionOnServer, InputVelocity, transform.position, OwnerClientId, sendChannel);
         //When the player isn't moving, send the data each 5 frames
-        else if (Time.frameCount % 5 == 0) { InvokeServerRpc(UpdatePlayerPositionOnServer, InputVelocity, transform.position, Jumping, OwnerClientId); }
+        else if (Time.frameCount % 10 == 0) { InvokeServerRpc(UpdatePlayerPositionOnServer, InputVelocity, transform.position, OwnerClientId, sendChannel); }
         //Only update the rotation if the mouse moved
-        if (Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y")) > 0.0f) InvokeServerRpc(UpdatePlayerRotationsOnServer, localPlayerRotationY, localCameraRotationX);
+        if (Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y")) > 0.0f) InvokeServerRpc(UpdatePlayerRotationsOnServer, PlayerRotationY, CameraRotationX, OwnerClientId, sendChannel);
         #endregion
     }
     #region Networking
     //Update the player position and velocity on the server
     [ServerRPC]
-    private void UpdatePlayerPositionOnServer(Vector3 velocity, Vector3 position, bool jumping, ulong clientID)
+    private void UpdatePlayerPositionOnServer(Vector3 velocity, Vector3 position, ulong clientID)
     {
-        //---Set server variables---\\
-        ServerPlayerInputVelocity.Value = velocity;
-        ServerPlayerPosition.Value = position;
-        ServerPlayerJumping.Value = jumping;
+        //Update on the server
+        InputVelocity = velocity;
+        Position = position;
+
+        InvokeClientRpcOnEveryoneExcept(UpdatePlayerPositionOnClient, clientID, velocity, position, sendChannel);
+    }
+    [ClientRPC]
+    //Update the player position and velocity on the clients
+    private void UpdatePlayerPositionOnClient(Vector3 velocity, Vector3 position) 
+    {
+        //Update on the clients
+        InputVelocity = velocity;
+        Position = position;
     }
     //Update the player rotation and camera rotation on the server
     [ServerRPC]
-    private void UpdatePlayerRotationsOnServer(float playerRotationY, float cameraRotationX)
+    private void UpdatePlayerRotationsOnServer(float playerRotationY, float cameraRotationX, ulong clientID)
     {
         //It doesnt matter if the player is cheating or not when setting the rotations
-        ServerPlayerRotationY.Value = playerRotationY;
-        ServerCameraRotationX.Value = cameraRotationX;
+        PlayerRotationY = playerRotationY;
+        CameraRotationX = cameraRotationX;
+
+        InvokeClientRpcOnEveryoneExcept(UpdatePlayerRotationsOnClient, clientID, playerRotationY, cameraRotationX, sendChannel);
+    }
+    //Update the player rotation and camera rotation on the clients
+    [ClientRPC]
+    private void UpdatePlayerRotationsOnClient(float playerRotationY, float cameraRotationX)
+    {
+        PlayerRotationY = playerRotationY;
+        CameraRotationX = cameraRotationX;
     }
     #endregion
     #region Player positioning
