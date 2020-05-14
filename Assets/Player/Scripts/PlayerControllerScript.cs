@@ -55,14 +55,14 @@ public class PlayerControllerScript : NetworkedBehaviour
 
         if (IsLocalPlayer)
         {
+            //Activate camera on other local player only
+            playerCamera.gameObject.SetActive(true);
             //Disable player models
             headObject.SetActive(false);
             playerObject.SetActive(false);
         }
         else
         {
-            //Disable camera on other players
-            playerCamera.gameObject.SetActive(false);
         }
         //Hide cursor and lock it
         Cursor.visible = false; Cursor.lockState = CursorLockMode.Locked;

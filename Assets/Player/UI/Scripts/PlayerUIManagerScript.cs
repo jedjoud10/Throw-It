@@ -16,13 +16,14 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     public Slider chargeBar;//The charge bar
     [Header("Billboard UIs")]
     public GameObject billboardCanvas;//The canvas that handles all the billboard UIs
-    private Transform _camera;//The current camera that is rendering the scene
+    private Camera _camera;//The current camera (That is rendering the scene)
     public Slider billboardHealth;
     public Text billboardNickname;
     // Start is called before the first frame update
     void Start()
     {
-        _camera = Camera.main.transform;
+        _camera = Camera.main;//Try to get a valid camera at start
+
         if (!IsLocalPlayer) { HidePlayerUI(); }
         else { HideBillboardUI(); }
     }
@@ -31,8 +32,9 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     void Update()
     {
         //Make the billboard have the same forward direction as the camera
-        //TODO: Turn this into a main billboard manager to save on performance
-        billboardCanvas.transform.forward = _camera.forward;
+        //TODO: Turn this into a main billboard manager to save on performance and optimize the camera handling
+        if (_camera != null) { billboardCanvas.transform.forward = _camera.transform.forward; }
+        else { _camera = Camera.main; }//Try to get a valid camera as soon as possible
     }
     //Update the player health UI
     public void UpdatePlayerHealth(int health, int maxHealth) 

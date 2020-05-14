@@ -2435,7 +2435,6 @@ MonoBehaviour:
   playerCamera: {fileID: 3713312724342768534}
   headObject: {fileID: 4461263076445192020}
   playerObject: {fileID: 4947533645565814336}
-  UIManager: {fileID: 3713312724342768470}
   idleFOV: 60
   walkingFOV: 75
   sprintingFOV: 90
@@ -2575,7 +2574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3713312724342768532
 Transform:
   m_ObjectHideFlags: 0
