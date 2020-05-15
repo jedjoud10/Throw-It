@@ -36,7 +36,7 @@ public class BotPhysicsScript : NetworkedBehaviour
             InvokeClientRpcOnEveryone(UpdateRigidbodyStateOnClient, rb.position, rb.rotation, sendChannel); //Send the new state to the clients
         }
 
-        if(IsClient && detachedFromBot.Value)
+        if(IsClient && detachedFromBot.Value && rotation.IsValid())
         {
             //Apply the data that the server gave us (smoothed)
             rb.position = Vector3.Lerp(rb.position, position, positionSmoothing * Time.fixedDeltaTime);
@@ -61,6 +61,7 @@ public class BotPhysicsScript : NetworkedBehaviour
         if (joint != null && Damage > damageThreshold)//Check if this part can get yeeted if damage is big enough
         {
             Destroy(joint);//remove the joint
+            rb.isKinematic = false;//Make the head movable
             detachedFromBot.Value = true;
             transform.parent = null;
             rb.AddForce(force);//Add force to our rigidbody to make it go  Y E E T
@@ -85,5 +86,22 @@ public class BotPhysicsScript : NetworkedBehaviour
     {
         Destroy(joint);//remove the joint
         transform.parent = null;
+    }
+}
+public static class UnityExtensionMethods
+{
+    //https://answers.unity.com/questions/182209/checking-for-quaternion-values-to-not-be-nan.html
+    /// <summary>
+    /// Determines whether the quaternion is safe for interpolation or use with transform.rotation.
+    /// </summary>
+    /// <returns><c>false</c> if using the quaternion in Quaternion.Lerp() will result in an error (eg. NaN values or zero-length quaternion).</returns>
+    /// <param name="quaternion">Quaternion.</param>
+    public static bool IsValid(this Quaternion quaternion)
+    {
+        bool isNaN = float.IsNaN(quaternion.x + quaternion.y + quaternion.z + quaternion.w);
+
+        bool isZero = quaternion.x == 0 && quaternion.y == 0 && quaternion.z == 0 && quaternion.w == 0;
+
+        return !(isNaN || isZero);
     }
 }
