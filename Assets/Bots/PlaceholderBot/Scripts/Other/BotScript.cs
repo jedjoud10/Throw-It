@@ -1,4 +1,5 @@
 ﻿using MLAPI;
+using MLAPI.NetworkedVar;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class BotScript : NetworkedBehaviour
     public BotMovementScript movementScript;
     public BotBobbingScript bobbingScript;
     public BotHealthScript healthScript;
-    protected bool isDead;//When the bot is dead
+    protected NetworkedVarBool isDead;//When the bot is dead
     // Start is called before the first frame update
     virtual public void Start()
     {
@@ -24,16 +25,17 @@ public class BotScript : NetworkedBehaviour
     {
         
     }
-    //Called when bot dies
+    //Called when bot dies (Only executed on server)
     virtual public void OnBotDeath() 
     {
+        if (!IsServer) return;
         //Slow down movement and bobbing
         movementScript.move = false;
         bobbingScript.applybobbing = false;
 
-        isDead = true;//well, he is dead
+        isDead.Value = true;//well, he is dead
     }
-    //Called when bot gets damaged
+    //Called when bot gets damaged (Only executed on server)
     virtual public void OnBotDamage(int damage, int newHealth) 
     {
     }

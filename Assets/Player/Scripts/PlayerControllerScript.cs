@@ -210,9 +210,10 @@ public class PlayerControllerScript : NetworkedBehaviour
         inputVelocity = Vector3.zero;
     }
     //Moves the player to a certain position
-    private void MovePlayerToPosition(Vector3 position)
+    private void MovePlayerToPosition(Vector3 _position)
     {
-        cr.Move(position - transform.position);//Move using velocity
+        transform.position = _position;
+        Physics.SyncTransforms();
     }
     #endregion
     //When the player hits something

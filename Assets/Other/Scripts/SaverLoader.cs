@@ -26,4 +26,5 @@ public class SaverLoader
         string stringData = JsonUtility.ToJson(data, true);
         File.WriteAllText(datadir + "/" + file, stringData);
     }
+    public static bool Exists(string file) { return File.Exists(datadir + "/" + file); }//If a file exists
 }

@@ -34,7 +34,7 @@ public class SnowballMovementScript : NetworkedBehaviour
         #endregion
     }
     //When we hit an object (Ex. : Player, Snowman, Ground)
-    //TODO: Make this collision handling client-trusted instead of handling it on the server
+    //TODO: Make client-prediction for the collisions
     private void OnCollisionEnter(Collision collision)
     {
         if (IsServer)

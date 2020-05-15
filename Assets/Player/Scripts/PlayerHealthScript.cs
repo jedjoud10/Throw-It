@@ -21,13 +21,11 @@ public class PlayerHealthScript : NetworkedBehaviour
         {
             //Setup health on server
             SetupPlayerHealth();
-        }      
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        }
+        else
+        {
+            UIManager.UpdatePlayerHealthBillboard(health.Value, maxHealth);//Init the billboard of this player on other clients when they join the game late
+        }
     }
     //Damage the player. Remove health out of player (Only executed on server)
     public void DamagePlayer(int damage) 
@@ -43,15 +41,15 @@ public class PlayerHealthScript : NetworkedBehaviour
     }
     //Executed on the client to update his UI health bar
     [ClientRPC]
-    private void UpdateHealthbarOnClient(int currentHealth, int maxHealth, PlayerUIManagerScript _UIManager) 
+    private void UpdateHealthbarOnClient(int _currentHealth, int _maxHealth, PlayerUIManagerScript _UIManager) 
     {
-        _UIManager.UpdatePlayerHealth(currentHealth, maxHealth);
+        _UIManager.UpdatePlayerHealth(_currentHealth, _maxHealth);
     }
     //Executed on the clients to update the player health billboard
     [ClientRPC]
-    private void UpdateBillboardHealthbarOnClients(int currentHealth, int maxHealth, PlayerUIManagerScript _UIManager) 
+    private void UpdateBillboardHealthbarOnClients(int _currentHealth, int _maxHealth, PlayerUIManagerScript _UIManager) 
     {
-        _UIManager.UpdatePlayerHealthBillboard(currentHealth, maxHealth);
+        _UIManager.UpdatePlayerHealthBillboard(_currentHealth, _maxHealth);
     }
     //Reset the player health
     public void SetupPlayerHealth() 

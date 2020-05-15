@@ -73,8 +73,8 @@ MonoBehaviour:
   airFriction: 0.9
   baseFriction: 1
   rotationSmoothing: 2
-  maxDistance: 0.1
-  clientSmoothing: 15
+  maxDistance: 0.05
+  clientSmoothing: 12
 --- !u!114 &5320872013909586124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,6 +303,8 @@ MonoBehaviour:
   botscript: {fileID: 521999159713424166}
   damageThreshold: 0
   decayTime: 15
+  positionSmoothing: 12
+  rotationSmoothing: 12
 --- !u!1001 &509201939673712222
 PrefabInstance:
   m_ObjectHideFlags: 0

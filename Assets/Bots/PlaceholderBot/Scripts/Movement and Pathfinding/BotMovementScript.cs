@@ -121,8 +121,9 @@ public class BotMovementScript : NetworkedBehaviour
     }
     //Teleports the bot to a certain position
     private void TeleportBotToPosition(Vector3 _position)
-    {
-        cr.Move(_position - transform.position);//Move using velocity
+    { 
+        transform.position = (_position);//Move using velocity
+        Physics.SyncTransforms();
     }
     #endregion
     #region Networking

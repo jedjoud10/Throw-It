@@ -17,14 +17,32 @@ public class MainMenuUIScript : MonoBehaviour
     public float autoDisconnectTimeout;//If a player has started an accidental client and there was no host, then disconnect after this ammount of seconds
     public List<string> selectableScenes;//Scene names that the player can select that will cahnge the map when they host a game
     public Dropdown selectHostScene;//The selection menu to select a scene that the player will go to when they start hosting
+    public GameObject nicknameSelectPanel;//The panel that holds the UI to select the nickname of the player
+    public InputField nicknameInputField;//The nickname the user wrote
+
     // Start is called before the first frame update
     void Start()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         SetupSceneChoices();
-    }
 
+        if (!SaverLoader.Exists("playerconfig.json")) 
+        {
+            nicknameSelectPanel.SetActive(true);
+        }
+    }
+    //When the player presses the "Save nickname" button
+    public void ApplyNickname() 
+    {
+        if(!string.IsNullOrWhiteSpace(nicknameInputField.text)) //If the nickname is valid
+        {
+            PlayerConfig newPlayerConfig = new PlayerConfig();
+            newPlayerConfig.nickname = nicknameInputField.text;
+            SaverLoader.Save("playerconfig.json", newPlayerConfig);//Save the nickname
+            nicknameSelectPanel.SetActive(false);
+        }
+    }
     // Update is called once per frame
     void Update()
     {

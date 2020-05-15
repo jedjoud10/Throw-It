@@ -29,7 +29,7 @@ public class ScrapBotScript : BotScript
     override public void Update()
     {
         base.Update();//Call parent class update method
-        if (isDead) 
+        if (isDead.Value) 
         {
             animatorSpeed = Mathf.Lerp(animatorSpeed, 0, animatorSlowdownSpeed * Time.deltaTime);//Go smoothly to zero, thus making animation smoothly stop
             animator.speed = animatorSpeed;//Set new playback speed
