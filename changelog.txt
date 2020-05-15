@@ -1,6 +1,7 @@
-Version: MultiplayerTest8
+Version: MultiplayerTest9
 
 Changelog: 
--Added networking support to bot health
--Added networking support to bot movement
--Players will now show their current health and nickname (nickname from playerconfig.json)
+-Fixed weird billboard bug when 3 or more clients join a host
+-Added network support for a BotPhysics objects (WIP)
+-Added nickname select at the start of the game
+-Bot positions will now properly sync between clients
