@@ -45,7 +45,7 @@ public class BotPathfinderScript : NetworkedBehaviour
     {
         if (pathfinder == null) return;//Bro cringe
         Debug.Log("Pathfind call for bot : " + gameObject.name);
-        pathfinder.Pathfind(transform.position, objectivePosition, this);        
+        pathfinder.Pathfind(transform.position, objectivePosition, this);
     }
     private void OnDrawGizmos()
     {
