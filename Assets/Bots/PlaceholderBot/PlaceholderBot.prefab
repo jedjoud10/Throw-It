@@ -197,7 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frequency: 20
   amplitude: 0.01
-  applybobbing: 0
+  applybobbing: 1
 --- !u!1 &8125851294297525014
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +240,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 2
   m_Constraints: 0
   m_CollisionDetection: 0

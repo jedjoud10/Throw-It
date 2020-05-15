@@ -74,7 +74,7 @@ MonoBehaviour:
   damageVelocityWeight: 0.125
   lifetime: 8
   angularVelocityRange: 10
-  rigidbodyForceRange: {x: 40, y: 50}
+  rigidbodyForceRange: {x: 5, y: 10}
 --- !u!114 &6734747142790766063
 MonoBehaviour:
   m_ObjectHideFlags: 0

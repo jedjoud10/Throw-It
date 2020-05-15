@@ -11,7 +11,7 @@ public class GameConfigHandlerScript : MonoBehaviour
     private WorldManager wm;//The world manager for the current scene
     public struct CameraConfig 
     {
-        public bool fastRender;
+        public bool fastrender;
         public bool usePostProcessing;
         public bool fastPostProcessing;
         public bool useFog;
@@ -80,21 +80,21 @@ public class GameConfigHandlerScript : MonoBehaviour
         SetCamerasConfig(
             inconfig.FastRendering,
             //Set post-processing   
-            inconfig.UsePostProcessing,
-            inconfig.FastPostProcessing,
-            inconfig.UseFog,
-            inconfig.UseColorGrading,
-            inconfig.UseChromaticAberration,
-            inconfig.UseBloom,
-            inconfig.UseVignette,
-            inconfig.UseAutoExposure,
-            inconfig.UseMotionBlur,
-            inconfig.UseAmbientOcclusion,
-            inconfig.UseDepthOfField,
-            inconfig.UseScreenSpaceReflections,
-            inconfig.UseGrain,
-            inconfig.UseLensDistortion,
-            inconfig.UseAntiAliasing
+            inconfig.usePostProcessing,
+            inconfig.fastPostProcessing,
+            inconfig.useFog,
+            inconfig.useColorGrading,
+            inconfig.useChromaticAberration,
+            inconfig.useBloom,
+            inconfig.useVignette,
+            inconfig.useAutoExposure,
+            inconfig.useMotionBlur,
+            inconfig.useAmbientOcclusion,
+            inconfig.useDepthOfField,
+            inconfig.useScreenSpaceReflections,
+            inconfig.useGrain,
+            inconfig.useLensDistortion,
+            inconfig.useAntiAliasing
         );
 
         LoadAllConfigs();//Load configs for all current scene objects
@@ -133,7 +133,7 @@ public class GameConfigHandlerScript : MonoBehaviour
     {
         //Set config for camera
         CameraConfig newCameraConfig;
-        newCameraConfig.fastRender = fastrender;
+        newCameraConfig.fastrender = fastrender;
         newCameraConfig.usePostProcessing = usepostprocessing;
         newCameraConfig.fastPostProcessing = fastpostprocessing;
         newCameraConfig.useFog = fog;
@@ -178,21 +178,21 @@ public class GameConfig
     #endregion
     #region Post-processing
     //Post-processing
-    public bool UsePostProcessing = true;
-    public bool FastPostProcessing = false;
-    public bool UseFog = true;
-    public bool UseColorGrading = true;
-    public bool UseChromaticAberration = true;
-    public bool UseBloom = true;
-    public bool UseVignette = true;
-    public bool UseAutoExposure = true;
-    public bool UseMotionBlur = true;
-    public bool UseAmbientOcclusion = true;
-    public bool UseDepthOfField = true;
-    public bool UseScreenSpaceReflections = true;
-    public bool UseGrain = true;
-    public bool UseLensDistortion = true;
-    public int UseAntiAliasing = 1;
+    public bool usePostProcessing = true;
+    public bool fastPostProcessing = false;
+    public bool useFog = true;
+    public bool useColorGrading = true;
+    public bool useChromaticAberration = true;
+    public bool useBloom = true;
+    public bool useVignette = true;
+    public bool useAutoExposure = true;
+    public bool useMotionBlur = true;
+    public bool useAmbientOcclusion = true;
+    public bool useDepthOfField = true;
+    public bool useScreenSpaceReflections = true;
+    public bool useGrain = true;
+    public bool useLensDistortion = true;
+    public int useAntiAliasing = 1;
     #endregion
     #region Shadows
     //Shadows

@@ -38,7 +38,8 @@ public class ScrapBotScript : BotScript
     //When bot dies
     override public void OnBotDeath() 
     {
-        base.OnBotDeath();        
+        base.OnBotDeath();
+
         pelletThrowingScript.isThrowing = false;//Stop shooting pellets
     }
 }

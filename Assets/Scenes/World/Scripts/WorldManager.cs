@@ -63,7 +63,7 @@ public class WorldManager : NetworkedBehaviour
         cameraLayer.fog.enabled = cameraConfig.useFog;
         cameraLayer.finalBlitToCameraTarget = cameraConfig.fastPostProcessing;
         cameraLayer.enabled = cameraConfig.usePostProcessing;//Whether or not to use postprocessing effects
-        if (cameraConfig.fastRender) camera.renderingPath = RenderingPath.Forward;
+        if (cameraConfig.fastrender) camera.renderingPath = RenderingPath.Forward;
         else { camera.renderingPath = RenderingPath.DeferredShading; }
     }
     //Loads the postprocessing config for a volume
@@ -103,7 +103,7 @@ public class WorldManager : NetworkedBehaviour
             for (int i = 0; i < pathfinders.Length; i++)
             {
                 yield return new WaitForSecondsRealtime(0.5f);//Wait before calculating the bot path to make it seem cool hehe
-                if (pathfinders[i] != null) { pathfinders[i].Pathfind(); }//Haha error go brrrrr
+                pathfinders[i].Pathfind();
             }
         }
         #endregion
