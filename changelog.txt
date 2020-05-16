@@ -1,5 +1,4 @@
-Version: No
+Version: NoButBetter
 
 Changelog: 
--Literally, just no
--Added trails for snowballs. They are pretty bad not gonna lie
+-Hopefully made the snowballs better
