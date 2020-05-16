@@ -4357,6 +4357,7 @@ MonoBehaviour:
   - Map2
   - Map3
   - MultiplayerLobbyMap
+  - MarchingCubesTestMap
   selectHostScene: {fileID: 381481669}
   nicknameSelectPanel: {fileID: 1601255518}
   nicknameInputField: {fileID: 21626461}
