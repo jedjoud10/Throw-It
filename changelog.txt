@@ -1,7 +1,5 @@
-Version: MultiplayerTest9
+Version: No
 
 Changelog: 
--Fixed weird billboard bug when 3 or more clients join a host
--Added network support for a BotPhysics objects (WIP)
--Added nickname select at the start of the game
--Bot positions will now properly sync between clients
+-Literally, just no
+-Added trails for snowballs. They are pretty bad not gonna lie
