@@ -1,6 +1,4 @@
-Version: MultiplayerTest11
+Version: GUITest1
 
 Changelog: 
--Optimized custom terrain 
--New test map using custom terrain
--Fixed test map networking bug (Not able to connect properly)
+-Updated the player GUI

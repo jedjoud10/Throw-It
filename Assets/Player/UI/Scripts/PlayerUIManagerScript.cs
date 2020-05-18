@@ -8,12 +8,10 @@ public class PlayerUIManagerScript : NetworkedBehaviour
 {
     public GameObject UICanvas;//The whole UI
     [Header("Health")]
-    public Text healthText;//Text showing current health
     public Slider healthBar;//The health bar
     public Animation healthBackAnimation;//The animation "controller"
     [Header("Snowball Charging")]
-    public Text chargeText;//UI Text
-    public Slider chargeBar;//The charge bar
+    public RawImage chargeBar;//The charge bar
     [Header("Billboard UIs")]
     public GameObject billboardCanvas;//The canvas that handles all the billboard UIs
     private Camera _camera;//The current camera (That is rendering the scene)
@@ -39,15 +37,13 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     //Update the player health UI
     public void UpdatePlayerHealth(int health, int maxHealth) 
     {
-        healthText.text = "Health : " + health;//Update health text
         healthBar.value = (float)health / (float)maxHealth;//Update health bar
         healthBackAnimation.Play();
     }
     //Updates the player snowball charge UI
-    public void UpdatePlayerCharge(float ChargePercent) 
-    {        
-        chargeText.text = "Charge : " + (ChargePercent * 100.0f).ToString("F2");
-        chargeBar.value = ChargePercent - 1;
+    public void UpdatePlayerCharge(float chargePercent) 
+    {
+        chargeBar.material.SetFloat("_Percent", chargePercent - 1);
     }
     //Hides the whole UI
     public void HidePlayerUI() { UICanvas.SetActive(false); }
