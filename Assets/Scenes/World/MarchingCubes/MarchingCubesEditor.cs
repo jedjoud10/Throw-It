@@ -12,16 +12,8 @@ public class MarchingCubesEditor : MonoBehaviour
     public bool addDensity;//The mouse button was pressed to add density
     [HideInInspector]
     public bool invertBrush;//Invert the strengh of the brush
-    public MarchingCubesEditorBrushType brushType;//The current brush we are using
-    public bool autoFixSeams;//auto fix the seams between chunks (Heavier on performance)
 
-    private MarchingCubesTerrainScript terrainScript;//The script that handles the whole marchingcube logic and meshes
-    [SerializeField]
-    public enum MarchingCubesEditorBrushType 
-    {
-        SPHERE,
-        CUBE
-    }
+    private MarchingCubesTerrainScript terrainScript;//The script that handles the whole marchingcube logic and meshes    
     // Start is called before the first frame updateasdfadf
     void Start()
     {
@@ -41,29 +33,14 @@ public class MarchingCubesEditor : MonoBehaviour
     //Gets the chunk script from the hitCollider form the brush
     private void GetChunks() 
     {
-        List<MarchingCubesChunk> outputChunks = new List<MarchingCubesChunk>();
         MarchingCubesTerrainScript.GetChunksInCubeForEach forEachChunk = new MarchingCubesTerrainScript.GetChunksInCubeForEach(ForEachChunk);
-        terrainScript.GetChunksInCube(brushSize, autoFixSeams ? 1 : 0, hitPoint, forEachChunk);
+        terrainScript.GetChunksInCube(brushSize, 1, hitPoint, forEachChunk);
     }
 
     //Callback method from the GetChunksInCube
     public void ForEachChunk(int x, int y, int z, Vector3 worldPosition, MarchingCubesTerrainScript.ChunkData chunk) 
     {
         if (!addDensity) return;
-        switch (brushType) 
-        {
-            case MarchingCubesEditorBrushType.SPHERE:
-            {
-                    terrainScript.EditChunkDensitiesSphereBrush(x, y, z, hitPoint, brushSize, brushStrengh * (invertBrush ? -1 : 1));//Paint densities using the sphere brush
-                    break;
-            }
-            case MarchingCubesEditorBrushType.CUBE:
-            {
-                    terrainScript.EditChunkDensitiesCubeBrush(x, y, z, hitPoint, brushSize, brushStrengh * (invertBrush ? -1 : 1));//Paint densities using the cube brush
-                    break;
-            }
-            default: break;
-        }
-        Debug.DrawRay(worldPosition, Vector3.up / 2);
+        terrainScript.EditChunkDensitiesSphereBrush(x, y, z, hitPoint, brushSize, brushStrengh * (invertBrush ? -1 : 1));//Paint densities using the sphere brush
     }
 }

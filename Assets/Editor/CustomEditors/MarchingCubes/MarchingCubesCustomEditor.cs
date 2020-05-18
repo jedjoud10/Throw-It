@@ -13,11 +13,7 @@ public class ObjectBuilderEditor : Editor
         MarchingCubesTerrainScript myScript = (MarchingCubesTerrainScript)target;
         if (GUILayout.Button("Generate chunks"))
         {
-            myScript.GenerateChunks(false, true, true);
-        }
-        if(GUILayout.Button("Fix Chunk Seams")) 
-        {
-            myScript.FixChunkSeams();
+            myScript.GenerateChunks();
         }
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Save Chunks"))

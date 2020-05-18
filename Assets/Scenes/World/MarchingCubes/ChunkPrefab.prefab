@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2854550919892264303}
   - component: {fileID: 7299471868574371051}
   - component: {fileID: 3653350823530270227}
-  - component: {fileID: 794733881269280456}
+  - component: {fileID: 8185168564352112003}
   m_Layer: 0
   m_Name: ChunkPrefab
   m_TagString: Untagged
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: b952e39354f62c44880b9d4abba77283, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,18 +97,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &794733881269280456
-MonoBehaviour:
+--- !u!205 &8185168564352112003
+LODGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5154164806003860041}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.06047121
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7299471868574371051}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d26605dfe78ffb94d992ffe2fbcb3417, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  x: 0
-  y: 0
-  z: 0

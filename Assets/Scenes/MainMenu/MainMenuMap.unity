@@ -11530,6 +11530,7 @@ MonoBehaviour:
     - Map1
     - Map2
     - Map3
+    - MarchingCubesTestMap
     AllowRuntimeSceneChanges: 0
     NetworkedPrefabs:
     - Prefab: {fileID: 3713312724342768572, guid: ce0fe32cc4f7d104bac3cc527cb8c6e9,
