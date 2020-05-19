@@ -1,4 +1,5 @@
-Version: 2
-VersionName: TestVersion
+Version: 3
+VersionName: yes.
 Changelog: 
--Testing the new version system
+-Fixed weird Health bar and Temperature bar positioning
+-Hosts wont disconnect if all clients disconnect

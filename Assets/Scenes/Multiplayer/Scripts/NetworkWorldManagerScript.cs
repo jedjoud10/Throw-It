@@ -58,11 +58,6 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     private void OnClientDisconnect(ulong clientID) 
     {
         if(IsClient) SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);//Return to main menu when a client disconnects
-        if (singleton.ConnectedClientsList.Count == 1 && IsHost) //Return to the main menu map only when the host is the only client in the session
-        {
-            singleton.StopHost();
-            SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);
-        }
     }
     //When the server starts
     private void OnServerStarted() 
