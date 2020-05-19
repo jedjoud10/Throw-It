@@ -1,4 +1,4 @@
-Version: GUITest1
-
+Version: 2
+VersionName: TestVersion
 Changelog: 
--Updated the player GUI
+-Testing the new version system
