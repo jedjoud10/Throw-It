@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-[CustomEditor(typeof(WorldManager))]
+[CustomEditor(typeof(WorldManagerScript))]
 public class WorldManagerCustomEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        WorldManager worldmanager = (WorldManager)target;
+        WorldManagerScript worldmanager = (WorldManagerScript)target;
         if (GUILayout.Button("Update World Map"))
         {
             worldmanager.WorldUpdate();

@@ -8,7 +8,7 @@ public class ObjectSpawnDetectionScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        WorldManager wm = FindObjectOfType<WorldManager>();
+        WorldManagerScript wm = FindObjectOfType<WorldManagerScript>();
         wm.OnObjectSpawn(gameObject, stringTag);
     }
 }

@@ -7,10 +7,10 @@ using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Rendering;
 using MLAPI;
 //Handles communications between multiple scripts and classes (Multiplayer included)
-public class WorldManager : NetworkedBehaviour
+public class WorldManagerScript : NetworkedBehaviour
 {
     public bool calculatePathesAtStart = true;//Should we calculate bot pathfinding at the start of the game ?
-    private AStarPathfinder pathfinder;//The pathfinder used for bot path calculations
+    private AStarPathfinderScript pathfinder;//The pathfinder used for bot path calculations
 
     //Reflection probes
     private int reflectionProbesResolution;
@@ -29,7 +29,7 @@ public class WorldManager : NetworkedBehaviour
         //Run the world update only on the server  
         if (calculatePathesAtStart && IsServer)
         {
-            pathfinder = FindObjectOfType<AStarPathfinder>();//Init base terrain
+            pathfinder = FindObjectOfType<AStarPathfinderScript>();//Init base terrain
             pathfinder.MakeTerrainGrid();
             WorldUpdate();
         }

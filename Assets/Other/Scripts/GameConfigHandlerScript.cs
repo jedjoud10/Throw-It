@@ -8,7 +8,7 @@ public class GameConfigHandlerScript : MonoBehaviour
 {
     private GameConfig currentGameConfig;
     private GameConfigHandlerScript instance;//Using an instance method to avoid duplicates
-    private WorldManager wm;//The world manager for the current scene
+    private WorldManagerScript wm;//The world manager for the current scene
     public struct CameraConfig 
     {
         public bool fastRender;
@@ -38,7 +38,7 @@ public class GameConfigHandlerScript : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneChange;
         DontDestroyOnLoad(gameObject);
 
-        wm = FindObjectOfType<WorldManager>();
+        wm = FindObjectOfType<WorldManagerScript>();
         currentGameConfig = (GameConfig) SaverLoader.Load("config.json", new GameConfig(), typeof(GameConfig));//Load config file
 
         ApplyConfig(currentGameConfig);
@@ -46,7 +46,7 @@ public class GameConfigHandlerScript : MonoBehaviour
     }
     private void OnSceneChange(Scene scene, LoadSceneMode mode)
     {
-        wm = FindObjectOfType<WorldManager>();
+        wm = FindObjectOfType<WorldManagerScript>();
         ApplyConfig(currentGameConfig);//Load config and apply it to the objects of the current scene
         Debug.Log("Finished reading game config on scene change");
         if (instance == null) instance = this;
@@ -125,7 +125,7 @@ public class GameConfigHandlerScript : MonoBehaviour
     {
         //Just to make sure that res is one of the following numbers. If not then make the default 64
         if (res != 16 && res != 32 && res != 64 && res != 128 && res != 256 && res != 512 && res != 1024 && res != 2048) res = 64;
-        WorldManager wm = FindObjectOfType<WorldManager>();
+        WorldManagerScript wm = FindObjectOfType<WorldManagerScript>();
         wm.SetReflectionProbeConfig(res, refreshEveryFrame);//Apply the settings
     }
     //Sets the cameras settings like whether or not to use fast rendering. Also set postprocessing settings

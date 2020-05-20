@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //Obstalce for the A* pathfinding algorithm
-public class PathfindObstacle : MonoBehaviour
+public class PathfindObstacleScript : MonoBehaviour
 {
     [HideInInspector]
     public Vector3 Position;//The position of this gameObject transform

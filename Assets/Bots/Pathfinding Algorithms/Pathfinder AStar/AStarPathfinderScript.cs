@@ -5,7 +5,7 @@ using System.Threading;
 using UnityEditor;
 //A pathfinder that uses the A* pathfinding algorithm and it is multithreaded
 //Will refact and optimize this code later on
-public class AStarPathfinder : MonoBehaviour
+public class AStarPathfinderScript : MonoBehaviour
 {
     [Header("Main settings")]
     public int maxIterations;//The max number of iterations that you are allowed
@@ -97,7 +97,7 @@ public class AStarPathfinder : MonoBehaviour
         }
     }
     //The terrain obstacles have changed, so recalculate grid using multithreading
-    private void MakeGridThread(PathfindObstacle[] obstacles) 
+    private void MakeGridThread(PathfindObstacleScript[] obstacles) 
     {
         for (int x = 0; x < gridsizeX; x++)
         {
@@ -144,7 +144,7 @@ public class AStarPathfinder : MonoBehaviour
     //Called from outside scripts to recalulate the grid using multithreading
     public void MakeGrid() 
     {
-        PathfindObstacle[] obstacles = FindObjectsOfType<PathfindObstacle>();
+        PathfindObstacleScript[] obstacles = FindObjectsOfType<PathfindObstacleScript>();
         Thread gridThread = new Thread(() => MakeGridThread(obstacles));
         gridThread.Start();
     }   

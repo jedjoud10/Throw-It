@@ -10,7 +10,7 @@ public class BotPathfinderScript : NetworkedBehaviour
     private Vector3[] destinationPoints;//The points that the bot will go to (It is an array because it is faster than a list)
     private Vector3 currentDestinationPoint;//The current destination point that the bot is heading to
     private BotScript bot;//The bot script for this specific bot
-    private AStarPathfinder pathfinder;//The global pathfinder for this current scene
+    private AStarPathfinderScript pathfinder;//The global pathfinder for this current scene
     private Vector3 objectivePosition;//The end position we want this bot to pathfind to
     // Start is called before the first frame update
     void Start()
@@ -18,7 +18,7 @@ public class BotPathfinderScript : NetworkedBehaviour
         bot = GetComponent<BotScript>();
         bot.movementScript.move = false;//Make the bot not able to move until we find a valid path
         objectivePosition = GameObject.FindGameObjectWithTag("Objective").transform.position;
-        pathfinder = FindObjectOfType<AStarPathfinder>();
+        pathfinder = FindObjectOfType<AStarPathfinderScript>();
     }
 
     // Update is called once per frame
