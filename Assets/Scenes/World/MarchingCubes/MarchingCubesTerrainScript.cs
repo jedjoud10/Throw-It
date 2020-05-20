@@ -544,16 +544,16 @@ public class MarchingCubesTerrainScript : MonoBehaviour
     //Get chunks in a cube from chunk data
     public void GetChunksInCube(float _cubeSize, int offset, Vector3 pos, GetChunksInCubeForEach delegateFunction) 
     {
-        int cubeSize = Mathf.Max(Mathf.RoundToInt(_cubeSize / size / _cubeSize), 1) + offset;
+        int newCubeSize = Mathf.Max(Mathf.RoundToInt(_cubeSize / size / cubeSize), 1) + offset;
         Vector3Int chunkPos = TransformCoordinatesWorldToChunk(pos);
         if (chunks == null || chunks.GetLength(0) != worldSize.x || chunks.GetLength(1) != worldSize.y || chunks.GetLength(2) != worldSize.z) chunks = new ChunkData[worldSize.x, worldSize.y, worldSize.z];
         int xc, yc, zc;//Position of the current chunk
         ChunkData chunk;//The current chunk that we are on
-        for (int x = -cubeSize; x < cubeSize; x++)
+        for (int x = -newCubeSize; x < newCubeSize; x++)
         {
-            for (int y = -cubeSize; y < cubeSize; y++)
+            for (int y = -newCubeSize; y < newCubeSize; y++)
             {
-                for (int z = -cubeSize; z < cubeSize; z++)
+                for (int z = -newCubeSize; z < newCubeSize; z++)
                 {
                     xc = x + chunkPos.x;
                     yc = y + chunkPos.y;
@@ -767,14 +767,14 @@ public struct MarchedCube
     {
         //Setup variables for mesh generation
         SetVariables(_cubeSize, _threshold, _size + 1, _chunkPosition);
-        densities = new float[_size + 1, _size + 1, _size + 1];        
+        densities = new float[_size + 1, _size + 1, _size + 1];
         for (int x = 0; x < _size + 1; x++)
         {
             for (int y = 0; y < _size + 1; y++)
             {
                 for (int z = 0; z < _size + 1; z++)
                 {
-                    densities[x, y, z] = -y + 2 - _chunkPosition.y;
+                    densities[x, y, z] = (-y*_cubeSize) + 2 -_chunkPosition.y;
                 }
             }
         }
@@ -838,7 +838,7 @@ public struct MarchedCube
             for (int z = 0; z < size; z++)
             {
                 densities[0, y, z] = otherDensities[size - 1, y, z];
-               // Debug.DrawRay(new Vector3(0, y, z) * cubeSize + chunkPosition, Vector3.right * 0.5f, Color.green);
+                //Debug.DrawRay(new Vector3(0, y, z) * cubeSize + chunkPosition, Vector3.right * 0.5f, Color.green);
             }
         }        
     }
@@ -896,15 +896,15 @@ public struct MarchedCube
             corners[6].density = densities[x + 1, y + 1, z + 1];
             corners[7].density = densities[x + 1, y, z + 1];
         }
-
-        outcase += (corners[0].density < threshold ? 1 : 0);
-        outcase += (corners[1].density < threshold ? 2 : 0);
-        outcase += (corners[2].density < threshold ? 4 : 0);
-        outcase += (corners[3].density < threshold ? 8 : 0);
-        outcase += (corners[4].density < threshold ? 16 : 0);
-        outcase += (corners[5].density < threshold ? 32 : 0);
-        outcase += (corners[6].density < threshold ? 64 : 0);
-        outcase += (corners[7].density < threshold ? 128 : 0);
+        //If density at a certain point is positive, then there is terrain at that point
+        outcase += (corners[0].density > threshold ? 0 : 1);
+        outcase += (corners[1].density > threshold ? 0 : 2);
+        outcase += (corners[2].density > threshold ? 0 : 4);
+        outcase += (corners[3].density > threshold ? 0 : 8);
+        outcase += (corners[4].density > threshold ? 0 : 16);
+        outcase += (corners[5].density > threshold ? 0 : 32);
+        outcase += (corners[6].density > threshold ? 0 : 64);
+        outcase += (corners[7].density > threshold ? 0 : 128);
 
         SetVerticesForEdges();
         return outcase;        
