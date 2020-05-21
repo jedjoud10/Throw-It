@@ -3,6 +3,7 @@ using MLAPI.Messaging;
 using MLAPI.NetworkedVar;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 //A script that handles communications between the Charachter Controller and other scripts. It allows us to move this gameObject to specified position
@@ -32,6 +33,8 @@ public class BotMovementScript : NetworkedBehaviour
     #endregion
     private CharacterController cr;//The CharacterController for this bot
     const string sendChannel = "UnreliableOrdered";//The channel where we are going to send the bot data
+    [HideInInspector]
+    public BotScript botScript;//The bot script of this bot
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -61,6 +64,11 @@ public class BotMovementScript : NetworkedBehaviour
 
             //Rotate the bot on the clients (Smoothed)
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, clientSmoothing * Time.deltaTime);
+
+            Vector3 eulerAnglesClient = transform.localEulerAngles;//yes.
+            eulerAnglesClient.x = botScript.rotationOffsetX;
+            transform.localEulerAngles = eulerAnglesClient;
+
             return;
         }
 
@@ -75,7 +83,7 @@ public class BotMovementScript : NetworkedBehaviour
         //Set the world velocity (rotation is taken account for this one)
         worldVelocity.x = 0; worldVelocity.z = 1;
         worldVelocity = transform.TransformDirection(worldVelocity);
-
+        worldVelocity.y = 0; worldVelocity.Normalize();
         //Smooth this to have like a acceleration effect and a sliding effect when friction is smaller
         //Only go forward, not left nor right.
         if (move) 
@@ -93,6 +101,11 @@ public class BotMovementScript : NetworkedBehaviour
         //Smooth out the rotation of the bot
         //Invert the direction because the bot is looking backwards when it is not inverted
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(-direction), rotationSmoothing * Time.deltaTime);
+        
+        Vector3 eulerAngles = transform.localEulerAngles;//yes.
+        eulerAngles.x = botScript.rotationOffsetX;
+        transform.localEulerAngles = eulerAngles;
+        
         #endregion        
         #region Gravity
         if (cr.isGrounded) { inputVelocity.y = Mathf.Lerp(inputVelocity.y, 0, 2 * Time.deltaTime); }

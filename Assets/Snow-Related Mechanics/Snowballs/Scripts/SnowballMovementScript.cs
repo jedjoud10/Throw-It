@@ -52,7 +52,7 @@ public class SnowballMovementScript : NetworkedBehaviour
                 //Damage player
                 otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(damage);
             }
-            if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().RemoveJoint(lastVelocity * rigidbodyForce, rigidBody.position, damage);
+            if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().DamageJoint(lastVelocity * rigidbodyForce, rigidBody.position, damage);
         }
         Destroy(gameObject);//Destroys the snowball
     }

@@ -57,7 +57,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     //When a client disconnects (ran on server and on local client machine)
     private void OnClientDisconnect(ulong clientID) 
     {
-        if(IsClient) SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);//Return to main menu when a client disconnects
+        if(IsClient && !IsHost) SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);//Return to main menu when a client disconnects
     }
     //When the server starts
     private void OnServerStarted() 

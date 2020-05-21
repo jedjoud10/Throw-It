@@ -14,10 +14,13 @@ public class BotScript : NetworkedBehaviour
     public BotBobbingScript bobbingScript;
     public BotHealthScript healthScript;
     protected NetworkedVarBool isDead;//When the bot is dead
+    public float rotationOffsetX;
     // Start is called before the first frame update
     virtual public void Start()
     {
-        healthScript.botScript = this;//Init bot script for health script
+        //Init this instance for bot scripts
+        healthScript.botScript = this;
+        movementScript.botScript = this;
     }
 
     // Update is called once per frame

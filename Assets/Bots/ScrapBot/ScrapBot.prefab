@@ -4901,6 +4901,8 @@ MonoBehaviour:
   botscript: {fileID: 6813172499673877050}
   damageThreshold: 50
   decayTime: 15
+  positionSmoothing: 15
+  rotationSmoothing: 15
 --- !u!1 &4968454808057817523
 GameObject:
   m_ObjectHideFlags: 0
@@ -5473,6 +5475,7 @@ GameObject:
   - component: {fileID: 128036154600147016}
   - component: {fileID: 6282971597593353102}
   - component: {fileID: 6813172499673877050}
+  - component: {fileID: 3208857891228755412}
   m_Layer: 0
   m_Name: ScrapBot
   m_TagString: Untagged
@@ -5529,12 +5532,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   move: 1
-  Speed: 1.5
-  RotationSpeed: 0.98
-  decelerationFactor: 5
-  airControlDecelerationFactor: 2
-  airControllSpeedLoss: 5
-  TiltPositionY: 0
+  speed: 1.5
+  airFriction: 0.9
+  baseFriction: 1
+  rotationSmoothing: 2
+  maxDistance: 0.1
+  clientSmoothing: 15
+  botScript: {fileID: 0}
 --- !u!114 &2788950925942958376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5548,9 +5552,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   botScript: {fileID: 0}
-  MaxHealth: 200
-  Health: 0
-  DelayDeath: 3.5
+  maxHealth: 100
+  health:
+    InternalValue: 0
+  healthPercentage:
+    InternalValue: 0
+  delayDeath: 3.5
 --- !u!114 &4328283259045829849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5592,10 +5599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da72fdb96fe98847aed6e22a41fdf0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardDistance: 1
-  upDistance: 2
-  Speed: 0.9
-  Offset: 0.6
+  contactPoint: {x: 0, y: -0.5, z: 0}
+  smoothing: 5
 --- !u!114 &6813172499673877050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5611,8 +5616,26 @@ MonoBehaviour:
   movementScript: {fileID: 5509279324734041416}
   bobbingScript: {fileID: 5520788041548390348}
   healthScript: {fileID: 2788950925942958376}
+  rotationOffsetX: 0
   animator: {fileID: 2594462075031492734}
   animatorSlowdownSpeed: 0.01
+--- !u!114 &3208857891228755412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5509279324734041431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 209037615, guid: 01701b64234b4d523d8045142cbc73fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkedInstanceId: 0
+  PrefabHash: 14049694821943344947
+  PrefabHashGenerator: ScrapBot
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!95 &2594462075031492734
 Animator:
   serializedVersion: 3

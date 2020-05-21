@@ -37,8 +37,7 @@ public class BotHealthScript : NetworkedBehaviour
     //Death after time everyone
     public void Death() 
     {
-        if (gameObject == null) return;
-        Destroy(gameObject, delayDeath);//Fast and chunky way to destroy bot after delay
         botScript.OnBotDeath();
+        Destroy(gameObject, delayDeath);//Fast and chunky way to destroy bot after delay
     }
 }

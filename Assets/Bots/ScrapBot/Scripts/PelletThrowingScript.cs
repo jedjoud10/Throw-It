@@ -1,6 +1,8 @@
 ﻿using MLAPI;
+using MLAPI.Serialization;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 //Throws pellet for the scrap bot
 

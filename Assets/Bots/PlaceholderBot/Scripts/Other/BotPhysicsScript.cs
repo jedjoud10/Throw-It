@@ -18,7 +18,7 @@ public class BotPhysicsScript : NetworkedBehaviour
     //State of the rigidbody on the clients
     private Vector3 position, velocity, angularVelocity = Vector3.zero;
     private Quaternion rotation = Quaternion.identity;
-    private NetworkedVarBool detachedFromBot;//If this physics rigidbody got it's joint removed
+    private NetworkedVarBool detachedFromBot = new NetworkedVarBool(false);//If this physics rigidbody got it's joint removed
 
     const string sendChannel = "UnreliableOrdered";
 
@@ -55,8 +55,8 @@ public class BotPhysicsScript : NetworkedBehaviour
         rotation = _rotation;
         //angularVelocity = _angularVelocity;
     }
-    //Removes joint from this part (only executed on the server)
-    public void RemoveJoint(Vector3 force, Vector3 _position, int Damage) 
+    //Damages the joint (only executed on the server)
+    public void DamageJoint(Vector3 force, Vector3 _position, int Damage) 
     {
         if (joint != null && Damage > damageThreshold)//Check if this part can get yeeted if damage is big enough
         {
@@ -74,7 +74,7 @@ public class BotPhysicsScript : NetworkedBehaviour
             //Armor bot : you guys are dying?
             //Factory guys : What no dont waste the fricking materials
             //Amalgam bot: don't worry I'm eating it
-            if (gameObject.name == "Head") botscript.healthScript.Death();
+            if (gameObject.name == "Head") botscript.healthScript.DamageBot(99999);
             
             InvokeClientRpcOnEveryone(RemoveJointOnClient);//Replicate on clients
         }
@@ -86,22 +86,5 @@ public class BotPhysicsScript : NetworkedBehaviour
     {
         Destroy(joint);//remove the joint
         transform.parent = null;
-    }
-}
-public static class UnityExtensionMethods
-{
-    //https://answers.unity.com/questions/182209/checking-for-quaternion-values-to-not-be-nan.html
-    /// <summary>
-    /// Determines whether the quaternion is safe for interpolation or use with transform.rotation.
-    /// </summary>
-    /// <returns><c>false</c> if using the quaternion in Quaternion.Lerp() will result in an error (eg. NaN values or zero-length quaternion).</returns>
-    /// <param name="quaternion">Quaternion.</param>
-    public static bool IsValid(this Quaternion quaternion)
-    {
-        bool isNaN = float.IsNaN(quaternion.x + quaternion.y + quaternion.z + quaternion.w);
-
-        bool isZero = quaternion.x == 0 && quaternion.y == 0 && quaternion.z == 0 && quaternion.w == 0;
-
-        return !(isNaN || isZero);
     }
 }

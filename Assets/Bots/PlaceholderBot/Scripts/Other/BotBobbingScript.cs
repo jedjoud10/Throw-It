@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //Adds bobbing to the bot in up and down motion
+//TODO : Networking support
 public class BotBobbingScript : MonoBehaviour
 {
     public float frequency;//Frequency for the bot motion

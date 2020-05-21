@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //Script to handle rotation of track of bot
+//TODO : Networking support and maybe remove this useless thing
 public class TrackScript : MonoBehaviour
 {
     public Transform offset;//Offset of start position of ray

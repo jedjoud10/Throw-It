@@ -1,4 +1,6 @@
-Version: 4
-VersionName: TerrainTest
+Version: 5
+VersionName: GUI/Networking
 Changelog: 
--Updated the MultiplayerLobbyMap terrain to use the custom terrain
+-Added corresponding icons on top of the health bar/temperature bar
+-New bot tilting with networking support
+-Bugs are cringe (Host will now PROPERLY not disconnect)
