@@ -19,7 +19,7 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     public Text billboardNickname;
     [Header("System Chat")]
     public Text systemChatText;
-    public Image systemChatPanel;
+    public Animation systemChatPanelAnimation;
     // Start is called before the first frame update
     void Start()
     {
@@ -67,5 +67,9 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     //Update the player nickname billboard (not networked)
     public void UpdatePlayerNicknameBillboard(string nickname) { billboardNickname.text = nickname; }
     //Update the system chat on this player
-    public void UpdateSystemChat(string newChat) { systemChatText.text = newChat; }
+    public void UpdateSystemChat(string newChat) 
+    { 
+        systemChatText.text = newChat;
+        systemChatPanelAnimation.Play();
+    }
 }

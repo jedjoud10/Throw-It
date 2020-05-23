@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Holds information for the snowball (ex : size, damage, speed) and might randomize them
-public class SnowballPropertiesScript : NetworkedBehaviour
+public class ThrowablePropertiesScript : NetworkedBehaviour
 {
     [Header("Properities")]
     [HideInInspector]

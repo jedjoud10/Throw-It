@@ -16,18 +16,19 @@ public class PlayerConfigScript : NetworkedBehaviour
         if (IsLocalPlayer) 
         {
             currentPlayerConfig = (PlayerConfig) SaverLoader.Load("playerconfig.json", new PlayerConfig(), typeof(PlayerConfig));
-            InvokeServerRpc(UpdateBillboardNicknameOnServer, currentPlayerConfig.nickname, OwnerClientId);
+            InvokeServerRpc(InitNicknameOnServer, currentPlayerConfig.nickname, OwnerClientId);
         }
         else
         {
             UIManager.UpdatePlayerNicknameBillboard(nickname.Value);//If the nickname was already set then use it
         }
     }
-    //Updates the client nickname billboard on the server
+    //Updates the client nickname on the server
     [ServerRPC]
-    private void UpdateBillboardNicknameOnServer(string _nickname, ulong clientID)
+    private void InitNicknameOnServer(string _nickname, ulong clientID)
     {
         nickname.Value = _nickname;
+        FindObjectOfType<NetworkWorldManagerScript>().UpdateSystemChat(RandomPlayerMessages.JoingameMessage(_nickname));
         InvokeClientRpcOnEveryoneExcept(UpdateBillboardNicknameOnClients, clientID, _nickname);//Ignore the local client that told us this nickname because they cannot see their nickname anyways
     }
     //Updates the client nickname billboard on the clients

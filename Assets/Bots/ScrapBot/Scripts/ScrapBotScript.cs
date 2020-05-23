@@ -12,7 +12,7 @@ public class ScrapBotScript : BotScript
     private BotStraightPathScript straightpathScript;//Goes straight to the specified destination
 
     //Throwing pellets
-    private SnowballThrowingScript thrower;//The thrower that is going to throw the pellets
+    private ThrowableThrowingScript thrower;//The thrower that is going to throw the pellets
     private NetworkedVarBool throwing = new NetworkedVarBool(false);//Are we allowed to throw pellets ?
     public float pelletThrowingDelay = 0.5f;//How much to wait (in seconds) between each pellet throw
 
@@ -28,7 +28,7 @@ public class ScrapBotScript : BotScript
 
         //Initialize scripts
         straightpathScript = GetComponent<BotStraightPathScript>();
-        thrower = GetComponent<SnowballThrowingScript>();
+        thrower = GetComponent<ThrowableThrowingScript>();
 
         if (IsServer) InvokeRepeating("ThrowPellet", 0, pelletThrowingDelay);
     }
@@ -52,6 +52,6 @@ public class ScrapBotScript : BotScript
     //Throws a single pellet (Only executed on server)
     private void ThrowPellet() 
     {
-        if (throwing.Value) thrower.ThrowSnowballOnServer(1f, "ScrapBot", OwnerClientId);
+        if (throwing.Value) thrower.ThrowOnServer(1f, "ScrapBot", OwnerClientId);
     }
 }

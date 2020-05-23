@@ -10,7 +10,7 @@ public class PlayerSnowballThrowingScript : NetworkedBehaviour
     const float chargeTimeThreshold = 0.2f;//If the player holds the charging button more that this number (in seconds) it will start charging
     private float chargeTime;//The last time value that we updated when the player threw a snowball
     private bool canThrow;//can the player throw a snowball
-    private SnowballThrowingScript thrower;//The thrower that is going to throw. yes
+    private ThrowableThrowingScript thrower;//The thrower that is going to throw. yes
     private PlayerConfigScript playerConfig;//The config holding the nickname for this player
     // Use this for initialization
     void Start()
@@ -18,7 +18,7 @@ public class PlayerSnowballThrowingScript : NetworkedBehaviour
         if (IsLocalPlayer) 
         {
             UIManager = GetComponent<PlayerUIManagerScript>();
-            thrower = GetComponent<SnowballThrowingScript>();
+            thrower = GetComponent<ThrowableThrowingScript>();
             playerConfig = GetComponent<PlayerConfigScript>();
         }
     }
@@ -43,7 +43,7 @@ public class PlayerSnowballThrowingScript : NetworkedBehaviour
             if (canThrow)
             {
                 //Reset charge timer and throw snowball
-                thrower.ThrowSnowball(charge, playerConfig.nickname.Value);
+                thrower.Throw(charge, playerConfig.nickname.Value);
                 chargeTime = 0;
             }
             canThrow = false;

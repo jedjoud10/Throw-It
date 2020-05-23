@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 //Controls the behaviour of the snowball movement and collisions
-[RequireComponent(typeof(SnowballPropertiesScript))]
-public class SnowballMovementScript : NetworkedBehaviour
+[RequireComponent(typeof(ThrowablePropertiesScript))]
+public class ThrowableMovementScript : NetworkedBehaviour
 {
     private int damage;//The base damage the snowball can do
     private float rigidbodyForce;//Force applied to every physics object when we hit it
     private Rigidbody rigidBody;//The rigidbody of the snowball
     private float damageVelocityWeight = 1;//How much the velocity changes the damage
     private Vector3 lastVelocity;//Last velocity measurement since OnCollisionEnter is called one frame after physics, thius giving us weird yeeting of the physics parts
-    SnowballPropertiesScript properties;//Properties for this snowball
+    ThrowablePropertiesScript properties;//Properties for this snowball
     // Start is called before the first frame update
     //Inits a snowball with a player nickname string
     public void InitSnowball(float speedFactor)
     {
         #region Setup properities
-        properties = GetComponent<SnowballPropertiesScript>();//Gets properities from script
+        properties = GetComponent<ThrowablePropertiesScript>();//Gets properities from script
         float Speed = properties.speed;//Use one time float since we wont reuse this float later on
         damage = properties.damage;
 
@@ -52,7 +52,7 @@ public class SnowballMovementScript : NetworkedBehaviour
             {
                 //Damage player
                 string hitPlayerNickname = otherobject.GetComponent<PlayerConfigScript>().nickname.Value;
-                otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(damage, "Snowball", RandomPlayerDeathMessages.RandomSnowballDeathMessage(hitPlayerNickname, properties.owner));
+                otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(damage, "Snowball", RandomPlayerMessages.SnowballDeathMessage(hitPlayerNickname, properties.owner));
             }
             if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().DamageJoint(lastVelocity * rigidbodyForce, rigidBody.position, damage);
         }

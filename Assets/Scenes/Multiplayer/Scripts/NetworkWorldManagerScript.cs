@@ -91,6 +91,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
 
     #region System Chat
     //Updates the system chat on all players (executed on server)
+    [ServerRPC]
     public void UpdateSystemChat(string newChat) 
     {
         InvokeClientRpcOnEveryone(UpdateSystemChatOnClient, newChat);
