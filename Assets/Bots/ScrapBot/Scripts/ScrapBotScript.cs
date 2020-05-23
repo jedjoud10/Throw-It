@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using MLAPI.NetworkedVar;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Script only used for bot "ScrapBot"
@@ -9,7 +10,12 @@ using UnityEngine;
 public class ScrapBotScript : BotScript
 {
     private BotStraightPathScript straightpathScript;//Goes straight to the specified destination
-    private PelletThrowingScript pelletThrowingScript;//The pellet throwing script that throws pellet
+
+    //Throwing pellets
+    private SnowballThrowingScript thrower;//The thrower that is going to throw the pellets
+    private NetworkedVarBool throwing = new NetworkedVarBool(false);//Are we allowed to throw pellets ?
+    public float pelletThrowingDelay = 0.5f;//How much to wait (in seconds) between each pellet throw
+
     public Animator animator;//The animator of the scrapbot
     public float animatorSlowdownSpeed;//The speed of how fast we are going to slowdown the animator's playback speed
     private float animatorSpeed;//How fast the current animation of the animator is playing
@@ -22,7 +28,9 @@ public class ScrapBotScript : BotScript
 
         //Initialize scripts
         straightpathScript = GetComponent<BotStraightPathScript>();
-        pelletThrowingScript = GetComponent<PelletThrowingScript>();
+        thrower = GetComponent<SnowballThrowingScript>();
+
+        if (IsServer) InvokeRepeating("ThrowPellet", 0, pelletThrowingDelay);
     }
 
     // Update is called once per frame
@@ -35,10 +43,15 @@ public class ScrapBotScript : BotScript
             animator.speed = animatorSpeed;//Set new playback speed
         }
     }
-    //When bot dies
+    //When bot dies (Only executed on server)
     override public void OnBotDeath() 
     {
-        base.OnBotDeath();        
-        pelletThrowingScript.isThrowing = false;//Stop shooting pellets
+        base.OnBotDeath();
+        throwing.Value = false;
+    }
+    //Throws a single pellet (Only executed on server)
+    private void ThrowPellet() 
+    {
+        if (throwing.Value) thrower.ThrowSnowballOnServer(1f, "ScrapBot", OwnerClientId);
     }
 }

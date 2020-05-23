@@ -28,35 +28,37 @@ public class PlayerHealthScript : NetworkedBehaviour
         }
     }
     //Damage the player. Remove health out of player (Only executed on server)
-    public void DamagePlayer(int damage) 
+    public void DamagePlayer(int damage, string reason, string deathMessage) 
     {
         if (!IsServer) return;
         health.Value -= damage;//Apply damage to health            
         if(health.Value < 0) 
         {
             wm.RespawnPlayer(GetComponent<PlayerControllerScript>(), this);
+            //We can do this since we are running as server
+            FindObjectOfType<NetworkWorldManagerScript>().UpdateSystemChat(deathMessage);
         }
-        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, health.Value, maxHealth, UIManager);
+        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, health.Value, maxHealth, 0, UIManager);
         InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, health.Value, maxHealth, UIManager);
     }
     //Executed on the client to update his UI health bar
     [ClientRPC]
-    private void UpdateHealthbarOnClient(int _currentHealth, int _maxHealth, PlayerUIManagerScript _UIManager) 
+    private void UpdateHealthbarOnClient(int currentHealth, int _maxHealth, int type, PlayerUIManagerScript _UIManager) 
     {
-        _UIManager.UpdatePlayerHealth(_currentHealth, _maxHealth);
+        _UIManager.UpdatePlayerHealth(currentHealth, _maxHealth, type);
     }
     //Executed on the clients to update the player health billboard
     [ClientRPC]
-    private void UpdateBillboardHealthbarOnClients(int _currentHealth, int _maxHealth, PlayerUIManagerScript _UIManager) 
+    private void UpdateBillboardHealthbarOnClients(int currentHealth, int _maxHealth, PlayerUIManagerScript _UIManager) 
     {
-        _UIManager.UpdatePlayerHealthBillboard(_currentHealth, _maxHealth);
+        _UIManager.UpdatePlayerHealthBillboard(currentHealth, _maxHealth);
     }
     //Reset the player health
     public void SetupPlayerHealth() 
     {
         health.Value = maxHealth;
         //Setup UI
-        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, maxHealth, maxHealth, UIManager);
+        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, maxHealth, maxHealth, 2, UIManager);
         InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, maxHealth, maxHealth, UIManager);
     }
 }

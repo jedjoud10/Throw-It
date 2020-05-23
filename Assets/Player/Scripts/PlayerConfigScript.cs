@@ -8,7 +8,8 @@ public class PlayerConfigScript : NetworkedBehaviour
 {
     public PlayerUIManagerScript UIManager;
     private PlayerConfig currentPlayerConfig;
-    private NetworkedVarString nickname = new NetworkedVarString();
+    [HideInInspector]
+    public NetworkedVarString nickname = new NetworkedVarString();
     // Use this for initialization
     void Start()
     {

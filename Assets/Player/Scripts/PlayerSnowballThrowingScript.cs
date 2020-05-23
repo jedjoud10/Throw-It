@@ -1,0 +1,52 @@
+﻿using UnityEngine;
+using System.Collections;
+using MLAPI;
+
+public class PlayerSnowballThrowingScript : NetworkedBehaviour
+{
+    private PlayerUIManagerScript UIManager;//Handles UI for us
+    private float charge = 1;
+    const float chargeSpeed = 3f;//How fast the snowball charging is
+    const float chargeTimeThreshold = 0.2f;//If the player holds the charging button more that this number (in seconds) it will start charging
+    private float chargeTime;//The last time value that we updated when the player threw a snowball
+    private bool canThrow;//can the player throw a snowball
+    private SnowballThrowingScript thrower;//The thrower that is going to throw. yes
+    private PlayerConfigScript playerConfig;//The config holding the nickname for this player
+    // Use this for initialization
+    void Start()
+    {
+        if (IsLocalPlayer) 
+        {
+            UIManager = GetComponent<PlayerUIManagerScript>();
+            thrower = GetComponent<SnowballThrowingScript>();
+            playerConfig = GetComponent<PlayerConfigScript>();
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!IsLocalPlayer) return;
+        UIManager.UpdatePlayerCharge(charge);
+        if (Input.GetAxis("ChargeSnowball") > 0)
+        {
+            chargeTime += Time.deltaTime;
+            //Start charging if time is over the threshold
+            if (chargeTime > chargeTimeThreshold) charge = Mathf.Lerp(charge, 2, chargeSpeed * Time.deltaTime);//Slowly go to 2
+            else charge = Mathf.Lerp(charge, 1, chargeSpeed * Time.deltaTime);//Slowly go back to 1
+
+            canThrow = true;
+        }
+        else
+        {
+            charge = Mathf.Lerp(charge, 1, chargeSpeed * Time.deltaTime);//Slowly go back to 1
+            if (canThrow)
+            {
+                //Reset charge timer and throw snowball
+                thrower.ThrowSnowball(charge, playerConfig.nickname.Value);
+                chargeTime = 0;
+            }
+            canThrow = false;
+        }
+    }
+}

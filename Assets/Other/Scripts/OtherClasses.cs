@@ -46,3 +46,21 @@ public static class UnityExtensionMethods
         return !(isNaN || isZero);
     }
 }
+//Picks a random death message when a player dies
+public static class RandomPlayerDeathMessages 
+{
+    private static string[] snowballDeathMessages = new string[4] 
+    {
+        "{0} got shrekt because {1} hit them",
+        "It seems like {1} has destroyed {0}",
+        "{0} has stopped existing because of {1}",
+        "{0} : Get shrekt.  {1} : No u"
+    };
+    public static string RandomSnowballDeathMessage(string damagedPlayerName, string snowballOwner) 
+    {
+        //Pick a random death message
+        string unformatted = snowballDeathMessages[UnityEngine.Random.Range(0, snowballDeathMessages.Length)];
+        //Format it correctly
+        return string.Format(unformatted, damagedPlayerName, snowballOwner);
+    }
+}

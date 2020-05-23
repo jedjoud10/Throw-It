@@ -11,24 +11,25 @@ public class SnowballMovementScript : NetworkedBehaviour
     private Rigidbody rigidBody;//The rigidbody of the snowball
     private float damageVelocityWeight = 1;//How much the velocity changes the damage
     private Vector3 lastVelocity;//Last velocity measurement since OnCollisionEnter is called one frame after physics, thius giving us weird yeeting of the physics parts
+    SnowballPropertiesScript properties;//Properties for this snowball
     // Start is called before the first frame update
-    public void InitSnowball(float _Speed, SnowballThrowingScript _throwingScript, bool randomize)//Multiply our base values by those arguments
+    //Inits a snowball with a player nickname string
+    public void InitSnowball(float speedFactor)
     {
         #region Setup properities
-        SnowballPropertiesScript properities = GetComponent<SnowballPropertiesScript>();//Gets properities from script
-        properities.InitSnowball(randomize);//Init snowball properities
-        float Speed = properities.speed;//Use one time float since we wont reuse this float later on
-        damage = properities.damage;
+        properties = GetComponent<SnowballPropertiesScript>();//Gets properities from script
+        float Speed = properties.speed;//Use one time float since we wont reuse this float later on
+        damage = properties.damage;
 
         //Setup variables from SnowballProperities script
-        Vector3 angularVelocity = properities.angularVelocity;
-        rigidbodyForce = properities.rigidbodyForce;
-        damageVelocityWeight = properities.damageVelocityWeight;
+        Vector3 angularVelocity = properties.angularVelocity;
+        rigidbodyForce = properties.rigidbodyForce;
+        damageVelocityWeight = properties.damageVelocityWeight;
 
         #endregion
         #region Setup Rigidbody
         rigidBody = GetComponent<Rigidbody>();//Sets the rigidbody to our own
-        rigidBody.AddForce(rigidBody.transform.forward * Speed * _Speed);//Pushes the snowball in the direction it is currently heading. Multiply the speed by the _speed argument so we can change how fast we can throw it in the SnowballThrowingScript.cs script
+        rigidBody.AddForce(rigidBody.transform.forward * Speed * speedFactor);//Pushes the snowball in the direction it is currently heading. Multiply the speed by the _speed argument so we can change how fast we can throw it in the SnowballThrowingScript.cs script
         rigidBody.transform.eulerAngles = angularVelocity;//Set rotation
         rigidBody.AddTorque(angularVelocity);//Add angular velocity force
         #endregion
@@ -50,7 +51,8 @@ public class SnowballMovementScript : NetworkedBehaviour
             if (otherobject.GetComponent<PlayerHealthScript>() != null)
             {
                 //Damage player
-                otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(damage);
+                string hitPlayerNickname = otherobject.GetComponent<PlayerConfigScript>().nickname.Value;
+                otherobject.GetComponent<PlayerHealthScript>().DamagePlayer(damage, "Snowball", RandomPlayerDeathMessages.RandomSnowballDeathMessage(hitPlayerNickname, properties.owner));
             }
             if (otherobject.GetComponent<BotPhysicsScript>() != null) otherobject.GetComponent<BotPhysicsScript>().DamageJoint(lastVelocity * rigidbodyForce, rigidBody.position, damage);
         }

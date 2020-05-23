@@ -29,8 +29,10 @@ public class SnowballPropertiesScript : NetworkedBehaviour
     public float lifetime;//time the snowball is allowed to exist
     public float angularVelocityRange;//How much randomness to apply to angular velocity
     public Vector2 rigidbodyForceRange;//How much randomness to apply to rigidbody hit force
+    [HideInInspector]
+    public string owner;//The owner for this snowball
     //Randomizes the values
-    private void RandomizeValues() 
+    public void RandomizeValues() 
     {
         //Randomize
         speed = Random.Range(speedRandomness.x, speedRandomness.y);
@@ -51,12 +53,10 @@ public class SnowballPropertiesScript : NetworkedBehaviour
         damage = _damage;
     }
     //Init snowball
-    public void InitSnowball(bool randomize)//Called from other scripts to init some properities and change them in some way. Also calles other stuff other from properities
+    //Called from other scripts to init some properities and change them in some way. Also called other stuff other from properities
+    public void InitSnowball(string _owner)
     {
-        if (randomize)
-        {
-            RandomizeValues();//Randomize snowball values            
-        }
+        owner = _owner;
         SetSnowballWorldProperities();
         Destroy(gameObject, lifetime);//Destroy snowball if lifetime is excedeed
     }

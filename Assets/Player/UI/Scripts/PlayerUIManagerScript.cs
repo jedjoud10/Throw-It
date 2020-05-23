@@ -9,7 +9,7 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     public GameObject UICanvas;//The whole UI
     [Header("Health")]
     public Slider healthBar;//The health bar
-    public Animation healthBackAnimation;//The animation "controller"
+    public Animation healthBarAnimation;//The animation "controller"
     [Header("Snowball Charging")]
     public RawImage chargeBar;//The charge bar
     [Header("Billboard UIs")]
@@ -17,13 +17,21 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     private Camera _camera;//The current camera (That is rendering the scene)
     public Slider billboardHealth;
     public Text billboardNickname;
+    [Header("System Chat")]
+    public Text systemChatText;
+    public Image systemChatPanel;
     // Start is called before the first frame update
     void Start()
     {
         _camera = Camera.main;//Try to get a valid camera at start
 
         if (!IsLocalPlayer) { HidePlayerUI(); }
-        else { HideBillboardUI(); }
+        else 
+        { 
+            HideBillboardUI();
+            FindObjectOfType<NetworkWorldManagerScript>().playerUIManager = this;
+            UpdateSystemChat("");//Init system chat
+        }
     }
 
     // Update is called once per frame
@@ -35,10 +43,15 @@ public class PlayerUIManagerScript : NetworkedBehaviour
         else { _camera = Camera.main; }//Try to get a valid camera as soon as possible
     }
     //Update the player health UI
-    public void UpdatePlayerHealth(int health, int maxHealth) 
+    //Types of player health updates are:
+    //0: Damage player
+    //1: Heal player
+    //2: Just update, without animations
+    public void UpdatePlayerHealth(int health, int maxHealth, int type) 
     {
         healthBar.value = (float)health / (float)maxHealth;//Update health bar
-        healthBackAnimation.Play();
+        if (type == 0) healthBarAnimation.Play("HealthBarDamage");
+        if (type == 1) healthBarAnimation.Play("HealthBarHeal");
     }
     //Updates the player snowball charge UI
     public void UpdatePlayerCharge(float chargePercent) 
@@ -53,4 +66,6 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     public void UpdatePlayerHealthBillboard(int health, int maxHealth) { billboardHealth.value = (float)health / (float)maxHealth; }
     //Update the player nickname billboard (not networked)
     public void UpdatePlayerNicknameBillboard(string nickname) { billboardNickname.text = nickname; }
+    //Update the system chat on this player
+    public void UpdateSystemChat(string newChat) { systemChatText.text = newChat; }
 }

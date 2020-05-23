@@ -1,6 +1,6 @@
-Version: 5
-VersionName: GUI/Networking
+Version: 6
+VersionName: Why
 Changelog: 
--Added corresponding icons on top of the health bar/temperature bar
--New bot tilting with networking support
--Bugs are cringe (Host will now PROPERLY not disconnect)
+-Reprogrammed how the player charging works
+-New system chat
+-New death messages system

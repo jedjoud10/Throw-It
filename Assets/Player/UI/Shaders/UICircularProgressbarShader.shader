@@ -40,7 +40,9 @@
             Lighting Off
             ZWrite Off
             ZTest[unity_GUIZTestMode]
-            Blend SrcAlpha OneMinusSrcAlpha
+            //Blend SrcAlpha OneMinusSrcAlpha
+            Blend OneMinusDstColor OneMinusSrcColor
+            AlphaToMask On
             ColorMask[_ColorMask]
 
             Pass
@@ -102,7 +104,7 @@
                     #ifdef UNITY_UI_CLIP_RECT
                     color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
                     #endif
-                    if(color.x < _Percent && color.a > 0.9)
+                    if(color.x < _Percent * 1.1 - 0.05f && color.a > 0.99)
                     {
                         color = IN.color;
                     }

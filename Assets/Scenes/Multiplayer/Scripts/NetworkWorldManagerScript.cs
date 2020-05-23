@@ -9,9 +9,11 @@ using System;
 public class NetworkWorldManagerScript : NetworkedBehaviour
 {
     public Transform playerSpawnPoint;//Position where the players will spawn
+    public PlayerUIManagerScript playerUIManager;//Current local player UIManager
     private NetworkingManager singleton;
     private bool singleplayer;//Is the game in singleplayer ?
     private string currentScene;//The current scene that we are in
+
     // Start is called before the first frame update
     void Start()
     {   
@@ -84,7 +86,21 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     private void RespawnPlayerOnClients(PlayerControllerScript playerController, PlayerHealthScript playerHealth) 
     {
         playerController.ResetPlayer();
-    }    
+    }
+    #endregion
+
+    #region System Chat
+    //Updates the system chat on all players (executed on server)
+    public void UpdateSystemChat(string newChat) 
+    {
+        InvokeClientRpcOnEveryone(UpdateSystemChatOnClient, newChat);
+    }
+    //Update the system chat on the local client
+    [ClientRPC]
+    private void UpdateSystemChatOnClient(string newChat) 
+    {
+        playerUIManager.UpdateSystemChat(newChat);
+    }
     #endregion
     // Update is called once per frame
     void Update()
