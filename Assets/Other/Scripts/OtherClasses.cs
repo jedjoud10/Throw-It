@@ -50,10 +50,15 @@ public static class UnityExtensionMethods
 public static class RandomPlayerMessages 
 {
     //Data
-    private static string[] snowballDeathMessages = new string[2] 
+    private static string[] throwable_snowballDeathMessages = new string[2] 
     {
         "{0} lost their nose to {1}'s shot.",
         "{1} thoroughly memed {0}."
+    };
+    private static string[] suicideDeathMessages = new string[2]
+    {
+        "{0} thought this was idiotic and went to hang themselves in style.",
+        "What comes up, comes down on {0}."
     };
     private static string[] hypothermiaDeathMessages = new string[2]
     {
@@ -77,11 +82,15 @@ public static class RandomPlayerMessages
     {
         "{1} was killed by THE AGE OF AUTOMATION."
     };
+    private static string[] throwable_generalDeathMessages = new string[0]
+    {
+
+    };
     #region Deaths
-    public static string SnowballDeathMessage(string damagedPlayerName, string snowballOwner) 
+    public static string Throwable_SnowballDeathMessage(string damagedPlayerName, string snowballOwner) 
     {
         //Pick a random death message
-        string unformatted = snowballDeathMessages[UnityEngine.Random.Range(0, snowballDeathMessages.Length)];
+        string unformatted = throwable_snowballDeathMessages[UnityEngine.Random.Range(0, throwable_snowballDeathMessages.Length)];
         //Format it correctly
         return string.Format(unformatted, damagedPlayerName, snowballOwner);
     }
@@ -89,6 +98,13 @@ public static class RandomPlayerMessages
     {
         //Pick a random death message
         string unformatted = hypothermiaDeathMessages[UnityEngine.Random.Range(0, hypothermiaDeathMessages.Length)];
+        //Format it correctly
+        return string.Format(unformatted, damagedPlayerName);
+    }
+    public static string SuicideDeathMessage(string damagedPlayerName) 
+    {
+        //Pick a random death message
+        string unformatted = suicideDeathMessages[UnityEngine.Random.Range(0, suicideDeathMessages.Length)];
         //Format it correctly
         return string.Format(unformatted, damagedPlayerName);
     }

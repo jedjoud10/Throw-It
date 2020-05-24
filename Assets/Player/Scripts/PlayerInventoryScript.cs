@@ -11,11 +11,15 @@ public class PlayerInventoryScript : NetworkedBehaviour
     public GameObject itemGameObject;//The base item object
     private Item equipedItem;//The current item the player is holding
     private NetworkedList<Item> inventory = new NetworkedList<Item>(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone });//What the player is currently holding in their inventory
+    private PlayerHealthScript healthScript;//The health script of the player
     const int maxInventorySize = 10;//Maximum number of items that the player can hold
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (IsLocalPlayer) 
+        {
+            healthScript = GetComponent<PlayerHealthScript>();
+        }
     }
 
     // Update is called once per frame
@@ -23,12 +27,27 @@ public class PlayerInventoryScript : NetworkedBehaviour
     {
         
     }
+    //Pick up an item
+    private bool PickupItem(ItemScript itemScript) 
+    {
+        if(itemScript != null) 
+        {
+            Destroy(itemScript.gameObject);
+            itemScript.itemData.PickupItem();
+            return AddItem(itemScript.itemData);
+        }
+        else
+        {
+            return false;
+        }
+    }
     //Drops an item infront of the player
     private bool DropItem(Item item) 
     {
         if (RemoveItem(item)) 
         {
             GameObject itemObject = Instantiate(itemGameObject, cameraObject.position + cameraObject.forward * 5, Quaternion.identity);
+            item.DropItem();
             return true;
         }
         else
@@ -77,6 +96,27 @@ public class PlayerInventoryScript : NetworkedBehaviour
             //Convert the equiped item intto an inventory item
             AddItem(equipedItem);
             equipedItem = null;        
+        }
+    }
+    //Consume a consumable item
+    private bool ConsumeItem(Item item) 
+    {
+        if(item is Consumable) 
+        {
+            //Add health to player
+            Consumable consumable = (Consumable)item;
+            if (healthScript.HealPlayer(consumable.healthRegeneration))
+            {
+                return RemoveItem(item);
+            }
+            else
+            {
+                return false;//Could not consume the item, health is already at max value
+            }
+        }
+        else
+        {
+            return false;
         }
     }
 }

@@ -4,10 +4,9 @@ using System.Collections;
 [CreateAssetMenu(fileName = "New Throwable", menuName = "Inventory/Create new Throwable")]
 public class Throwable : Item
 {
-    public GameObject throwableGameObject;
-    public override void InitItem()
-    {
-        base.InitItem();
-        itemType = ItemType.Throwable;
-    }
+    public GameObject throwableGameObject;    
+}
+public enum ThrowableType
+{
+    snowball
 }

@@ -9,7 +9,7 @@ using UnityEngine;
 //Snowball throwing
 public class ThrowableThrowingScript : NetworkedBehaviour
 {
-    public GameObject prefab;//The snowball prefab that we are going to throw
+    public GameObject prefab;//The object prefab that we are going to throw
     public Transform throwPoint;//The point where the snowball is throwed
     private GameObject instanceThrowObject;//The instance of the instanced object    
     /*
@@ -30,35 +30,35 @@ public class ThrowableThrowingScript : NetworkedBehaviour
         instanceThrowObject = Instantiate(prefab, throwPoint.position, throwPoint.rotation);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
         ThrowablePropertiesScript properties = instanceThrowObject.GetComponent<ThrowablePropertiesScript>();
         properties.RandomizeValues();
-        properties.InitSnowball(owner);
-        instanceThrowObject.GetComponent<ThrowableMovementScript>().InitSnowball(speedFactor);//Init the snowball with taking account the charging
-        InvokeClientRpcOnEveryoneExcept(ThrowOnClient, hostClientID, speedFactor, throwPoint.position, throwPoint.rotation, properties.speed, properties.size, properties.angularVelocity, properties.rigidbodyForce, properties.damage, owner);
+        properties.InitThrowable(owner);
+        instanceThrowObject.GetComponent<ThrowableMovementScript>().InitThrowable(speedFactor);//Init the snowball with taking account the charging
+        InvokeClientRpcOnEveryoneExcept(ThrowOnClient, hostClientID, speedFactor, throwPoint.position, throwPoint.rotation, properties.speed, properties.size, properties.angularVelocity, properties.rigidbodyForce, properties.damage, owner, prefab);
     }
     #region Player throwing
     [ServerRPC]
     //Spawns the object on the server
-    public void ThrowOnServer(float speedFactor, Vector3 pos, Quaternion rot, ulong clientID, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner)
+    public void ThrowOnServer(float speedFactor, Vector3 pos, Quaternion rot, ulong clientID, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner, GameObject _prefab)
     {
-        InvokeClientRpcOnEveryoneExcept(ThrowOnClient, clientID, speedFactor, pos, rot, _speed, _size, _angularVelocity, _rigidbodyForce, _damage, owner);
+        InvokeClientRpcOnEveryoneExcept(ThrowOnClient, clientID, speedFactor, pos, rot, _speed, _size, _angularVelocity, _rigidbodyForce, _damage, owner, _prefab);
     }
     public void Throw(float speedFactor, string owner)//Throw snowball method (Client side only)
     {
         instanceThrowObject = Instantiate(prefab, throwPoint.position, throwPoint.rotation);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
         ThrowablePropertiesScript properties = instanceThrowObject.GetComponent<ThrowablePropertiesScript>();
         properties.RandomizeValues();
-        properties.InitSnowball(owner);
-        instanceThrowObject.GetComponent<ThrowableMovementScript>().InitSnowball(speedFactor);//Init the snowball with taking account the charging
-        InvokeServerRpc(ThrowOnServer, speedFactor, throwPoint.position, throwPoint.rotation, OwnerClientId, properties.speed, properties.size, properties.angularVelocity, properties.rigidbodyForce, properties.damage, owner);
+        properties.InitThrowable(owner);
+        instanceThrowObject.GetComponent<ThrowableMovementScript>().InitThrowable(speedFactor);//Init the snowball with taking account the charging
+        InvokeServerRpc(ThrowOnServer, speedFactor, throwPoint.position, throwPoint.rotation, OwnerClientId, properties.speed, properties.size, properties.angularVelocity, properties.rigidbodyForce, properties.damage, owner, prefab);
     }
     [ClientRPC]
     //Spawns the object on all the clients except the owner
-    private void ThrowOnClient(float speedFactor, Vector3 pos, Quaternion rot, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner) 
+    private void ThrowOnClient(float speedFactor, Vector3 pos, Quaternion rot, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner, GameObject _prefab) 
     {
-        instanceThrowObject = Instantiate(prefab, pos, rot);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
+        instanceThrowObject = Instantiate(_prefab, pos, rot);//Throw snowball and set that spawned snoball as our variable so we can call the InitSnowball method
         ThrowablePropertiesScript properties = instanceThrowObject.GetComponent<ThrowablePropertiesScript>();
         properties.SetValues(_speed, _size, _angularVelocity, _rigidbodyForce, _damage);
-        properties.InitSnowball(owner);
-        instanceThrowObject.GetComponent<ThrowableMovementScript>().InitSnowball(speedFactor);//Init the snowball with taking account the charging
+        properties.InitThrowable(owner);
+        instanceThrowObject.GetComponent<ThrowableMovementScript>().InitThrowable(speedFactor);//Init the snowball with taking account the charging
     }
     #endregion
 }

@@ -1,6 +1,5 @@
-Version: 6
-VersionName: Why
+Version: 7
+VersionName: System chat update
 Changelog: 
--Reprogrammed how the player charging works
--New system chat
--New death messages system
+-New death messages for the system chat
+-System chat has now a sliding animation

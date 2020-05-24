@@ -1,11 +1,10 @@
 ﻿using MLAPI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-//Holds information for the snowball (ex : size, damage, speed) and might randomize them
+//Holds information for the throwable (ex : size, damage, speed) and might randomize them
 public class ThrowablePropertiesScript : NetworkedBehaviour
 {
     [Header("Properities")]
+    public ThrowableType throwableType;
     [HideInInspector]
     public float speed;//Speed force applied at start
     [HideInInspector]
@@ -54,15 +53,10 @@ public class ThrowablePropertiesScript : NetworkedBehaviour
     }
     //Init snowball
     //Called from other scripts to init some properities and change them in some way. Also called other stuff other from properities
-    public void InitSnowball(string _owner)
+    public void InitThrowable(string _owner)
     {
         owner = _owner;
-        SetSnowballWorldProperities();
-        Destroy(gameObject, lifetime);//Destroy snowball if lifetime is excedeed
-    }
-    //Set snowball game values from variables (Ex : size for local size)
-    private void SetSnowballWorldProperities() 
-    {
         transform.localScale = new Vector3(size, size, size);//Set world scale with size variable
+        Destroy(gameObject, lifetime);//Destroy snowball if lifetime is excedeed
     }
 }
