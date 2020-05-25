@@ -27,5 +27,6 @@ public class ItemScript : NetworkedBehaviour
     public void SetItemModel(GameObject model) 
     {
         Instantiate(model, itemModelHolder, false);
+        GetComponent<MeshCollider>().sharedMesh = model.GetComponent<MeshFilter>().sharedMesh;
     }
 }

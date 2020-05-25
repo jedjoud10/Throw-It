@@ -22,6 +22,11 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
     {
 
     }
+    //Deselects the current
+    public void Deselect() 
+    {
+        itemName.text = ""; itemDescription.text = ""; itemCustomDescription.text = "";
+    }
     //Select a specific item
     public void SelectItem(Item item) 
     {        
@@ -34,13 +39,21 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
         itemDescription.text = item.itemDescription;
         if(item is Throwable) 
         {
+            string customDescription = "";
+            Throwable throwable = (Throwable)item;
+            //Custom description
+            customDescription = "Type: " + throwable.type + '\n';
+            customDescription += "Speed randomness: " + throwable.speedRandomness + '\n';
+            customDescription += "Size randomness: " + throwable.sizeRandomness + '\n';
+            customDescription += "Damage randomness: " + throwable.damageRandomness;
+            itemCustomDescription.text = customDescription;
             return;
         }
         if (item is Consumable)
         {
             string customDescription = "";
             Consumable consumable = (Consumable)item;
-            //Custom regeneration
+            //Custom description
             customDescription = "Health regeneration: " + consumable.healthRegeneration + '\n';
             customDescription += "Temperature regeneration: " + consumable.temperatureRegeneration;
             itemCustomDescription.text = customDescription;

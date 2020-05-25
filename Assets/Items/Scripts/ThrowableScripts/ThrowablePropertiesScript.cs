@@ -3,7 +3,7 @@ using UnityEngine;
 //Holds information for the throwable (ex : size, damage, speed) and might randomize them
 public class ThrowablePropertiesScript : NetworkedBehaviour
 {
-    [Header("Properities")]
+    [HideInInspector]
     public ThrowableType throwableType;
     [HideInInspector]
     public float speed;//Speed force applied at start
@@ -15,21 +15,36 @@ public class ThrowablePropertiesScript : NetworkedBehaviour
     public float rigidbodyForce;//Force applied to every physics object when we hit it
     [HideInInspector()]
     public Vector3 angularVelocity;//The angular velocity of the snowball at throw 
+    [HideInInspector]
+    public float damageVelocityWeight;//How much the velocity changes the damage
 
     [Header("Randomness")]
     //Speed force applied at start
-    public Vector2 speedRandomness;//How much randomness to apply to speed
+    private Vector2 speedRandomness;//How much randomness to apply to speed
     //Size of snowball
-    public Vector2 sizeRandomness;//How much randomness to apply to speed
+    private Vector2 sizeRandomness;//How much randomness to apply to speed
     //Damage applied to someone/something when it collides with the snowball
-    public Vector2 damageRandomness;//How much randomness to apply to speed
+    private Vector2 damageRandomness;//How much randomness to apply to speed
 
-    public float damageVelocityWeight;//How much the velocity changes the damage
-    public float lifetime;//time the snowball is allowed to exist
-    public float angularVelocityRange;//How much randomness to apply to angular velocity
-    public Vector2 rigidbodyForceRange;//How much randomness to apply to rigidbody hit force
+    private float lifetime;//time the snowball is allowed to exist
+    private float angularVelocityRange;//How much randomness to apply to angular velocity
+    private Vector2 rigidbodyForceRange;//How much randomness to apply to rigidbody hit force
     [HideInInspector]
     public string owner;//The owner for this snowball
+    //Load the throwable values from the item id
+    public void LoadItemData(int throwableID) 
+    {
+        Throwable throwable = (Throwable)ItemsHandler.ID2Item(throwableID);
+        //Set all values from scriptable object
+        throwableType = throwable.type;
+        speedRandomness = throwable.speedRandomness;
+        sizeRandomness = throwable.sizeRandomness;
+        damageRandomness = throwable.damageRandomness;
+        damageVelocityWeight = throwable.damageVelocityWeight;
+        lifetime = throwable.lifetime;
+        angularVelocityRange = throwable.angularVelocityRange;
+        rigidbodyForceRange = throwable.rigidbodyForceRange;
+    }
     //Randomizes the values
     public void RandomizeValues() 
     {
@@ -51,7 +66,7 @@ public class ThrowablePropertiesScript : NetworkedBehaviour
         rigidbodyForce = _rigidbodyForce;
         damage = _damage;
     }
-    //Init snowball
+    //Init throwable
     //Called from other scripts to init some properities and change them in some way. Also called other stuff other from properities
     public void InitThrowable(string _owner)
     {

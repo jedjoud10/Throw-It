@@ -64,19 +64,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a3db2cfed81aa5468cf0b82deaf7deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemID: 1
   throwableType: 0
   speed: 0
   size: 0
   damage: 0
   rigidbodyForce: 0
   angularVelocity: {x: 0, y: 0, z: 0}
-  speedRandomness: {x: 500, y: 600}
-  sizeRandomness: {x: 1, y: 1}
-  damageRandomness: {x: 3, y: 6}
   damageVelocityWeight: 0.125
-  lifetime: 8
-  angularVelocityRange: 10
-  rigidbodyForceRange: {x: 40, y: 50}
   owner: 
 --- !u!114 &6734747142790766063
 MonoBehaviour:

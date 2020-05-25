@@ -232,7 +232,7 @@ public class PlayerControllerScript : NetworkedBehaviour
         if (hit.normal.y < 0.9) return;//Discard the collision if it wasn't under the player
         friction = baseFriction;//Since we are on the ground, reset the friction (The friction changes if we are in air)
         //If we hit a PhysicsObject
-        if (hit.gameObject.GetComponent<PhysicsObjectScript>())
+        if (hit.gameObject.GetComponent<PhysicsObjectScript>() != null)
         {
             //Override the current friction
             friction = hit.gameObject.GetComponent<PhysicsObjectScript>().friction;

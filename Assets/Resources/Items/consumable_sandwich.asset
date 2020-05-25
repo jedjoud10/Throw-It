@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27b05c6702ab3474eb320bbacccc83f4, type: 3}
-  m_Name: sandwichItem
+  m_Name: consumable_sandwich
   m_EditorClassIdentifier: 
   itemName: Sandwich
   itemModel: {fileID: -927199367670048503, guid: 4fb516bdb779fed4ca9fe52bbb11907b,

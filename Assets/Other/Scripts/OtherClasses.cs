@@ -132,7 +132,7 @@ public static class ItemsHandler
     public static void LoadAllItems() 
     {
         items = Resources.LoadAll<Item>("Items");
-        Debug.LogWarning("Loaded " + items.Length + " items !");
+        Debug.LogWarning("Loaded " + items.Length + " items !");        
     }
     //Transform an itemID into an item
     public static Item ID2Item(int id) 

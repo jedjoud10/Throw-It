@@ -62,18 +62,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a3db2cfed81aa5468cf0b82deaf7deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 600
-  Size: 1
-  Damage: 5
-  DamageVelocityWeight: 0.125
-  RigidbodyForce: 100
-  LifeTime: 4
-  AngularVelocity: {x: 0, y: 0, z: 0}
-  SpeedRandomness: 0.1
-  SizeRandomness: 0.1
-  DamageRandomness: 0.1
-  AngularVelocityRange: 10
-  RigidbodyForceRange: 0.1
+  itemID: 2
+  throwableType: 0
+  speed: 0
+  size: 0
+  damage: 0
+  rigidbodyForce: 0
+  angularVelocity: {x: 0, y: 0, z: 0}
+  damageVelocityWeight: 0
+  owner: 
 --- !u!114 &8037410182261337070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,7 +93,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5012079817539591344, guid: d329d29a0e1857b489fbbe0ac6e7f5d7, type: 3}
