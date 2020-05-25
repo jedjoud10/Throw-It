@@ -28,7 +28,7 @@ public class PlayerConfigScript : NetworkedBehaviour
     private void InitNicknameOnServer(string _nickname, ulong clientID)
     {
         nickname.Value = _nickname;
-        FindObjectOfType<NetworkWorldManagerScript>().UpdateSystemChat(RandomPlayerMessages.JoingameMessage(_nickname));
+        FindObjectOfType<NetworkWorldManagerScript>().UpdateSystemChat(RandomPlayerMessages.Joingame(_nickname));
         InvokeClientRpcOnEveryoneExcept(UpdateBillboardNicknameOnClients, clientID, _nickname);//Ignore the local client that told us this nickname because they cannot see their nickname anyways
     }
     //Updates the client nickname billboard on the clients

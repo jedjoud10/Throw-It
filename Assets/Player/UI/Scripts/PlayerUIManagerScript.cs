@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//Hadnles communications between scripts and UI of the player
+//Handles communications between scripts and UI of the player
 public class PlayerUIManagerScript : NetworkedBehaviour
 {
     public GameObject UICanvas;//The whole UI

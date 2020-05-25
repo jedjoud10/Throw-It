@@ -7,13 +7,6 @@ public class Item : ScriptableObject
 {
     public string itemName;//The name of the item
     public GameObject itemModel;//The model of this item
-    //This is so useless
-    virtual public void DropItem() //Called when a player drops this item
-    {
-        
-    }
-    virtual public void PickupItem() //Called when a player collects this item
-    {
-    
-    }
+    public Texture itemIcon;//The icon for this specific item
+    public string itemDescription;//The unique description for this item
 }

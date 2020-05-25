@@ -11,6 +11,7 @@ public class WorldManagerScript : NetworkedBehaviour
 {
     public bool calculatePathesAtStart = true;//Should we calculate bot pathfinding at the start of the game ?
     private AStarPathfinderScript pathfinder;//The pathfinder used for bot path calculations
+    private string currentScene;//The current scene that we are in
 
     //Reflection probes
     private int reflectionProbesResolution;
@@ -21,7 +22,12 @@ public class WorldManagerScript : NetworkedBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        currentScene = SceneManager.GetActiveScene().name;
+        if(currentScene != "MainMenuMap") 
+        {
+            //Load items from resource folder at the start of a game
+            ItemsHandler.LoadAllItems();
+        }
     }
     public override void NetworkStart()
     {

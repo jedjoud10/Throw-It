@@ -5,12 +5,16 @@ using UnityEngine;
 //Script that is applied to items on the ground
 public class ItemScript : NetworkedBehaviour
 {
-    public Item itemData;//The item data associated with this item
+    public int itemID;//The item data associated with this item
     public Transform itemModelHolder;//The holder for the instantiated model
     // Start is called before the first frame update
     void Start()
     {
-        
+        //Init the item
+        if (itemID != -1)
+        {
+            SetItemModel(ItemsHandler.ID2Item(itemID).itemModel);
+        }
     }
 
     // Update is called once per frame

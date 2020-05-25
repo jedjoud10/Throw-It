@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestMaps/MarchingCubesTestMap.unity
     guid: 84f8f9bf30920b44fafeb6e6a38d0029
+  - enabled: 1
+    path: Assets/Scenes/TestMaps/InventoryTestMap.unity
+    guid: cbed01d8caff9a247a261b0e4aec57b1
   m_configObjects: {}

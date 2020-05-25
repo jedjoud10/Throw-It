@@ -50,77 +50,100 @@ public static class UnityExtensionMethods
 public static class RandomPlayerMessages 
 {
     //Data
-    private static string[] throwable_snowballDeathMessages = new string[2] 
+    private static string[] death_throwable_general = new string[0]
+    {
+
+    };
+    private static string[] death_throwable_snowball = new string[2] 
     {
         "{0} lost their nose to {1}'s shot.",
         "{1} thoroughly memed {0}."
     };
-    private static string[] suicideDeathMessages = new string[2]
+    private static string[] death_suicide = new string[2]
     {
         "{0} thought this was idiotic and went to hang themselves in style.",
         "What comes up, comes down on {0}."
     };
-    private static string[] hypothermiaDeathMessages = new string[2]
+    private static string[] death_hypothermia = new string[2]
     {
         "{0} met a chilly end.",
         "{0} froze to oblivion."
     };
-    private static string[] leftgameDeathMessages = new string[3] 
+    private static string[] leftgame = new string[3] 
     {
         "{0} threw in the towel.",
         "{0} went to go play minecraft.",
         "{0} realized they left the oven on."
     };
-    private static string[] joingameMessages = new string[4]
+    private static string[] joingame = new string[4]
     {
         "{0} dropped in. Welcome to the warzone.",
         "{0} joined. You're in Snow Man's Land.",
         "{0} popped into the fort. You'll be assigned to a station soon.",
         "Guess who came to the playground? {0}!"
     };
-    private static string[] machineyDeathMessages = new string[1] 
+    private static string[] death_machinery_general = new string[1] 
     {
         "{1} was killed by THE AGE OF AUTOMATION."
     };
-    private static string[] throwable_generalDeathMessages = new string[0]
-    {
-
-    };
     #region Deaths
-    public static string Throwable_SnowballDeathMessage(string damagedPlayerName, string snowballOwner) 
+    public static string Death_Throwable_Snowball(string damagedPlayerName, string snowballOwner) 
     {
         //Pick a random death message
-        string unformatted = throwable_snowballDeathMessages[UnityEngine.Random.Range(0, throwable_snowballDeathMessages.Length)];
+        string unformatted = death_throwable_snowball[UnityEngine.Random.Range(0, death_throwable_snowball.Length)];
         //Format it correctly
         return string.Format(unformatted, damagedPlayerName, snowballOwner);
     }
-    public static string HypothermiaDeathMessage(string damagedPlayerName)
+    public static string Death_Hypothermia(string damagedPlayerName)
     {
         //Pick a random death message
-        string unformatted = hypothermiaDeathMessages[UnityEngine.Random.Range(0, hypothermiaDeathMessages.Length)];
+        string unformatted = death_hypothermia[UnityEngine.Random.Range(0, death_hypothermia.Length)];
         //Format it correctly
         return string.Format(unformatted, damagedPlayerName);
     }
-    public static string SuicideDeathMessage(string damagedPlayerName) 
+    public static string Death_Suicide(string damagedPlayerName) 
     {
         //Pick a random death message
-        string unformatted = suicideDeathMessages[UnityEngine.Random.Range(0, suicideDeathMessages.Length)];
+        string unformatted = death_suicide[UnityEngine.Random.Range(0, death_suicide.Length)];
         //Format it correctly
         return string.Format(unformatted, damagedPlayerName);
     }
-    public static string LeftgameDeathMessage(string damagedPlayerName)
+    public static string Leafgame(string damagedPlayerName)
     {
         //Pick a random death message
-        string unformatted = leftgameDeathMessages[UnityEngine.Random.Range(0, leftgameDeathMessages.Length)];
+        string unformatted = leftgame[UnityEngine.Random.Range(0, leftgame.Length)];
         //Format it correctly
         return string.Format(unformatted, damagedPlayerName);
     }
     #endregion
-    public static string JoingameMessage(string playerName) 
+    public static string Joingame(string playerName) 
     {
         //Pick a random join message
-        string unformatted = joingameMessages[UnityEngine.Random.Range(0, joingameMessages.Length)];
+        string unformatted = joingame[UnityEngine.Random.Range(0, joingame.Length)];
         //Format it correctly
         return string.Format(unformatted, playerName);
+    }
+}
+//Loads all the items from the resources folder
+public static class ItemsHandler 
+{
+    private static Item[] items;//The loaded items
+    //Load all the items from the resource folder and store them into the variable
+    public static void LoadAllItems() 
+    {
+        items = Resources.LoadAll<Item>("Items");
+        Debug.LogWarning("Loaded " + items.Length + " items !");
+    }
+    //Transform an itemID into an item
+    public static Item ID2Item(int id) 
+    {
+        if(id < items.Length && id != -1) 
+        {
+            return items[id];
+        }
+        else
+        {
+            return null;
+        }
     }
 }

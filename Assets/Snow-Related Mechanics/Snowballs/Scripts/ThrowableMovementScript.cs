@@ -55,7 +55,7 @@ public class ThrowableMovementScript : NetworkedBehaviour
                 PlayerHealthScript playerHealthScript = otherobject.GetComponent<PlayerHealthScript>();
                 if (hitPlayerNickname == properties.owner)//Uh-oh
                 {
-                    playerHealthScript.DamagePlayer(damage, properties.throwableType.ToString(), RandomPlayerMessages.SuicideDeathMessage(hitPlayerNickname));
+                    playerHealthScript.DamagePlayer(damage, properties.throwableType.ToString(), RandomPlayerMessages.Death_Suicide(hitPlayerNickname));
                 }
                 else
                 {
@@ -63,7 +63,7 @@ public class ThrowableMovementScript : NetworkedBehaviour
                     switch (properties.throwableType)
                     {
                         case ThrowableType.snowball:
-                            playerHealthScript.DamagePlayer(damage, "snowball", RandomPlayerMessages.Throwable_SnowballDeathMessage(hitPlayerNickname, properties.owner));
+                            playerHealthScript.DamagePlayer(damage, "snowball", RandomPlayerMessages.Death_Throwable_Snowball(hitPlayerNickname, properties.owner));
                             break;
 
                         default:

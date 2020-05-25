@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerControllerScript : NetworkedBehaviour
 {
     [Header("Control")]
+    public bool controllable;//Can the player move/rotate using the input ?
     public float mouseSensivity = 1.0f;//How much to scale the mouse input values before passing them to the playeRotation/cameraRotation
     public float walkingSpeed, sprintingSpeed;//All the possible FOVs based on the state of the player
     public float jump;//How much the player can jump    
@@ -100,10 +101,16 @@ public class PlayerControllerScript : NetworkedBehaviour
         #region Input
 
         //Read the input
-        jumping = Input.GetAxis("Jump") > 0.0f;
-        inputData.x = Input.GetAxis("LeftRight");
-        inputData.y = Input.GetAxis("ForwardBackward");
-
+        if (controllable)
+        {
+            jumping = Input.GetAxis("Jump") > 0.0f;
+            inputData.x = Input.GetAxis("LeftRight");
+            inputData.y = Input.GetAxis("ForwardBackward");
+        }
+        else
+        {
+            inputData.x = 0; inputData.y = 0; jumping = false;
+        }
         //Set the world velocity (rotation is taken account for this one)
         worldVelocity.x = inputData.x; worldVelocity.z = inputData.y;
         worldVelocity = transform.TransformDirection(worldVelocity);
@@ -114,10 +121,13 @@ public class PlayerControllerScript : NetworkedBehaviour
         inputVelocity.x = Mathf.Lerp(inputVelocity.x, worldVelocity.x * speed, friction * Time.deltaTime);//Set inputVelocity X axis 
         inputVelocity.z = Mathf.Lerp(inputVelocity.z, worldVelocity.z * speed, friction * Time.deltaTime);//Set inputVelocity Z axis
         Debug.DrawRay(transform.position, inputVelocity);
-        //Rotate the player left and right
-        playerRotationY += Input.GetAxis("Mouse X") * mouseSensivity;
-        //Rotate the camera up and down
-        cameraRotationX -= Input.GetAxis("Mouse Y") * mouseSensivity;
+        if (controllable)
+        {
+            //Rotate the player left and right
+            playerRotationY += Input.GetAxis("Mouse X") * mouseSensivity;
+            //Rotate the camera up and down
+            cameraRotationX -= Input.GetAxis("Mouse Y") * mouseSensivity;
+        }
         //Clamp the head rotation because necks can absolutely bend over infinitely
         cameraRotationX = Mathf.Clamp(cameraRotationX, -90, 90);
         #endregion

@@ -16,7 +16,8 @@ Shader "Custom/UIBlurShader" {
 
 
             SubShader {
-
+                ZWrite Off
+                ZTest[unity_GUIZTestMode]
                 // Horizontal blur
                 GrabPass {
                     Tags { "LightMode" = "Always" }
