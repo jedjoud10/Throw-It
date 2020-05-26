@@ -7,14 +7,19 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
 {
     public GameObject inventoryCanvas;//The whole inventory canvas
     public RawImage[] itemIcons;//The item icons
-    public UIInventoryItemIconScript[] itemScripts;
+    public UIInventoryItemIconScript[] itemIconScripts;
     public Text itemName;//The name of the current equipped item
     public Text itemDescription;//Description of the current eqquiped item
     public Text itemCustomDescription;//Custom description if the item is a child item class
     // Start is called before the first frame update
     void Start()
     {
-        HideInventory();
+        SetInventoryVisibility(false);
+        //Init all the item icons
+        for (int i = 0; i < itemIconScripts.Length; i++)
+        {
+            itemIconScripts[i].InitItemIcon();
+        }
     }
 
     // Update is called once per frame
@@ -26,6 +31,10 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
     public void Deselect() 
     {
         itemName.text = ""; itemDescription.text = ""; itemCustomDescription.text = "";
+        for (int i = 0; i < itemIconScripts.Length; i++)
+        {
+            itemIconScripts[i].toggle.isOn = false;
+        }
     }
     //Select a specific item
     public void SelectItem(Item item) 
@@ -60,20 +69,24 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
             return;
         }
     }
-    //Open the inventory
-    public void ShowInventory() 
-    {
-        inventoryCanvas.SetActive(true);
-    }
     //Toggle the inventory
     public void ToggleInventory()
     {
         inventoryCanvas.SetActive(!inventoryCanvas.activeSelf);
+        if (inventoryCanvas.activeSelf) 
+        {
+            Deselect();
+            //Reset the items when we open the inventory
+            for (int i = 0; i < itemIconScripts.Length; i++)
+            {
+                itemIconScripts[i].ResetItemIconSize();
+            }
+        }
     }
     //Close the inventory
-    public void HideInventory() 
+    public void SetInventoryVisibility(bool visible) 
     {
-        inventoryCanvas.SetActive(false);
+        inventoryCanvas.SetActive(visible);
     }
     //Set the icons for the items
     public void SetItemIcons(Texture[] textures) 
@@ -91,7 +104,7 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
                 //Reset the icon color
                 itemIcons[i].color = Color.white;
             }
-            itemScripts[i].ItemIconStopHover();
+            itemIconScripts[i].ItemIconStopHover();
         }
     }
 }

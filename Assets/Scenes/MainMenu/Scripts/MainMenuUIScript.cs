@@ -8,17 +8,18 @@ using System.Net.NetworkInformation;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 //Handler for main menu UI
 public class MainMenuUIScript : MonoBehaviour
 {
     public GameObject multiplayerSelectScreen;
     public RufflesTransport.RufflesTransport transport;//The networking transport to use
-    public InputField IPField;//Field where we will write the ip we want to connect to
+    public TMP_InputField IPField;//Field where we will write the ip we want to connect to
     public float autoDisconnectTimeout;//If a player has started an accidental client and there was no host, then disconnect after this ammount of seconds
     public List<string> selectableScenes;//Scene names that the player can select that will cahnge the map when they host a game
-    public Dropdown selectHostScene;//The selection menu to select a scene that the player will go to when they start hosting
+    public TMP_Dropdown selectHostScene;//The selection menu to select a scene that the player will go to when they start hosting
     public GameObject nicknameSelectPanel;//The panel that holds the UI to select the nickname of the player
-    public InputField nicknameInputField;//The nickname the user wrote
+    public TMP_InputField nicknameInputField;//The nickname the user wrote
 
     // Start is called before the first frame update
     void Start()

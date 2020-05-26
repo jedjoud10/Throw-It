@@ -12,49 +12,18 @@ public class BotPhysicsScript : NetworkedBehaviour
     public float decayTime;//Time before the part gets destroyed
     private Joint joint;//The joint of this part to the bot
     private Rigidbody rb;//The rigidbody of this part
-    public float positionSmoothing = 15;//How much to smooth the position the server gave us
-    public float rotationSmoothing = 15;//How much to smooth the rotation the server gave us
-
-    //State of the rigidbody on the clients
-    private Vector3 position, velocity, angularVelocity = Vector3.zero;
-    private Quaternion rotation = Quaternion.identity;
+    private NetworkedRigidbodyScript networkedRigidbody;//Script that handles networking for rigidbodies
+    
     private NetworkedVarBool detachedFromBot = new NetworkedVarBool(false);//If this physics rigidbody got it's joint removed
-
-    const string sendChannel = "UnreliableOrdered";
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();//Get the rigidbody
-        joint = GetComponent<Joint>();//Get joint component
-    }
-    // FixedUpdate is called each physics timestep
-    void FixedUpdate()
-    {        
-        if (IsServer && detachedFromBot.Value) 
-        { 
-            InvokeClientRpcOnEveryone(UpdateRigidbodyStateOnClient, rb.position, rb.rotation, sendChannel); //Send the new state to the clients
-        }
-
-        if(IsClient && detachedFromBot.Value && rotation.IsValid())
-        {
-            //Apply the data that the server gave us (smoothed)
-            rb.position = Vector3.Lerp(rb.position, position, positionSmoothing * Time.fixedDeltaTime);
-            rb.rotation = Quaternion.Lerp(rb.rotation, rotation, rotationSmoothing * Time.fixedDeltaTime);            
-            //rb.velocity = velocity;
-            //rb.angularVelocity = angularVelocity;
-        }
-    }
-    //TODO: Make this a separate component
-    //Update the state of the rigidbody on the clients
-    [ClientRPC]
-    private void UpdateRigidbodyStateOnClient(Vector3 _position, Quaternion _rotation) 
-    {
-        position = _position;
-        //velocity = _velocity;
-        rotation = _rotation;
-        //angularVelocity = _angularVelocity;
-    }
+        rb = GetComponent<Rigidbody>();
+        joint = GetComponent<Joint>();
+        networkedRigidbody = GetComponent<NetworkedRigidbodyScript>();
+        networkedRigidbody.transmitApplyData = false;
+    }   
     //Damages the joint (only executed on the server)
     public void DamageJoint(Vector3 force, Vector3 _position, int Damage) 
     {
@@ -66,7 +35,7 @@ public class BotPhysicsScript : NetworkedBehaviour
             transform.parent = null;
             rb.AddForce(force);//Add force to our rigidbody to make it go  Y E E T
             Debug.DrawRay(_position, force, Color.black, 5.0f);
-
+            networkedRigidbody.transmitApplyData = true;
             Destroy(gameObject, decayTime);
             //When the bot stops moving because its head got yeeted :  
             //Bot : y am i ded now

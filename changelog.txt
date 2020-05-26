@@ -1,5 +1,8 @@
-Version: 7
-VersionName: System chat update
+Version: 8
+VersionName: InventoryTest1
 Changelog: 
--New death messages for the system chat
--System chat has now a sliding animation
+-New inventory system and new inventory test map
+-Inventory default controls:
+"Q": Drop item (Not functional yet)
+"E": Pickup item
+"R": Toggle inventory

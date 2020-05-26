@@ -1,6 +1,7 @@
 ﻿using MLAPI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 //Handles communications between scripts and UI of the player
@@ -14,33 +15,26 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     public RawImage chargeBar;//The charge bar
     [Header("Billboard UIs")]
     public GameObject billboardCanvas;//The canvas that handles all the billboard UIs
-    private Camera _camera;//The current camera (That is rendering the scene)
     public Slider billboardHealth;
-    public Text billboardNickname;
+    public TMP_Text billboardNickname;
     [Header("System Chat")]
-    public Text systemChatText;
+    public TMP_Text systemChatText;
     public Animation systemChatPanelAnimation;
     // Start is called before the first frame update
     void Start()
     {
-        _camera = Camera.main;//Try to get a valid camera at start
-
         if (!IsLocalPlayer) { HidePlayerUI(); }
         else 
         { 
             HideBillboardUI();
             FindObjectOfType<NetworkWorldManagerScript>().playerUIManager = this;
-            UpdateSystemChat("");//Init system chat
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Make the billboard have the same forward direction as the camera
-        //TODO: Turn this into a main billboard manager to save on performance and optimize the camera handling
-        if (_camera != null) { billboardCanvas.transform.forward = _camera.transform.forward; }
-        else { _camera = Camera.main; }//Try to get a valid camera as soon as possible
+
     }
     //Update the player health UI
     //Types of player health updates are:

@@ -63,6 +63,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
         instanceThrowObject = Instantiate(prefab, pos, rot);//Throw throwable and set that spawned snoball as our variable so we can call the Initthrowable method
         ThrowablePropertiesScript properties = instanceThrowObject.GetComponent<ThrowablePropertiesScript>();
         //Override the data on the client since it is already generated on the server
+        properties.LoadItemData(throwableID);
         properties.SetValues(_speed, _size, _angularVelocity, _rigidbodyForce, _damage);
         properties.InitThrowable(owner);
         instanceThrowObject.GetComponent<ThrowableMovementScript>().InitThrowable(speedFactor);//Init the throwable with taking account the charging

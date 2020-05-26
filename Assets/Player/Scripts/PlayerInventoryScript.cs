@@ -4,7 +4,9 @@ using MLAPI.NetworkedVar;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI.Messaging;
 //The whole inventory for this player
+//TODO: Networking support
 public class PlayerInventoryScript : NetworkedBehaviour
 {
     public Transform cameraObject;//The camera of the player
@@ -41,6 +43,10 @@ public class PlayerInventoryScript : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsLocalPlayer) 
+        {
+            return;
+        }
         if(Input.GetAxis("PickupItem") > 0) 
         {
             RaycastHit hit;//Result of raycast
@@ -61,20 +67,20 @@ public class PlayerInventoryScript : NetworkedBehaviour
                 //Make the player uncrontolable if the inventory is opened
                 playerController.controllable = !inventoryOpened;
                 inventoryUIManager.ToggleInventory();
-                UpdateUIInventory();
                 if (inventoryOpened) 
                 {
                     //Show the cursor
+                    UpdateUIInventory();
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
-                    playerThrowingScript.canCharge = false;
+                    playerThrowingScript.canCharge.Value = false;
                 }
                 else
                 {
                     //Hide the cursor
                     Cursor.visible = false;
                     Cursor.lockState = CursorLockMode.Locked;
-                    playerThrowingScript.canCharge = true;
+                    playerThrowingScript.canCharge.Value = true;
                 }
             }
         }
@@ -92,6 +98,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
             {
                 //If item was succsessfully added, then remove the gameobject
                 Destroy(itemScript.gameObject);
+                InvokeServerRpc(DestroyItemOnServer, OwnerClientId, itemScript.gameObject);
                 return true;
             }
             else
@@ -104,13 +111,25 @@ public class PlayerInventoryScript : NetworkedBehaviour
             return false;
         }
     }
+    //Destroys a gameobject on the server then on the clients (except the owner)
+    [ServerRPC]
+    private void DestroyItemOnServer(ulong clientID, GameObject _gameObject) { InvokeClientRpcOnEveryoneExcept(DestroyItemOnClient, clientID, _gameObject);  }
+    //Destroy a gameobject on the clients
+    [ClientRPC]
+    private void DestroyItemOnClient(GameObject _gameObject) 
+    {
+        Destroy(_gameObject);
+    }
     //Drops an item infront of the player
     private bool DropItem(int itemIndex) 
     {
         if (RemoveItemAtIndex(itemIndex)) 
         {
             //Spawn a new base item into the world
-            GameObject itemObject = Instantiate(itemGameObject, cameraObject.position + cameraObject.forward * 5, Quaternion.identity);
+            Vector3 spawnPosition = cameraObject.position + cameraObject.forward * 5;
+            Quaternion spawnRotation = Quaternion.identity;
+            GameObject itemObject = Instantiate(itemGameObject, spawnPosition, spawnRotation);
+            InvokeServerRpc(SpawnItemOnServer, OwnerClientId, inventory.Value[itemIndex], spawnPosition, spawnRotation);
             //Set the item's model
             itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Item(inventory.Value[itemIndex]).itemModel);
             return true;
@@ -120,6 +139,20 @@ public class PlayerInventoryScript : NetworkedBehaviour
             //Could not drop the item
             return false;
         }
+    }
+    //Spawn an item on the server then on the clients (except the owner)
+    [ServerRPC]
+    private void SpawnItemOnServer(ulong clientID, int itemID, Vector3 position, Quaternion rotation) 
+    {
+        InvokeClientRpcOnEveryoneExcept(SpawnItemOnClient, clientID, itemID, position, rotation);
+    }
+    //Spawn an item on the clients
+    [ClientRPC]
+    private void SpawnItemOnClient(int itemID, Vector3 position, Quaternion rotation) 
+    {
+        GameObject itemObject = Instantiate(itemGameObject, position, rotation);
+        //Set the item's model
+        itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Item(inventory.Value[itemID]).itemModel);
     }
     //Removes an item from the inventory
     public bool RemoveItem(int itemID) 
@@ -184,10 +217,10 @@ public class PlayerInventoryScript : NetworkedBehaviour
         if(changedInventory) UpdateUIInventory();
         return changedInventory;        
     }
-    //Equips an item
-    private void EquipItem(int itemIndex) 
+    //Equips an item using a specific index
+    public void EquipItem(int itemIndex) 
     {
-        if(inventory.Value[itemIndex] != -1) 
+        if(itemIndex != -1) 
         {
             //Convert the inventory item into a equiped item
             Item newlyEquipedItem = ItemsHandler.ID2Item(inventory.Value[itemIndex]);
@@ -208,19 +241,8 @@ public class PlayerInventoryScript : NetworkedBehaviour
         else
         {
             //we dont have that item, so set the equiped item as null
-            equipedItem = -1;
-        }
-    }
-    //Equip an item using a specific index
-    public void EquipItemWithIndex(int itemIndex) 
-    {
-        if(itemIndex < inventory.Value.Length && itemIndex != -1) 
-        {
-            EquipItem(itemIndex);        
-        }
-        else
-        {
             inventoryUIManager.SelectItem(null);
+            equipedItem = -1;
         }
     }
     //Un-equip an item

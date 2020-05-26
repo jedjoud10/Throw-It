@@ -320,8 +320,21 @@ MonoBehaviour:
   botscript: {fileID: 521999159713424166}
   damageThreshold: 0
   decayTime: 15
-  positionSmoothing: 12
-  rotationSmoothing: 12
+--- !u!114 &744222098156300818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8747465472712605522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53500c481bc1b6943ae6d1aac5ffb4f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transmitApplyData: 0
+  positionSmoothing: 15
+  rotationSmoothing: 15
 --- !u!1001 &509201939673712222
 PrefabInstance:
   m_ObjectHideFlags: 0

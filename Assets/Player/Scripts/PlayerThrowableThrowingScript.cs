@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using MLAPI;
+using MLAPI.NetworkedVar;
 
 public class PlayerThrowableThrowingScript : NetworkedBehaviour
 {
     private PlayerUIManagerScript UIManager;//Handles UI for us
-    [HideInInspector]
     public int selectedThrowableID = -1;//The ID of the throwable that we can throw
-    public bool canCharge = false;//The the player charge and throw?
+    public NetworkedVarBool canCharge = new NetworkedVarBool(new NetworkedVarSettings { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone }, false);//The the player charge and throw?
     private float charge = 1;
     const float chargeSpeed = 3f;//How fast the throwable charging is
     const float chargeTimeThreshold = 0.2f;//If the player holds the charging button more that this number (in seconds) it will start charging
@@ -33,7 +33,7 @@ public class PlayerThrowableThrowingScript : NetworkedBehaviour
     {
         if (!IsLocalPlayer) return;
         UIManager.UpdatePlayerCharge(charge);
-        if (canCharge && selectedThrowableID != -1)
+        if (canCharge.Value && selectedThrowableID != -1)
         {
             if (Input.GetAxis("ChargeThrowable") > 0)
             {
