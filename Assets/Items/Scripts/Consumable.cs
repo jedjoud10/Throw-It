@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 //A throwable item
-[CreateAssetMenu(fileName = "New Consumable", menuName = "Inventory/Create new Consumable")]
+[System.Serializable]
 public class Consumable : Item
 {
     public int healthRegeneration;//How much to heal the player

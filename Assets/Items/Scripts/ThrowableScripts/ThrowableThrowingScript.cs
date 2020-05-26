@@ -21,7 +21,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
     {
         //Spawn the specific item with a specific id
         Throwable throwable = (Throwable)ItemsHandler.ID2Item(throwableID);
-        GameObject prefab = throwable.throwableGameObject;
+        GameObject prefab = ItemsHandler.ID2Prefab(throwable.throwableGameObjectID);
 
         instanceThrowObject = Instantiate(prefab, throwPoint.position, throwPoint.rotation);//Throw throwable and set that spawned snoball as our variable so we can call the Initthrowable method
         ThrowablePropertiesScript properties = instanceThrowObject.GetComponent<ThrowablePropertiesScript>();
@@ -42,7 +42,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
     {
         //Spawn the specific item with a specific id
         Throwable throwable = (Throwable)ItemsHandler.ID2Item(throwableID);
-        GameObject prefab = throwable.throwableGameObject;
+        GameObject prefab = ItemsHandler.ID2Prefab(throwable.throwableGameObjectID);
 
         instanceThrowObject = Instantiate(prefab, throwPoint.position, throwPoint.rotation);//Throw throwable and set that spawned snoball as our variable so we can call the Initthrowable method
         ThrowablePropertiesScript properties = instanceThrowObject.GetComponent<ThrowablePropertiesScript>();
@@ -58,7 +58,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
     {
         //Spawn the specific item with a specific id
         Throwable throwable = (Throwable)ItemsHandler.ID2Item(throwableID);
-        GameObject prefab = throwable.throwableGameObject;
+        GameObject prefab = ItemsHandler.ID2Prefab(throwable.throwableGameObjectID);
 
         instanceThrowObject = Instantiate(prefab, pos, rot);//Throw throwable and set that spawned snoball as our variable so we can call the Initthrowable method
         ThrowablePropertiesScript properties = instanceThrowObject.GetComponent<ThrowablePropertiesScript>();

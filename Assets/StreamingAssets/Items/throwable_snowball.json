@@ -1,0 +1,27 @@
+{
+  "itemName": "Snowball",
+  "itemModelID": 2,
+  "itemIconID": 2,
+  "itemDescription": "hehe snowball go reeeee",
+  "throwableGameObjectID": 0,
+  "type": 1,
+  "speedRandomness": {
+    "x": 500,
+    "y": 600
+  },
+  "sizeRandomness": {
+    "x": 1,
+    "y": 1.2000000476837158
+  },
+  "damageRandomness": {
+    "x": 3,
+    "y": 6
+  },
+  "damageVelocityWeight": 0.125,
+  "lifetime": 10,
+  "angularVelocityRange": 8,
+  "rigidbodyForceRange": {
+    "x": 40,
+    "y": 50
+  }
+}

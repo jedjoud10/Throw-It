@@ -1,19 +1,20 @@
 ﻿using MLAPI;
+using MLAPI.NetworkedVar;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Script that is applied to items on the ground
 public class ItemScript : NetworkedBehaviour
 {
-    public int itemID;//The item data associated with this item
+    public NetworkedVarInt itemID;//The item data associated with this item
     public Transform itemModelHolder;//The holder for the instantiated model
     // Start is called before the first frame update
     void Start()
     {
         //Init the item
-        if (itemID != -1)
+        if (itemID.Value != -1)
         {
-            SetItemModel(ItemsHandler.ID2Item(itemID).itemModel);
+            SetItemModel(ItemsHandler.ID2Model(ItemsHandler.ID2Item(itemID.Value).itemModelID));
         }
     }
 

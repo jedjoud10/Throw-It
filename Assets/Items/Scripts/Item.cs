@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 //Class representing an base item
-[CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Create new Item")]
-public class Item : ScriptableObject
+[System.Serializable]
+public class Item
 {
     public string itemName;//The name of the item
-    public GameObject itemModel;//The model of this item
-    public Texture itemIcon;//The icon for this specific item
+    public int itemModelID;//The model of this item using an ID
+    public int itemIconID;//The icon id for this specific item
     public string itemDescription;//The unique description for this item
 }

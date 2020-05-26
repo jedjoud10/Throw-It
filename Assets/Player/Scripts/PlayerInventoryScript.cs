@@ -92,9 +92,9 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Pick up an item
     private bool PickupItem(ItemScript itemScript) 
     {
-        if(itemScript != null && itemScript.itemID != -1) 
+        if(itemScript != null && itemScript.itemID.Value != -1) 
         {
-            if (AddItem(itemScript.itemID)) 
+            if (AddItem(itemScript.itemID.Value)) 
             {
                 //If item was succsessfully added, then remove the gameobject
                 Destroy(itemScript.gameObject);
@@ -131,7 +131,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
             GameObject itemObject = Instantiate(itemGameObject, spawnPosition, spawnRotation);
             InvokeServerRpc(SpawnItemOnServer, OwnerClientId, inventory.Value[itemIndex], spawnPosition, spawnRotation);
             //Set the item's model
-            itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Item(inventory.Value[itemIndex]).itemModel);
+            itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Model(ItemsHandler.ID2Item(inventory.Value[itemIndex]).itemModelID));
             return true;
         }
         else
@@ -152,7 +152,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     {
         GameObject itemObject = Instantiate(itemGameObject, position, rotation);
         //Set the item's model
-        itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Item(inventory.Value[itemID]).itemModel);
+        itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Model(ItemsHandler.ID2Item(inventory.Value[itemID]).itemModelID));
     }
     //Removes an item from the inventory
     public bool RemoveItem(int itemID) 
@@ -298,7 +298,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
             {
                 if (ItemsHandler.ID2Item(inventory.Value[i]) != null)
                 {
-                    textures[i] = ItemsHandler.ID2Item(inventory.Value[i]).itemIcon;
+                    textures[i] = ItemsHandler.ID2ItemIcon(ItemsHandler.ID2Item(inventory.Value[i]).itemIconID);
                 }
                 else
                 {

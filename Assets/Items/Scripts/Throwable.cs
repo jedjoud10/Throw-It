@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 //A throwable item
-[CreateAssetMenu(fileName = "New Throwable", menuName = "Inventory/Create new Throwable")]
+[System.Serializable]
 public class Throwable : Item
 {
-    public GameObject throwableGameObject;
+    public int throwableGameObjectID;
     public ThrowableType type;//The type of throwable
     public Vector2 speedRandomness;//How much randomness to apply to speed
     public Vector2 sizeRandomness;//How much randomness to apply to speed
@@ -15,7 +15,8 @@ public class Throwable : Item
     public float angularVelocityRange;//How much randomness to apply to angular velocity
     public Vector2 rigidbodyForceRange;//How much randomness to apply to rigidbody hit force
 }
+[System.Serializable]
 public enum ThrowableType
 {
-    snowball, general
+    general, snowball
 }

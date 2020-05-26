@@ -1,0 +1,8 @@
+{
+    "itemName": "Sandwich",
+    "itemModelID": 1,
+    "itemIconID": 1,
+    "itemDescription": "Mmm yes tasty sandwich",
+    "healthRegeneration": 10,
+    "temperatureRegeneration": 5
+}
