@@ -9,14 +9,16 @@ public class PlayerConfigScript : NetworkedBehaviour
     public PlayerUIManagerScript UIManager;
     private PlayerConfig currentPlayerConfig;
     [HideInInspector]
-    public NetworkedVarString nickname = new NetworkedVarString();
+    public NetworkedVarString nickname = new NetworkedVarString(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone });
     // Use this for initialization
     void Start()
     {
         if (IsLocalPlayer) 
         {
             currentPlayerConfig = (PlayerConfig) SaverLoader.Load("playerconfig.json", new PlayerConfig(), typeof(PlayerConfig));
+            nickname.Value = currentPlayerConfig.nickname;
             InvokeServerRpc(InitNicknameOnServer, currentPlayerConfig.nickname, OwnerClientId);
+            FindObjectOfType<NetworkWorldManagerScript>().playerConfigScript = this;
         }
         else
         {
@@ -27,7 +29,6 @@ public class PlayerConfigScript : NetworkedBehaviour
     [ServerRPC]
     private void InitNicknameOnServer(string _nickname, ulong clientID)
     {
-        nickname.Value = _nickname;
         FindObjectOfType<NetworkWorldManagerScript>().UpdateSystemChat(RandomPlayerMessages.Joingame(_nickname));
         InvokeClientRpcOnEveryoneExcept(UpdateBillboardNicknameOnClients, clientID, _nickname);//Ignore the local client that told us this nickname because they cannot see their nickname anyways
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using System.Linq;
 //Loads and saves data in files
 public class SaverLoader
 {
@@ -54,10 +55,11 @@ public static class RandomPlayerMessages
     {
 
     };
-    private static string[] death_throwable_snowball = new string[2] 
+    private static string[] death_throwable_snowball = new string[3] 
     {
         "{0} lost their nose to {1}'s shot.",
-        "{1} thoroughly memed {0}."
+        "{1} thoroughly memed {0}.",
+        "{0}: I am dead!   {1}: Correct!"
     };
     private static string[] death_suicide = new string[2]
     {
@@ -108,18 +110,18 @@ public static class RandomPlayerMessages
         //Format it correctly
         return string.Format(unformatted, damagedPlayerName);
     }
-    public static string Leafgame(string damagedPlayerName)
-    {
-        //Pick a random death message
-        string unformatted = leftgame[UnityEngine.Random.Range(0, leftgame.Length)];
-        //Format it correctly
-        return string.Format(unformatted, damagedPlayerName);
-    }
     #endregion
     public static string Joingame(string playerName) 
     {
         //Pick a random join message
         string unformatted = joingame[UnityEngine.Random.Range(0, joingame.Length)];
+        //Format it correctly
+        return string.Format(unformatted, playerName);
+    }
+    public static string Leftgame(string playerName)
+    {
+        //Pick a random death message
+        string unformatted = leftgame[UnityEngine.Random.Range(0, leftgame.Length)];
         //Format it correctly
         return string.Format(unformatted, playerName);
     }
@@ -132,6 +134,7 @@ public static class ItemsHandler
     public static void LoadAllItems() 
     {
         items = Resources.LoadAll<Item>("Items");
+        items = items.OrderBy(item => int.Parse(item.name.Split('_')[0])).ToArray();
         Debug.LogWarning("Loaded " + items.Length + " items !");        
     }
     //Transform an itemID into an item

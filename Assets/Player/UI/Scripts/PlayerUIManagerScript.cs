@@ -19,7 +19,10 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     public TMP_Text billboardNickname;
     [Header("System Chat")]
     public TMP_Text systemChatText;
+    public RectTransform systemChatTargetPos;
+    public RectTransform systemChat;
     public Animation systemChatPanelAnimation;
+    public float systemChatSmoothness = 5;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +37,8 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //Smooth out the system chat in code because unity animations cant do *prefect* exponential curves (maybe they do and i am very bumbum)
+        systemChat.anchoredPosition = Vector2.Lerp(systemChat.anchoredPosition, systemChatTargetPos.anchoredPosition, systemChatSmoothness * Time.deltaTime);
     }
     //Update the player health UI
     //Types of player health updates are:

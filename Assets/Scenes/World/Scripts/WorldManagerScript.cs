@@ -23,7 +23,7 @@ public class WorldManagerScript : NetworkedBehaviour
     void Start()
     {
         currentScene = SceneManager.GetActiveScene().name;
-        if(currentScene != "MainMenuMap") 
+        if(currentScene == "MainMenuMap") 
         {
             //Load items from resource folder at the start of a game
             ItemsHandler.LoadAllItems();

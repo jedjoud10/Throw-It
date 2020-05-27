@@ -31,7 +31,6 @@ public class PlayerInventoryScript : NetworkedBehaviour
             inventoryUIManager = GetComponent<PlayerInventoryUIManagerScript>();
             playerThrowingScript = GetComponent<PlayerThrowableThrowingScript>();
             playerController = GetComponent<PlayerControllerScript>();
-
             inventory = new NetworkedVar<int[]>(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone }, new int[maxInventorySize]);
             for (int i = 0; i < maxInventorySize; i++)
             {
@@ -166,7 +165,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
                     UnequipItem();
                 }
                 inventory.Value[i] = -1;
-                inventoryUIManager.Deselect();
+                inventoryUIManager.HideItemData();//Hide the item data when removing an item
                 UpdateUIInventory();
                 return true;
             }
@@ -178,16 +177,16 @@ public class PlayerInventoryScript : NetworkedBehaviour
         return false;
     }
     //Removes an item from the inventory using a specificed index
-    public bool RemoveItemAtIndex(int index) 
+    public bool RemoveItemAtIndex(int itemIndex) 
     {
-        if (inventory.Value[index] != -1)
+        if (inventory.Value[itemIndex] != -1)
         {
-            if (equipedItem == inventory.Value[index])
+            if (equipedItem == inventory.Value[itemIndex])
             {
                 UnequipItem();
             }
-            inventory.Value[index] = -1;
-            inventoryUIManager.Deselect();
+            inventory.Value[itemIndex] = -1;
+            inventoryUIManager.HideItemData();//Hide the item data when removing an item
             UpdateUIInventory();
             return true;
         }
@@ -217,6 +216,11 @@ public class PlayerInventoryScript : NetworkedBehaviour
         if(changedInventory) UpdateUIInventory();
         return changedInventory;        
     }
+    //Replace an item (using its index) with a new itemID
+    public void ReplaceItem(int itemIndex, int newItemID) 
+    {
+        inventory.Value[itemIndex] = newItemID;
+    }
     //Equips an item using a specific index
     public void EquipItem(int itemIndex) 
     {
@@ -224,7 +228,6 @@ public class PlayerInventoryScript : NetworkedBehaviour
         {
             //Convert the inventory item into a equiped item
             Item newlyEquipedItem = ItemsHandler.ID2Item(inventory.Value[itemIndex]);
-            inventoryUIManager.SelectItem(newlyEquipedItem);
             equipedItem = inventory.Value[itemIndex];
             equipedItemIndex = itemIndex;
             if(newlyEquipedItem is Throwable) 
@@ -240,8 +243,6 @@ public class PlayerInventoryScript : NetworkedBehaviour
         }
         else
         {
-            //we dont have that item, so set the equiped item as null
-            inventoryUIManager.SelectItem(null);
             equipedItem = -1;
         }
     }
@@ -258,6 +259,11 @@ public class PlayerInventoryScript : NetworkedBehaviour
             }
             equipedItem = -1;        
         }
+    }
+    //Gets an itemID from the inventory with an index
+    public int GetItemID(int itemIndex) 
+    {
+        return inventory.Value[itemIndex];
     }
     //Consume a consumable item
     private bool ConsumeItem(int itemIndex) 
@@ -309,5 +315,6 @@ public class PlayerInventoryScript : NetworkedBehaviour
             }
         }
         inventoryUIManager.SetItemIcons(textures);
+        inventoryUIManager.SetHotbarIcons(textures[0], textures[1], textures[2], textures[3]);
     }
 }

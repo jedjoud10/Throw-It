@@ -10,6 +10,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
 {
     public Transform playerSpawnPoint;//Position where the players will spawn
     public PlayerUIManagerScript playerUIManager;//Current local player UIManager
+    public PlayerConfigScript playerConfigScript;//Current local player config
     private NetworkingManager singleton;
     private bool singleplayer;//Is the game in singleplayer ?
     private string currentScene;//The current scene that we are in
@@ -59,7 +60,10 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     //When a client disconnects (ran on server and on local client machine)
     private void OnClientDisconnect(ulong clientID) 
     {
-        if(IsClient && !IsHost) SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);//Return to main menu when a client disconnects
+        if(IsClient && !IsHost) 
+        {
+            SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);//Return to main menu when a client disconnects
+        }
     }
     //When the server starts
     private void OnServerStarted() 
@@ -118,6 +122,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
                 ReturnMainMenuClient();
                 return;
             }
+            InvokeServerRpc(UpdateSystemChat, RandomPlayerMessages.Leftgame(playerConfigScript.nickname.Value));
         }        
     }
     //When the user closes the game
