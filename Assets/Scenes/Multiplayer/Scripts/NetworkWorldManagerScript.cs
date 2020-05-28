@@ -112,6 +112,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     {
         if(Input.GetKeyDown(KeyCode.O)) 
         {
+            InvokeServerRpc(UpdateSystemChat, RandomPlayerMessages.Leftgame(playerConfigScript.nickname.Value));
             if (IsHost) 
             {            
                 ReturnMainMenu();
@@ -122,7 +123,6 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
                 ReturnMainMenuClient();
                 return;
             }
-            InvokeServerRpc(UpdateSystemChat, RandomPlayerMessages.Leftgame(playerConfigScript.nickname.Value));
         }        
     }
     //When the user closes the game

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIInventoryItemIconScript : MonoBehaviour
 {
-    const float normalSize = 90;//The delta size of this item icon when it is not hovered
-    const float hoveredSize = 125;//The delta size of this item icon when it is hovered
+    const float normalSize = 100;//The delta size of this item icon when it is not hovered
+    const float hoveredSize = 120;//The delta size of this item icon when it is hovered
     private float currentSize;//The current ItemIcon size;
     private float targetSize;//The size we want this item icon to be at
     const float smoothing = 5;//How fast to go to the desired icon size?
@@ -17,6 +18,8 @@ public class UIInventoryItemIconScript : MonoBehaviour
     public void InitItemIcon() 
     {
         rectTransform = GetComponent<RectTransform>();
+        EventTrigger trigger = GetComponent<EventTrigger>();
+        trigger.triggers = 
         targetSize = normalSize;
     }
 
@@ -30,6 +33,7 @@ public class UIInventoryItemIconScript : MonoBehaviour
     public void ResetItemIconSize() 
     {
         currentSize = 0;
+        rectTransform.sizeDelta = new Vector2(currentSize, currentSize);//Update the item icon size
     }
     //When the item icon has been hovered by the mouse
     public void ItemIconHover() 

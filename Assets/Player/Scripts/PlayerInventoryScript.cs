@@ -17,7 +17,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     public int equipedItemIndex = 0;//The index of the currently equiped item in the inventory
     private NetworkedVar<int[]> inventory = new NetworkedVar<int[]>(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone });//What the player is currently holding in their inventory
     private PlayerHealthScript healthScript;//The health script of the player
-    const int maxInventorySize = 10;//Maximum number of items that the player can hold
+    const int maxInventorySize = 16;//Maximum number of items that the player can hold
     private bool inventoryOpened;//If the UI for the inventory is visible
     private bool inventoryButton;//If the inventory toggle button is pressed right now
     private PlayerThrowableThrowingScript playerThrowingScript;//How the player is gonna throws stuff
