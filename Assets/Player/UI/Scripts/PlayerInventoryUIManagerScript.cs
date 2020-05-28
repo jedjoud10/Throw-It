@@ -123,26 +123,5 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
         if (c == null) { hotbar3.color = Color.clear; } else { hotbar3.color = Color.white; }
         if (d == null) { hotbar4.color = Color.clear; } else { hotbar4.color = Color.white; }
     }
-    //Start dragging from a UIInventoryItemIconScript
-    public void StartDrag(int index) 
-    {
-        if (inventoryScript.GetItemID(index) != -1) //We cant drag a null item
-        {
-            return;
-        }
 
-        draggedItemIconInstance = Instantiate(draggedItemIconPrefab).GetComponent<DraggedItemIconScript>();
-        draggedItemIconInstance.itemID = inventoryScript.GetItemID(index);
-    }
-    //Stop dragging an item (Replace the current item data with the draggable gameObject data)
-    public void StopDrag(int index)
-    {
-        if(inventoryScript.GetItemID(index) != -1) //We cant replace an already existing item
-        {
-            return;
-        }
-
-        inventoryScript.ReplaceItem(index, draggedItemIconInstance.itemID);        
-        Destroy(draggedItemIconInstance.gameObject);
-    }
 }

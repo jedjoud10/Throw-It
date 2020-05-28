@@ -216,10 +216,13 @@ public class PlayerInventoryScript : NetworkedBehaviour
         if(changedInventory) UpdateUIInventory();
         return changedInventory;        
     }
-    //Replace an item (using its index) with a new itemID
-    public void ReplaceItem(int itemIndex, int newItemID) 
+    //Swap two items using their itemIndexes
+    public void SwapItems(int itemIndex, int itemIndex2) 
     {
-        inventory.Value[itemIndex] = newItemID;
+        int oldItemID = inventory.Value[itemIndex];
+        inventory.Value[itemIndex] = inventory.Value[itemIndex2];
+        inventory.Value[itemIndex2] = oldItemID;
+        UpdateUIInventory();
     }
     //Equips an item using a specific index
     public void EquipItem(int itemIndex) 

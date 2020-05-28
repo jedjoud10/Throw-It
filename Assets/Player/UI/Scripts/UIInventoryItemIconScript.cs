@@ -18,9 +18,27 @@ public class UIInventoryItemIconScript : MonoBehaviour
     public void InitItemIcon() 
     {
         rectTransform = GetComponent<RectTransform>();
-        EventTrigger trigger = GetComponent<EventTrigger>();
-        trigger.triggers = 
         targetSize = normalSize;
+        #region no.
+        EventTrigger.Entry starthover, stophover, click;
+
+        starthover = new EventTrigger.Entry();
+        starthover.eventID = EventTriggerType.PointerEnter;
+        starthover.callback.AddListener((eventData) => { ItemIconStartHover(); });
+
+        stophover = new EventTrigger.Entry();
+        stophover.eventID = EventTriggerType.PointerExit;
+        stophover.callback.AddListener((eventData) => { ItemIconStopHover(); });
+
+        click = new EventTrigger.Entry();
+        click.eventID = EventTriggerType.PointerClick;
+        click.callback.AddListener((eventData) => { ItemIconClick(); });
+
+        EventTrigger trigger = GetComponent<EventTrigger>();
+        trigger.triggers.Add(starthover);
+        trigger.triggers.Add(stophover);
+        trigger.triggers.Add(click);
+        #endregion
     }
 
     // Update is called once per frame
@@ -36,7 +54,7 @@ public class UIInventoryItemIconScript : MonoBehaviour
         rectTransform.sizeDelta = new Vector2(currentSize, currentSize);//Update the item icon size
     }
     //When the item icon has been hovered by the mouse
-    public void ItemIconHover() 
+    public void ItemIconStartHover() 
     {              
         targetSize = hoveredSize;
         UIManager.ShowItemData(ItemsHandler.ID2Item(inventoryScript.GetItemID(itemIndex)));
@@ -48,14 +66,9 @@ public class UIInventoryItemIconScript : MonoBehaviour
         targetSize = normalSize;
         UIManager.HideItemData();
     }
-    //Start dragging this ui object
-    public void StartDragItemIcon() 
+    //When the user clicks on an item icon
+    private void ItemIconClick() 
     {
-        UIManager.StartDrag(itemIndex);
-    }
-    //Stop dragging and replace this item icon with the "drag" one
-    public void StopDragItemIcon() 
-    {
-        UIManager.StopDrag(itemIndex);
+        
     }
 }
