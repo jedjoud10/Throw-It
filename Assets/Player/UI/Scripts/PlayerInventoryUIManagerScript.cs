@@ -17,6 +17,7 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
     public TMP_Text itemCustomDescription;//Custom description if the item is a child item class
     public RawImage hotbar1, hotbar2, hotbar3, hotbar4;
     private PlayerInventoryScript inventoryScript;//The inventory handling
+    private int selectedItemIconSwapperIndex = -1;//The new selected item that we will swap the old selected item into
     // Start is called before the first frame update
     void Start()
     {
@@ -73,7 +74,6 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
         }
     }
 
-
     //Toggle the inventory
     public void ToggleInventory()
     {
@@ -122,6 +122,20 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
         if (b == null) { hotbar2.color = Color.clear; } else { hotbar2.color = Color.white; }
         if (c == null) { hotbar3.color = Color.clear; } else { hotbar3.color = Color.white; }
         if (d == null) { hotbar4.color = Color.clear; } else { hotbar4.color = Color.white; }
+    }
+    //When the user clicks on an item icon
+    public void ClickItemIcon(int itemIconIndex) 
+    {
+        if (selectedItemIconSwapperIndex == -1) 
+        { 
+            selectedItemIconSwapperIndex = itemIconIndex;
+        }
+        else
+        {
+            //We have both indexes, we can swap
+            inventoryScript.SwapItems(selectedItemIconSwapperIndex, itemIconIndex);
+            selectedItemIconSwapperIndex = -1;//Reset
+        }
     }
 
 }

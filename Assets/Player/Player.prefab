@@ -994,6 +994,7 @@ GameObject:
   - component: {fileID: 3976157611084142566}
   - component: {fileID: 7839003457843508470}
   - component: {fileID: 8577141317784097909}
+  - component: {fileID: 3435972556138121634}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -1069,7 +1070,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 14
+  itemIndex: 2
+--- !u!114 &3435972556138121634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433522063491604291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &1499179876796397812
 GameObject:
   m_ObjectHideFlags: 0
@@ -1082,6 +1096,7 @@ GameObject:
   - component: {fileID: 1238112672100706659}
   - component: {fileID: 7090268307516699373}
   - component: {fileID: 6031363373153349100}
+  - component: {fileID: 1260194678985064813}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -1157,7 +1172,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 2
+  itemIndex: 6
+--- !u!114 &1260194678985064813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499179876796397812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &1574039484035342042
 GameObject:
   m_ObjectHideFlags: 0
@@ -2931,6 +2959,7 @@ GameObject:
   - component: {fileID: 2098560904219101967}
   - component: {fileID: 5468480694041289382}
   - component: {fileID: 3181708110274796755}
+  - component: {fileID: 2051850831100793424}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -3006,7 +3035,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 12
+  itemIndex: 0
+--- !u!114 &2051850831100793424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3078126581829904165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &3180438798182462415
 GameObject:
   m_ObjectHideFlags: 0
@@ -3019,6 +3061,7 @@ GameObject:
   - component: {fileID: 273542119265574374}
   - component: {fileID: 818957411933725935}
   - component: {fileID: 424998568477153541}
+  - component: {fileID: 5546058528377593301}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -3094,7 +3137,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 11
+  itemIndex: 15
+--- !u!114 &5546058528377593301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3180438798182462415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &3288629018120597660
 GameObject:
   m_ObjectHideFlags: 0
@@ -3143,6 +3199,7 @@ GameObject:
   - component: {fileID: 3903890068227930496}
   - component: {fileID: 968288233179424688}
   - component: {fileID: 5734047085571532730}
+  - component: {fileID: 343495670915770150}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -3218,7 +3275,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 1
+  itemIndex: 5
+--- !u!114 &343495670915770150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3291612503677627235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &3430204753351348800
 GameObject:
   m_ObjectHideFlags: 0
@@ -3385,6 +3455,7 @@ GameObject:
   - component: {fileID: 2141401873892066832}
   - component: {fileID: 866741230518365440}
   - component: {fileID: 3954737195175599500}
+  - component: {fileID: 1938762409491866318}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -3460,7 +3531,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 3
+  itemIndex: 7
+--- !u!114 &1938762409491866318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688192274921496983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &3695607872499170940
 GameObject:
   m_ObjectHideFlags: 0
@@ -3785,6 +3869,10 @@ MonoBehaviour:
     type: 3}
   inventoryCanvas: {fileID: 8349582049046592938}
   itemIcons:
+  - {fileID: 5468480694041289382}
+  - {fileID: 5481850992401582287}
+  - {fileID: 7839003457843508470}
+  - {fileID: 567939021460703149}
   - {fileID: 8231905537284104948}
   - {fileID: 968288233179424688}
   - {fileID: 7090268307516699373}
@@ -3797,11 +3885,11 @@ MonoBehaviour:
   - {fileID: 507263365084680465}
   - {fileID: 8721567800011443181}
   - {fileID: 818957411933725935}
-  - {fileID: 5468480694041289382}
-  - {fileID: 5481850992401582287}
-  - {fileID: 7839003457843508470}
-  - {fileID: 567939021460703149}
   itemIconScripts:
+  - {fileID: 3181708110274796755}
+  - {fileID: 5056871236933325929}
+  - {fileID: 8577141317784097909}
+  - {fileID: 1720971614546446863}
   - {fileID: 1429873734826021970}
   - {fileID: 5734047085571532730}
   - {fileID: 6031363373153349100}
@@ -3814,10 +3902,6 @@ MonoBehaviour:
   - {fileID: 3863844967803940150}
   - {fileID: 3213521604267704735}
   - {fileID: 424998568477153541}
-  - {fileID: 3181708110274796755}
-  - {fileID: 5056871236933325929}
-  - {fileID: 8577141317784097909}
-  - {fileID: 1720971614546446863}
   itemName: {fileID: 8591513024426045249}
   itemDescription: {fileID: 9223232043729560567}
   itemCustomDescription: {fileID: 2802819993373528248}
@@ -4791,6 +4875,7 @@ GameObject:
   - component: {fileID: 167839108312778676}
   - component: {fileID: 8721567800011443181}
   - component: {fileID: 3213521604267704735}
+  - component: {fileID: 4501524123180511960}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -4866,7 +4951,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 10
+  itemIndex: 14
+--- !u!114 &4501524123180511960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4473642319260082456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &4676982662062119769
 GameObject:
   m_ObjectHideFlags: 0
@@ -5033,6 +5131,7 @@ GameObject:
   - component: {fileID: 7746932720583425159}
   - component: {fileID: 507263365084680465}
   - component: {fileID: 3863844967803940150}
+  - component: {fileID: 7189222506574055037}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -5108,7 +5207,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 9
+  itemIndex: 13
+--- !u!114 &7189222506574055037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4775627486820810458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &4829770158663007940
 GameObject:
   m_ObjectHideFlags: 0
@@ -5275,6 +5387,7 @@ GameObject:
   - component: {fileID: 9151267535593207323}
   - component: {fileID: 8530722477980566926}
   - component: {fileID: 7002527401784505218}
+  - component: {fileID: 3887457699836386179}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -5350,7 +5463,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 8
+  itemIndex: 12
+--- !u!114 &3887457699836386179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4870363868926569144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &4947533645565814336
 GameObject:
   m_ObjectHideFlags: 0
@@ -5778,6 +5904,7 @@ GameObject:
   - component: {fileID: 8446097035983529744}
   - component: {fileID: 3343694832619219161}
   - component: {fileID: 5647728553167819337}
+  - component: {fileID: 7280122056153082346}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -5853,7 +5980,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 6
+  itemIndex: 10
+--- !u!114 &7280122056153082346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5621431510091349338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &5648481684125717173
 GameObject:
   m_ObjectHideFlags: 0
@@ -5958,8 +6098,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2230195797769469844}
   - {fileID: 8198701028955360193}
+  - {fileID: 2230195797769469844}
   - {fileID: 3610086300592919424}
   - {fileID: 3636404243413177785}
   - {fileID: 4435043643506828505}
@@ -6168,6 +6308,7 @@ GameObject:
   - component: {fileID: 1882787732253508098}
   - component: {fileID: 6574444741026492635}
   - component: {fileID: 3056031131020184642}
+  - component: {fileID: 6308236018757414853}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -6243,7 +6384,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 7
+  itemIndex: 11
+--- !u!114 &6308236018757414853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6411702326383570165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &6615251287293141897
 GameObject:
   m_ObjectHideFlags: 0
@@ -6256,6 +6410,7 @@ GameObject:
   - component: {fileID: 9068998187179603988}
   - component: {fileID: 3908859624860201253}
   - component: {fileID: 5313381252471483875}
+  - component: {fileID: 5243076810513249160}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -6331,7 +6486,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 4
+  itemIndex: 8
+--- !u!114 &5243076810513249160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6615251287293141897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &6713358836390454430
 GameObject:
   m_ObjectHideFlags: 0
@@ -6416,6 +6584,7 @@ GameObject:
   - component: {fileID: 6497745111414540139}
   - component: {fileID: 5481850992401582287}
   - component: {fileID: 5056871236933325929}
+  - component: {fileID: 6857724657447759992}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -6491,7 +6660,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 13
+  itemIndex: 1
+--- !u!114 &6857724657447759992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6770678976467403223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &6775805912105275072
 GameObject:
   m_ObjectHideFlags: 0
@@ -7206,7 +7388,7 @@ RectTransform:
   - {fileID: 4374855947609717229}
   - {fileID: 954700497983947173}
   m_Father: {fileID: 3546182214760712294}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7774,6 +7956,7 @@ GameObject:
   - component: {fileID: 5099405207005305733}
   - component: {fileID: 8231905537284104948}
   - component: {fileID: 1429873734826021970}
+  - component: {fileID: 4629406547458423249}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -7849,7 +8032,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 0
+  itemIndex: 4
+--- !u!114 &4629406547458423249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8128097549198958271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &8184076577080918810
 GameObject:
   m_ObjectHideFlags: 0
@@ -8381,6 +8577,7 @@ GameObject:
   - component: {fileID: 5203454276308422891}
   - component: {fileID: 567939021460703149}
   - component: {fileID: 1720971614546446863}
+  - component: {fileID: 5869203704689802314}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -8456,7 +8653,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 15
+  itemIndex: 3
+--- !u!114 &5869203704689802314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8849791203381064713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &8914953154450721522
 GameObject:
   m_ObjectHideFlags: 0
@@ -8469,6 +8679,7 @@ GameObject:
   - component: {fileID: 1076865808504901513}
   - component: {fileID: 1427370707492332639}
   - component: {fileID: 1066343827839001304}
+  - component: {fileID: 2344180755765020663}
   m_Layer: 0
   m_Name: ItemIcon
   m_TagString: Untagged
@@ -8544,7 +8755,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryScript: {fileID: 7299881070440695740}
   UIManager: {fileID: 9114718179916332944}
-  itemIndex: 5
+  itemIndex: 9
+--- !u!114 &2344180755765020663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914953154450721522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &9087262173227220217
 GameObject:
   m_ObjectHideFlags: 0
@@ -8579,7 +8803,7 @@ RectTransform:
   - {fileID: 5219972799661564788}
   - {fileID: 1220206458964390697}
   m_Father: {fileID: 3546182214760712294}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

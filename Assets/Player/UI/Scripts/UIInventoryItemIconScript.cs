@@ -69,6 +69,7 @@ public class UIInventoryItemIconScript : MonoBehaviour
     //When the user clicks on an item icon
     private void ItemIconClick() 
     {
-        
+        Debug.Log("Clicked on itemIcon " + itemIndex);
+        UIManager.ClickItemIcon(itemIndex);
     }
 }
