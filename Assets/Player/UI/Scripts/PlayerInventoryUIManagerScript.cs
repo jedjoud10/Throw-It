@@ -9,7 +9,7 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
 {
     public GameObject draggedItemIconPrefab;//The gameobject that we will instantiate when dragging an item
     private DraggedItemIconScript draggedItemIconInstance;//The instance of the draggedItemIconPrefab
-    public GameObject inventoryCanvas;//The whole inventory canvas
+    public Canvas inventoryCanvas;//The whole inventory canvas
     public RawImage[] itemIcons;//The item icons
     public UIInventoryItemIconScript[] itemIconScripts;
     public TMP_Text itemName;//The name of the current equipped item
@@ -18,6 +18,8 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
     public RawImage hotbar1, hotbar2, hotbar3, hotbar4;
     private PlayerInventoryScript inventoryScript;//The inventory handling
     private int selectedItemIconSwapperIndex = -1;//The new selected item that we will swap the old selected item into
+    private Vector2 selectedItemIconSwaperPosition;//The position of the selected item
+    public RectTransform selectedItemIconIndicator;//yes.
     // Start is called before the first frame update
     void Start()
     {
@@ -33,7 +35,15 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (selectedItemIconSwapperIndex != -1)//We are currently selecting an item
+        {
+            Vector2 diff = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - selectedItemIconSwaperPosition;
+            selectedItemIconIndicator.sizeDelta = new Vector2(diff.magnitude / inventoryCanvas.scaleFactor - 10, 10);
+            selectedItemIconIndicator.pivot = new Vector2(0, 0.5f);
+            selectedItemIconIndicator.position = selectedItemIconSwaperPosition;
+            float angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+            selectedItemIconIndicator.rotation = Quaternion.Euler(0, 0, angle);
+        }
     }
     //Deselects the current
     public void HideItemData() 
@@ -77,8 +87,8 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
     //Toggle the inventory
     public void ToggleInventory()
     {
-        inventoryCanvas.SetActive(!inventoryCanvas.activeSelf);
-        if (inventoryCanvas.activeSelf) 
+        inventoryCanvas.gameObject.SetActive(!inventoryCanvas.gameObject.activeSelf);
+        if (inventoryCanvas.gameObject.activeSelf) 
         {
             HideItemData();//yes.
             //Reset the items when we open the inventory
@@ -91,7 +101,7 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
     //Close the inventory
     public void SetInventoryVisibility(bool visible) 
     {
-        inventoryCanvas.SetActive(visible);
+        inventoryCanvas.gameObject.SetActive(visible);
     }
     //Set the icons for the items
     public void SetItemIcons(Texture[] textures) 
@@ -124,16 +134,20 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
         if (d == null) { hotbar4.color = Color.clear; } else { hotbar4.color = Color.white; }
     }
     //When the user clicks on an item icon
-    public void ClickItemIcon(int itemIconIndex) 
+    public void ClickItemIcon(int itemIconIndex, Vector2 pos) 
     {
         if (selectedItemIconSwapperIndex == -1) 
         { 
             selectedItemIconSwapperIndex = itemIconIndex;
+            selectedItemIconSwaperPosition = pos;
+            selectedItemIconIndicator.gameObject.SetActive(true);
         }
         else
         {
             //We have both indexes, we can swap
             inventoryScript.SwapItems(selectedItemIconSwapperIndex, itemIconIndex);
+            selectedItemIconSwaperPosition = Vector2.zero;
+            selectedItemIconIndicator.gameObject.SetActive(false);
             selectedItemIconSwapperIndex = -1;//Reset
         }
     }
