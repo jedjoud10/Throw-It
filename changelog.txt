@@ -1,8 +1,10 @@
-Version: 8
-VersionName: InventoryTest1
+Version: 9
+VersionName: InventoryTest2
 Changelog: 
--New inventory system and new inventory test map
--Inventory default controls:
-"Q": Drop item (Not functional yet)
-"E": Pickup item
-"R": Toggle inventory
+-Better Inventory GUI
+-Item Swapping while in inventory (Placeholder ?)
+-Functional Hotbar; Use the scrollwheel to change between items
+-New Controls:
+"E" to toggle inventory
+"F" to pickup item
+"Left Mouse Click" to activate item

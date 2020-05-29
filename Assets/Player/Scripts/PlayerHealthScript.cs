@@ -51,6 +51,8 @@ public class PlayerHealthScript : NetworkedBehaviour
         }
         health.Value += healthRegeneration;//Apply healing to health  
         health.Value = Mathf.Min(health.Value, maxHealth);//Dont let the health exceed the max health
+        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, health.Value, maxHealth, 1, UIManager);
+        InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, health.Value, maxHealth, UIManager);
         return true;
     }
     //Executed on the client to update his UI health bar

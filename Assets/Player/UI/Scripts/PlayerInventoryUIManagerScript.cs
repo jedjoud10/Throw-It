@@ -20,6 +20,7 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
     private int selectedItemIconSwapperIndex = -1;//The new selected item that we will swap the old selected item into
     private Vector2 selectedItemIconSwaperPosition;//The position of the selected item
     public RectTransform selectedItemIconIndicator;//yes.
+    public GameObject[] hotbarEquipedItemSelectors;
     // Start is called before the first frame update
     void Start()
     {
@@ -132,6 +133,14 @@ public class PlayerInventoryUIManagerScript : MonoBehaviour
         if (b == null) { hotbar2.color = Color.clear; } else { hotbar2.color = Color.white; }
         if (c == null) { hotbar3.color = Color.clear; } else { hotbar3.color = Color.white; }
         if (d == null) { hotbar4.color = Color.clear; } else { hotbar4.color = Color.white; }
+    }
+    //Set the equipedItemIndicator correctly
+    public void SetEquipedItemIndex(int itemIndex) 
+    {
+        for (int i = 0; i < hotbarEquipedItemSelectors.Length; i++)
+        {
+            hotbarEquipedItemSelectors[i].SetActive(i == itemIndex);//Turn on the correct selector and turn off all the other ones
+        }
     }
     //When the user clicks on an item icon
     public void ClickItemIcon(int itemIconIndex, Vector2 pos) 

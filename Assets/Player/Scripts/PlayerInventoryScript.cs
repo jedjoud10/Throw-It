@@ -20,36 +20,42 @@ public class PlayerInventoryScript : NetworkedBehaviour
     const int maxInventorySize = 16;//Maximum number of items that the player can hold
     private bool inventoryOpened;//If the UI for the inventory is visible
     private bool inventoryButton;//If the inventory toggle button is pressed right now
+    private float mouseScrollWheelCounter = 0;//How much the user scrolled the wheel on their mouse
+    const float mouseScrollWheelSensivity = 10;//Well yes
+
+    //Item activation
     private PlayerThrowableThrowingScript playerThrowingScript;//How the player is gonna throws stuff
     // Start is called before the first frame update
     void Start()
     {
         if (IsLocalPlayer) 
         {
-            //Init components            
-            healthScript = GetComponent<PlayerHealthScript>();
-            inventoryUIManager = GetComponent<PlayerInventoryUIManagerScript>();
-            playerThrowingScript = GetComponent<PlayerThrowableThrowingScript>();
-            playerController = GetComponent<PlayerControllerScript>();
             inventory = new NetworkedVar<int[]>(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone }, new int[maxInventorySize]);
             for (int i = 0; i < maxInventorySize; i++)
             {
                 inventory.Value[i] = -1;
             }
+            //Init components            
+            healthScript = GetComponent<PlayerHealthScript>();
+
+            playerThrowingScript = GetComponent<PlayerThrowableThrowingScript>();
+            playerController = GetComponent<PlayerControllerScript>();
+
+            //UI
+            inventoryUIManager = GetComponent<PlayerInventoryUIManagerScript>();
+            UpdateUIInventory();//Init ui
+            inventoryUIManager.SetEquipedItemIndex(equipedItemIndex);//Init ui
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!IsLocalPlayer) 
-        {
-            return;
-        }
+        if (!IsLocalPlayer) {  return;  }//Only on local player machine
         if(Input.GetAxis("PickupItem") > 0) 
         {
             RaycastHit hit;//Result of raycast
-            if (Physics.Raycast(cameraObject.position, cameraObject.forward, out hit))
+            if (Physics.Raycast(cameraObject.position, cameraObject.forward, out hit, 3.2f))//Max distance is 6 units
             {
                 if(hit.transform.GetComponent<ItemScript>() != null) 
                 {
@@ -57,6 +63,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
                 }
             }
         }
+        //Show/hide inventory
         if(Input.GetAxis("ToggleInventory") > 0) 
         {
             if(inventoryButton == false) 
@@ -72,14 +79,12 @@ public class PlayerInventoryScript : NetworkedBehaviour
                     UpdateUIInventory();
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
-                    playerThrowingScript.canCharge.Value = false;
                 }
                 else
                 {
                     //Hide the cursor
                     Cursor.visible = false;
                     Cursor.lockState = CursorLockMode.Locked;
-                    playerThrowingScript.canCharge.Value = true;
                 }
             }
         }
@@ -87,7 +92,49 @@ public class PlayerInventoryScript : NetworkedBehaviour
         {
             inventoryButton = false;
         }
+
+        //Mouse scroll wheel input
+        float newMouseScrollWheelCounter = mouseScrollWheelCounter + (Input.GetAxis("Mouse ScrollWheel") * -mouseScrollWheelSensivity);
+        if (newMouseScrollWheelCounter != mouseScrollWheelCounter)//Detect change
+        {
+            mouseScrollWheelCounter = newMouseScrollWheelCounter;
+            EquipItem(Mathf.RoundToInt(nfmod(mouseScrollWheelCounter, 4)));
+            if(Mathf.RoundToInt(nfmod(mouseScrollWheelCounter, 4)) == 4) 
+            {
+                EquipItem(0);//bro cringe
+            }
+        }
+
+        //"Activate" currently equiped item only when the inventory is closed
+        if (Input.GetAxis("ActivateEquipedItem") > 0 && !inventoryOpened)
+        {
+            Item currentItem = ItemsHandler.ID2Item(equipedItem);
+            if (currentItem is Throwable)
+            {
+                //Throw this item since its a throwable
+                playerThrowingScript.StartChargingThrowable();
+            }
+            if (currentItem is Consumable)
+            {
+                //Mmmm yes consume
+                ConsumeItem(equipedItemIndex);
+            }
+        }
+        else
+        {
+            Item currentItem = ItemsHandler.ID2Item(equipedItem);
+            if (currentItem is Throwable)
+            {
+                playerThrowingScript.StopChargingThrowable();
+            }
+        }
     }
+    //Modulo thingy thing from https://stackoverflow.com/questions/1082917/mod-of-negative-number-is-melting-my-brain
+    float nfmod(float a, float b)
+    {
+        return a - b * Mathf.Floor(a / b);
+    }
+    #region GameObject management
     //Pick up an item
     private bool PickupItem(ItemScript itemScript) 
     {
@@ -153,6 +200,8 @@ public class PlayerInventoryScript : NetworkedBehaviour
         //Set the item's model
         itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Item(inventory.Value[itemID]).itemModel);
     }
+    #endregion
+    #region Item handling
     //Removes an item from the inventory
     public bool RemoveItem(int itemID) 
     {
@@ -233,16 +282,15 @@ public class PlayerInventoryScript : NetworkedBehaviour
             Item newlyEquipedItem = ItemsHandler.ID2Item(inventory.Value[itemIndex]);
             equipedItem = inventory.Value[itemIndex];
             equipedItemIndex = itemIndex;
+
+            //Set the new item for the item activators
             if(newlyEquipedItem is Throwable) 
             {
                 //If the item is throwable, then set it as the current throwable item
                 playerThrowingScript.selectedThrowableID = inventory.Value[itemIndex];
             }
-            else
-            {
-                //Item is not a throwable, disable throwing
-                playerThrowingScript.selectedThrowableID = -1;
-            }
+            else { playerThrowingScript.selectedThrowableID = -1; }//Item is not a throwable, disable throwing
+            inventoryUIManager.SetEquipedItemIndex(equipedItemIndex);//Update ui
         }
         else
         {
@@ -262,11 +310,6 @@ public class PlayerInventoryScript : NetworkedBehaviour
             }
             equipedItem = -1;        
         }
-    }
-    //Gets an itemID from the inventory with an index
-    public int GetItemID(int itemIndex) 
-    {
-        return inventory.Value[itemIndex];
     }
     //Consume a consumable item
     private bool ConsumeItem(int itemIndex) 
@@ -291,9 +334,17 @@ public class PlayerInventoryScript : NetworkedBehaviour
             return false;
         }
     }
+    //Gets an itemID from the inventory with an index
+    public int GetItemID(int itemIndex) 
+    {
+        return inventory.Value[itemIndex];
+    }
+    #endregion
     //Update the inventory UI
     private void UpdateUIInventory() 
     {
+        EquipItem(equipedItemIndex);//Re equip the current equiped item in case we changed something
+
         Texture[] textures = new Texture[maxInventorySize];
         for (int i = 0; i < textures.Length; i++)
         {
