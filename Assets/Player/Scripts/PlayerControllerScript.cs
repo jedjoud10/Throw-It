@@ -54,16 +54,14 @@ public class PlayerControllerScript : NetworkedBehaviour
         //Set the default player position
         playerSpawn = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
 
+        //Activate camera on this local player only
+        playerCamera.gameObject.SetActive(IsLocalPlayer);
         if (IsLocalPlayer)
         {
-            //Activate camera on other local player only
-            playerCamera.gameObject.SetActive(true);
-            //Disable player models
-            headObject.SetActive(false);
-            playerObject.SetActive(false);
-        }
-        else
-        {
+            //Disable player models but the shadows are still active
+
+            playerObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+            headObject.transform.GetChild(0).GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
         }
         //Hide cursor and lock it
         Cursor.visible = false; Cursor.lockState = CursorLockMode.Locked;
@@ -103,9 +101,27 @@ public class PlayerControllerScript : NetworkedBehaviour
         //Read the input
         if (controllable)
         {
-            jumping = Input.GetAxis("Jump") > 0.0f;
-            inputData.x = Input.GetAxis("LeftRight");
-            inputData.y = Input.GetAxis("ForwardBackward");
+            inputData.x = 0;
+            //Movement left / right
+            if (InputManager.GetKey("Left")) 
+            {
+                inputData.x = -1;
+            }
+            else if(InputManager.GetKey("Right"))
+            {
+                inputData.x = 1;
+            }
+            inputData.y = 0;
+            //Movement backwards / forwards
+            if (InputManager.GetKey("Backward"))
+            {
+                inputData.y = -1;
+            }
+            else if (InputManager.GetKey("Forward"))
+            {
+                inputData.y = 1;
+            }
+            jumping = InputManager.GetKey("Jump");
         }
         else
         {
@@ -136,7 +152,7 @@ public class PlayerControllerScript : NetworkedBehaviour
         //WalkingFactor smoothly goes to 1 when we are walking
         walkingFactor = Mathf.Lerp(walkingFactor, (inputData.magnitude > 0.0f) ? 1 : 0, factorSmoothingSpeed * Time.deltaTime);
         //SprintingFactor smoothly goes to 1 when we are sprinting
-        sprintingFactor = Mathf.Lerp(sprintingFactor, (Input.GetAxis("Sprint") > 0.0f) ? 1 : 0, factorSmoothingSpeed * Time.deltaTime);
+        sprintingFactor = Mathf.Lerp(sprintingFactor, InputManager.GetKey("Sprint") ? 1 : 0, factorSmoothingSpeed * Time.deltaTime);
 
         //Set the new calculated speed from the SprintingFactor
         speed = Mathf.Lerp(walkingSpeed, sprintingSpeed, sprintingFactor);//Only sprinting factor this time
@@ -161,7 +177,7 @@ public class PlayerControllerScript : NetworkedBehaviour
         //Rotate the camera on the local client
         playerCamera.transform.localRotation = Quaternion.Euler(cameraRotationX, 0, 0);
 
-        //HeadObject.transform.localRotation = playerCamera.transform.localRotation;//This is useless since the local player never sees their head, but eh why not
+        headObject.transform.localRotation = playerCamera.transform.localRotation;
 
         //Send that data to the server so it can relay it to the other clients
         //Send the velocity, position and if the player is jumping or not

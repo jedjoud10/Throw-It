@@ -25,8 +25,11 @@ public class WorldManagerScript : NetworkedBehaviour
         currentScene = SceneManager.GetActiveScene().name;
         if(currentScene == "MainMenuMap") 
         {
-            //Load items from resource folder at the start of a game
+            //Load items from resource folder at the start of the game
             ItemsHandler.LoadAllItems();
+
+            //Load all the key binds at the start of the game
+            InputManager.SetupKeybinds();
         }
     }
     public override void NetworkStart()

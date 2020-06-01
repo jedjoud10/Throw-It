@@ -19,7 +19,6 @@ public class PlayerInventoryScript : NetworkedBehaviour
     private PlayerHealthScript healthScript;//The health script of the player
     const int maxInventorySize = 16;//Maximum number of items that the player can hold
     private bool inventoryOpened;//If the UI for the inventory is visible
-    private bool inventoryButton;//If the inventory toggle button is pressed right now
     private float mouseScrollWheelCounter = 0;//How much the user scrolled the wheel on their mouse
     const float mouseScrollWheelSensivity = 10;//Well yes
 
@@ -52,7 +51,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     void Update()
     {
         if (!IsLocalPlayer) {  return;  }//Only on local player machine
-        if(Input.GetAxis("PickupItem") > 0) 
+        if (InputManager.GetKeyPress("PickupItem")) 
         {
             RaycastHit hit;//Result of raycast
             if (Physics.Raycast(cameraObject.position, cameraObject.forward, out hit, 3.2f))//Max distance is 6 units
@@ -63,35 +62,31 @@ public class PlayerInventoryScript : NetworkedBehaviour
                 }
             }
         }
+        if (InputManager.GetKeyPress("DropItem"))
+        {
+            DropItem(equipedItemIndex);
+        }
         //Show/hide inventory
-        if(Input.GetAxis("ToggleInventory") > 0) 
+        if (InputManager.GetKeyPress("ToggleInventory"))
         {
-            if(inventoryButton == false) 
+            inventoryOpened = !inventoryOpened;
+            //Make the player uncrontolable if the inventory is opened
+            playerController.controllable = !inventoryOpened;
+            inventoryUIManager.ToggleInventory();
+            if (inventoryOpened)
             {
-                inventoryButton = true;//Oh no, the heavy is DEAD
-                inventoryOpened = !inventoryOpened;
-                //Make the player uncrontolable if the inventory is opened
-                playerController.controllable = !inventoryOpened;
-                inventoryUIManager.ToggleInventory();
-                if (inventoryOpened) 
-                {
-                    //Show the cursor
-                    UpdateUIInventory();
-                    Cursor.visible = true;
-                    Cursor.lockState = CursorLockMode.None;
-                }
-                else
-                {
-                    //Hide the cursor
-                    Cursor.visible = false;
-                    Cursor.lockState = CursorLockMode.Locked;
-                }
+                //Show the cursor
+                UpdateUIInventory();
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
             }
-        }
-        else
-        {
-            inventoryButton = false;
-        }
+            else
+            {
+                //Hide the cursor
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }       
 
         //Mouse scroll wheel input
         float newMouseScrollWheelCounter = mouseScrollWheelCounter + (Input.GetAxis("Mouse ScrollWheel") * -mouseScrollWheelSensivity);
@@ -106,7 +101,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
         }
 
         //"Activate" currently equiped item only when the inventory is closed
-        if (Input.GetAxis("ActivateEquipedItem") > 0 && !inventoryOpened)
+        if (InputManager.GetKey("ActivateEquipedItem") && !inventoryOpened)
         {
             Item currentItem = ItemsHandler.ID2Item(equipedItem);
             if (currentItem is Throwable)
@@ -169,15 +164,18 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Drops an item infront of the player
     private bool DropItem(int itemIndex) 
     {
+        int itemID = inventory.Value[itemIndex];//Saving the item id since it will be destroyed in the inventory array
         if (RemoveItemAtIndex(itemIndex)) 
         {
             //Spawn a new base item into the world
-            Vector3 spawnPosition = cameraObject.position + cameraObject.forward * 5;
+            RaycastHit hit;//Result of raycast
+            Vector3 spawnPosition = cameraObject.position + cameraObject.forward * 5;//Default value
+            if (Physics.Raycast(cameraObject.position, cameraObject.forward, out hit, 5f))
+            {
+                spawnPosition = hit.point;
+            }
             Quaternion spawnRotation = Quaternion.identity;
-            GameObject itemObject = Instantiate(itemGameObject, spawnPosition, spawnRotation);
-            InvokeServerRpc(SpawnItemOnServer, OwnerClientId, inventory.Value[itemIndex], spawnPosition, spawnRotation);
-            //Set the item's model
-            itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Item(inventory.Value[itemIndex]).itemModel);
+            InvokeServerRpc(SpawnItemOnServer, OwnerClientId, itemID, spawnPosition, spawnRotation);
             return true;
         }
         else
@@ -190,15 +188,17 @@ public class PlayerInventoryScript : NetworkedBehaviour
     [ServerRPC]
     private void SpawnItemOnServer(ulong clientID, int itemID, Vector3 position, Quaternion rotation) 
     {
+        GameObject itemObject = Instantiate(itemGameObject, position, rotation);
+        //Set the item's model
+        itemObject.GetComponent<ItemScript>().itemID = itemID;
+        itemObject.GetComponent<NetworkedObject>().Spawn();
         InvokeClientRpcOnEveryoneExcept(SpawnItemOnClient, clientID, itemID, position, rotation);
     }
     //Spawn an item on the clients
     [ClientRPC]
     private void SpawnItemOnClient(int itemID, Vector3 position, Quaternion rotation) 
     {
-        GameObject itemObject = Instantiate(itemGameObject, position, rotation);
-        //Set the item's model
-        itemObject.GetComponent<ItemScript>().SetItemModel(ItemsHandler.ID2Item(inventory.Value[itemID]).itemModel);
+        itemObject.GetComponent<ItemScript>().itemID = itemID;
     }
     #endregion
     #region Item handling
@@ -242,8 +242,8 @@ public class PlayerInventoryScript : NetworkedBehaviour
         else
         {
             //Could not remove the item
-        }        
-        return false;
+            return false;
+        }
     }
     //Adds an item to the inventory
     private bool AddItem(int itemID)

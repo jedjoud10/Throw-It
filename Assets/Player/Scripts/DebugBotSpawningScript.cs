@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //Spawning of current bot with "m" and switching to next bot with "n"
+//TODO : Networking support but also no.
 public class DebugBotSpawningScript : MonoBehaviour
 {
     public Transform cam;//Camera

@@ -31,6 +31,8 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
                 //If we arent in the main menu, then start the game as a host
                 //MLAPI cant send any data if we are the only player, so we are going to be in singleplayer then
                 singleton.StartHost(playerSpawnPoint.position);
+
+                ChatLogger.StartLogger();
             }
         }       
     }
@@ -99,6 +101,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     public void UpdateSystemChat(string newChat) 
     {
         InvokeClientRpcOnEveryone(UpdateSystemChatOnClient, newChat);
+        ChatLogger.LogNewMessage(newChat, DateTime.Now);
     }
     //Update the system chat on the local client
     [ClientRPC]
@@ -110,9 +113,9 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.O)) 
+        if(InputManager.GetKeyPress("PauseMenu")) 
         {
-            InvokeServerRpc(UpdateSystemChat, RandomPlayerMessages.Leftgame(playerConfigScript.nickname.Value));
+            InvokeServerRpc(UpdateSystemChat, RandomMessages.Player_Leftgame(playerConfigScript.nickname.Value));
             if (IsHost) 
             {            
                 ReturnMainMenu();

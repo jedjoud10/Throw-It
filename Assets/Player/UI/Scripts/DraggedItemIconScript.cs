@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //When the player starts dragging an item, this gameobject gets instatiated and follows the mouse
+//TODO: No.
 public class DraggedItemIconScript : MonoBehaviour
 {
     public int itemID;//The item id that we started with (When clicking on an item)

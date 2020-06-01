@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Pellet
   itemModel: {fileID: -927199367670048503, guid: d329d29a0e1857b489fbbe0ac6e7f5d7,
     type: 3}
-  itemIcon: {fileID: 2800000, guid: 40975a3fce8691c4f94d6a07568a77a5, type: 3}
+  itemIcon: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
   itemDescription: A smol boio
   throwableGameObject: {fileID: 1227122033092753418, guid: e201ae30ff0c7ba46aa7d1f53a34532f,
     type: 3}

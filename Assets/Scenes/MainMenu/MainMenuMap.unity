@@ -12869,6 +12869,9 @@ MonoBehaviour:
     - Prefab: {fileID: 2592843989083868683, guid: fd2832e91e78b0e4e9a1e5ad933f370b,
         type: 3}
       PlayerPrefab: 0
+    - Prefab: {fileID: 4624301458934471212, guid: 923cff8b79ad9694e812b6831de71e00,
+        type: 3}
+      PlayerPrefab: 0
     PlayerPrefabHash:
       Value: 4529605043381124101
     CreatePlayerPrefab: 1
@@ -14958,7 +14961,7 @@ PrefabInstance:
     - target: {fileID: 6385653187937861115, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 461.03
+      value: 469.03
       objectReference: {fileID: 0}
     - target: {fileID: 6385653187937861115, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}
@@ -14968,7 +14971,7 @@ PrefabInstance:
     - target: {fileID: 6385653187937861115, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 443.24
+      value: 444.28
       objectReference: {fileID: 0}
     - target: {fileID: 6385653187937861115, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}

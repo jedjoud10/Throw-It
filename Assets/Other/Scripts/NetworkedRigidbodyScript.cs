@@ -6,7 +6,8 @@ using UnityEngine;
 //Well uhh... a networked rigidbody yes
 public class NetworkedRigidbodyScript : NetworkedBehaviour
 {
-    public bool transmitApplyData = false;//Should the server transmit the data and should the clients use it ?
+    public bool transmitData = false;//Should the server transmit the data
+    public bool applyData = false;//Should the clients the data the server gave them ?
     public float positionSmoothing = 15;//How much to smooth the position the server gave us
     public float rotationSmoothing = 15;//How much to smooth the rotation the server gave us
 
@@ -25,12 +26,12 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
     // FixedUpdate is called each physics timestep
     void FixedUpdate()
     {
-        if (IsServer && transmitApplyData)
+        if (IsServer && transmitData)
         {
             InvokeClientRpcOnEveryone(UpdateRigidbodyStateOnClient, rb.position, rb.rotation, sendChannel); //Send the new state to the clients
         }
 
-        if (IsClient && rotation.IsValid() && transmitApplyData)
+        if (IsClient && rotation.IsValid() && applyData)
         {
             //Apply the data that the server gave us (smoothed)
             rb.position = Vector3.Lerp(rb.position, position, positionSmoothing * Time.fixedDeltaTime);
@@ -39,7 +40,6 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
             //rb.angularVelocity = angularVelocity;
         }
     }
-    //TODO: Make this a separate component
     //Update the state of the rigidbody on the clients
     [ClientRPC]
     private void UpdateRigidbodyStateOnClient(Vector3 _position, Quaternion _rotation)
