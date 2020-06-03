@@ -10,7 +10,6 @@ using MLAPI.Messaging;
 public class PlayerInventoryScript : NetworkedBehaviour
 {
     public Transform cameraObject;//The camera of the player
-    public GameObject itemPrefab;//The base item object
     private PlayerInventoryUIManagerScript inventoryUIManager;//Manages the UI for this inventory
     private PlayerControllerScript playerController;//Movement and rotation controller for this player
     private int equipedItem = -1;//The current item the player is holding
@@ -184,7 +183,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     [ServerRPC]
     private void SpawnItemOnServer(int itemID, Vector3 position, Quaternion rotation) 
     {
-        GameObject itemObject = Instantiate(itemPrefab, position, rotation);
+        GameObject itemObject = Instantiate(ItemsHandler.itemBase, position, rotation);
         //Set the item's model
         itemObject.GetComponent<ItemScript>().itemID = itemID;
         itemObject.GetComponent<NetworkedObject>().Spawn();
