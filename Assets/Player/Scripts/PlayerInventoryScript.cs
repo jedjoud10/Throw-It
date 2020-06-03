@@ -10,7 +10,7 @@ using MLAPI.Messaging;
 public class PlayerInventoryScript : NetworkedBehaviour
 {
     public Transform cameraObject;//The camera of the player
-    public GameObject itemGameObject;//The base item object
+    public GameObject itemPrefab;//The base item object
     private PlayerInventoryUIManagerScript inventoryUIManager;//Manages the UI for this inventory
     private PlayerControllerScript playerController;//Movement and rotation controller for this player
     private int equipedItem = -1;//The current item the player is holding
@@ -138,8 +138,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
             if (AddItem(itemScript.itemID)) 
             {
                 //If item was succsessfully added, then remove the gameobject
-                Destroy(itemScript.gameObject);
-                InvokeServerRpc(DestroyItemOnServer, OwnerClientId, itemScript.gameObject);
+                InvokeServerRpc(DestroyItemOnServer, itemScript.gameObject);
                 return true;
             }
             else
@@ -152,12 +151,9 @@ public class PlayerInventoryScript : NetworkedBehaviour
             return false;
         }
     }
-    //Destroys a gameobject on the server then on the clients (except the owner)
+    //Destroys a gameobject on the server then on the clients
     [ServerRPC]
-    private void DestroyItemOnServer(ulong clientID, GameObject _gameObject) { InvokeClientRpcOnEveryoneExcept(DestroyItemOnClient, clientID, _gameObject);  }
-    //Destroy a gameobject on the clients
-    [ClientRPC]
-    private void DestroyItemOnClient(GameObject _gameObject) 
+    private void DestroyItemOnServer(GameObject _gameObject) 
     {
         Destroy(_gameObject);
     }
@@ -175,7 +171,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
                 spawnPosition = hit.point;
             }
             Quaternion spawnRotation = Quaternion.identity;
-            InvokeServerRpc(SpawnItemOnServer, OwnerClientId, itemID, spawnPosition, spawnRotation);
+            InvokeServerRpc(SpawnItemOnServer, itemID, spawnPosition, spawnRotation);
             return true;
         }
         else
@@ -186,17 +182,17 @@ public class PlayerInventoryScript : NetworkedBehaviour
     }
     //Spawn an item on the server then on the clients (except the owner)
     [ServerRPC]
-    private void SpawnItemOnServer(ulong clientID, int itemID, Vector3 position, Quaternion rotation) 
+    private void SpawnItemOnServer(int itemID, Vector3 position, Quaternion rotation) 
     {
-        GameObject itemObject = Instantiate(itemGameObject, position, rotation);
+        GameObject itemObject = Instantiate(itemPrefab, position, rotation);
         //Set the item's model
         itemObject.GetComponent<ItemScript>().itemID = itemID;
         itemObject.GetComponent<NetworkedObject>().Spawn();
-        InvokeClientRpcOnEveryoneExcept(SpawnItemOnClient, clientID, itemID, position, rotation);
+        InvokeClientRpcOnEveryone(SpawnItemOnClient, itemID, itemObject);
     }
     //Spawn an item on the clients
     [ClientRPC]
-    private void SpawnItemOnClient(int itemID, Vector3 position, Quaternion rotation) 
+    private void SpawnItemOnClient(int itemID, GameObject itemObject) 
     {
         itemObject.GetComponent<ItemScript>().itemID = itemID;
     }

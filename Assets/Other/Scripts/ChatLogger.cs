@@ -13,12 +13,11 @@ public static class ChatLogger
         logFileName = "chatlog_" + DateTime.Now.ToString().Replace(':', '_');
         if (!Directory.Exists(Application.persistentDataPath + "/logs/")) Directory.CreateDirectory(Application.persistentDataPath + "/logs/");        
         chatMessages = new List<string>();
-        Debug.Log(logFileName);
     }
     //Logs a new message to the txt file with a specified timestamp
-    public static void LogNewMessage(string message, DateTime time)
+    public static void LogNewMessage(string message)
     {
-        chatMessages.Add(time.ToString() + ": " + message);//Add the new message
+        chatMessages.Add(DateTime.Now.ToString() + ": " + message);//Add the new message
         SaverLoader.SaveTxtLines("logs/" + logFileName + ".txt", chatMessages.ToArray());
     }
 }

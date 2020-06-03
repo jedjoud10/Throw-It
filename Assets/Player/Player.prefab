@@ -3726,7 +3726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraObject: {fileID: 3713312724342768532}
-  itemGameObject: {fileID: 4624301458934471212, guid: 923cff8b79ad9694e812b6831de71e00,
+  itemPrefab: {fileID: 4624301458934471212, guid: 923cff8b79ad9694e812b6831de71e00,
     type: 3}
   equipedItemIndex: 0
 --- !u!114 &9114718179916332944
@@ -3886,7 +3886,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3713312724342768532
 Transform:
   m_ObjectHideFlags: 0

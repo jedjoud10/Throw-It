@@ -10,8 +10,7 @@ public class BotHealthScript : NetworkedBehaviour
     public BotScript botScript;//The script for our bot
     public int maxHealth;//Maximum health
     public NetworkedVarInt health;//Current health
-    public NetworkedVarFloat healthPercentage;//Curent health, but from 0 to 1
-    public float delayDeath = 3.5f;//Delay before dying
+    public NetworkedVarFloat healthPercentage;//Curent health, but from 0 to 1    
     // Start is called before the first frame update
     void Start()
     {
@@ -31,13 +30,7 @@ public class BotHealthScript : NetworkedBehaviour
         botScript.OnBotDamage(damage, health.Value);
         if(health.Value <= 0)//Bot is dead 
         {
-            Death();
+            botScript.OnBotDeath();
         }
-    }
-    //Death after time everyone
-    public void Death() 
-    {
-        botScript.OnBotDeath();
-        Destroy(gameObject, delayDeath);//Fast and chunky way to destroy bot after delay
-    }
+    }    
 }

@@ -16,7 +16,7 @@ public class BillboardScript : MonoBehaviour
     {
         //Make the billboard have the same forward direction as the camera
         //TODO: Turn this into a main billboard manager to save on performance and optimize the camera handling
-        if (_camera != null) { transform.forward = _camera.transform.forward; }
+        if (_camera != null && _camera.gameObject.activeSelf) { transform.forward = _camera.transform.forward; }
         else { _camera = Camera.main; }//Try to get a valid camera as soon as possible
     }
     private void LateUpdate()

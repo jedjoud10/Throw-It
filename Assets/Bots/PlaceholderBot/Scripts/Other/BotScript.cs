@@ -15,6 +15,7 @@ public class BotScript : NetworkedBehaviour
     public BotHealthScript healthScript;
     protected NetworkedVarBool isDead;//When the bot is dead
     public float rotationOffsetX;
+    public float delayDeath = 3.5f;//Delay before dying
     // Start is called before the first frame update
     virtual public void Start()
     {
@@ -32,6 +33,7 @@ public class BotScript : NetworkedBehaviour
     virtual public void OnBotDeath() 
     {
         if (!IsServer) return;
+        Destroy(gameObject, delayDeath);//Fast and chunky way to destroy bot after delay
         //Slow down movement and bobbing
         movementScript.move = false;
         bobbingScript.applybobbing = false;
