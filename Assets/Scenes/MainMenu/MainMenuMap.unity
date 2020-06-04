@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1414661612}
-  m_IndirectSpecularColor: {r: 0.45142746, g: 0.5006438, b: 0.5708459, a: 1}
+  m_IndirectSpecularColor: {r: 0.45142776, g: 0.5006445, b: 0.570847, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4890,7 +4890,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 795018495}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
   m_Name: 
@@ -12848,27 +12848,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DontDestroy: 1
   RunInBackground: 1
-  LogLevel: 2
+  LogLevel: 1
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1216209673}
     RegisteredScenes:
     - MainMenuMap
-    - MultiplayerLobbyMap
     - TestMap
     - Map1
     - Map2
     - Map3
-    - MarchingCubesTestMap
     - InventoryTestMap
+    - MultiplayerLobbyMap
+    - MarchingCubesTestMap
     AllowRuntimeSceneChanges: 0
     NetworkedPrefabs:
     - Prefab: {fileID: 3713312724342768572, guid: ce0fe32cc4f7d104bac3cc527cb8c6e9,
         type: 3}
       PlayerPrefab: 1
-    - Prefab: {fileID: 2592843989083868683, guid: fd2832e91e78b0e4e9a1e5ad933f370b,
-        type: 3}
-      PlayerPrefab: 0
     - Prefab: {fileID: 4624301458934471212, guid: 923cff8b79ad9694e812b6831de71e00,
         type: 3}
       PlayerPrefab: 0
