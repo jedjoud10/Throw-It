@@ -26,16 +26,21 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
         currentScene = SceneManager.GetActiveScene().name;
         //If the player isnt a server and isnt a client (The only client (Basically in singleplayer))
         singleplayer = !singleton.IsHost && !singleton.IsClient;
-        if (singleplayer)
+        if (currentScene != "MainMenuMap")
         {
-            if(currentScene != "MainMenuMap")
+            if (singleplayer)
             {
                 //If we arent in the main menu, then start the game as a host
                 //MLAPI cant send any data if we are the only player, so we are going to be in singleplayer then
                 singleton.StartHost(playerSpawnPoint.position);
+                players = new NetworkedDictionary<ulong, string>(new Dictionary<ulong, string>());
                 Debug.Log("Server has started");
                 ChatLogger.StartLogger();
-                ChatLogger.LogNewMessage("Server has started");
+                ChatLogger.LogNewMessage("Server has started");                
+            }
+            else
+            {
+                
             }
         }
         singleton.OnClientDisconnectCallback += PlayerDisconnect;
@@ -68,7 +73,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     public void UpdateSystemChat(string newChat)
     {
         InvokeClientRpcOnEveryone(UpdateSystemChatOnClient, newChat);
-        ChatLogger.LogNewMessage(newChat);        
+        ChatLogger.LogNewMessage("SYSTEM CHAT: " + newChat);        
     }
     //Update the system chat on the local client
     [ClientRPC]
@@ -87,13 +92,15 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     //When a player quits (exectued only on server)
     private void PlayerDisconnect(ulong clientID) 
     {
+        //if (clientID == OwnerClientId && IsHost) return;
         if (IsHost)
         {
+            NetworkWorldManagerScript instance = FindObjectOfType<NetworkWorldManagerScript>();
             if (!players.ContainsKey(clientID)) return;
             //Server code
-            string nickname = players[clientID];            
+            string nickname = players[clientID];           
             ChatLogger.LogNewMessage("Player leaving... ID: " + clientID + " User: " + nickname);
-            //UpdateSystemChat(RandomMessages.Player_Leftgame(nickname));//Do not send the disconnect message on the disconnected player
+            instance.UpdateSystemChat(RandomMessages.Player_Leftgame(nickname));
             players.Remove(clientID);//This client disconnected, so we can remove them from the players list
         }
         else

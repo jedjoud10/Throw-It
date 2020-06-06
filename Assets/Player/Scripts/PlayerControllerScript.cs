@@ -61,7 +61,9 @@ public class PlayerControllerScript : NetworkedBehaviour
             //Disable player models but the shadows are still active
 
             playerObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+            playerObject.GetComponent<MeshRenderer>().materials = new Material[0];
             headObject.transform.GetChild(0).GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+            headObject.transform.GetChild(0).GetComponent<MeshRenderer>().materials = new Material[0];
         }
         //Hide cursor and lock it
         Cursor.visible = false; Cursor.lockState = CursorLockMode.Locked;

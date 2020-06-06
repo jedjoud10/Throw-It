@@ -9,7 +9,7 @@ using System.Reflection;
 //Loads all the items from the resources folder
 public static class ItemsHandler
 {
-    private static Item[] items;//The loaded items
+    public static Item[] items;//The loaded items
     public static GameObject itemBase;//The item base
     //Load all the items from the resource folder and store them into the variable
     public static void LoadAllItems()

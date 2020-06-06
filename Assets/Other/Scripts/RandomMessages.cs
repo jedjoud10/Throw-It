@@ -18,10 +18,11 @@ public static class RandomMessages
         "{1} thoroughly memed {0}.",
         "{0}: I am dead!   {1}: Correct!"
     };
-    private static string[] player_death_suicide = new string[2]
+    private static string[] player_death_suicide = new string[3]
     {
         "{0} thought this was idiotic and went to hang themselves in style.",
-        "What comes up, comes down on {0}."
+        "What comes up, comes down on {0}.",
+        "{0} took the death sentence"
     };
     private static string[] player_death_hypothermia = new string[2]
     {
@@ -34,12 +35,13 @@ public static class RandomMessages
         "{0} went to go play minecraft.",
         "{0} realized they left the oven on."
     };
-    private static string[] player_joingame = new string[4]
+    private static string[] player_joingame = new string[5]
     {
         "{0} dropped in. Welcome to the warzone.",
         "{0} joined. You're in Snow Man's Land.",
         "{0} popped into the fort. You'll be assigned to a station soon.",
-        "Guess who came to the playground? {0}!"
+        "Guess who came to the playground? {0}!",
+        "{0} joined... EVERYONE TO YOUR BATTLE STATIONS!"
     };
     private static string[] player_death_machinery_general = new string[1]
     {

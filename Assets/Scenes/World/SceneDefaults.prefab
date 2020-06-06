@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2082133175408352617}
   - component: {fileID: 2181546393743919664}
+  - component: {fileID: 332656212359284676}
   m_Layer: 8
   m_Name: PostProcessVolume
   m_TagString: Untagged
@@ -48,6 +49,19 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!114 &332656212359284676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663436051828809035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6353f9e9caa13a145afb74f34297dccb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stringTag: PostProcess
 --- !u!1 &1088516015720085013
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,6 +137,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpawnPoint: {fileID: 5141500743562139008}
+  playerUIManager: {fileID: 0}
+  playerConfigScript: {fileID: 0}
 --- !u!114 &4194823475630902250
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -132,9 +132,9 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Pick up an item
     private bool PickupItem(ItemScript itemScript) 
     {
-        if(itemScript != null && itemScript.itemID != -1) 
+        if(itemScript != null && itemScript.itemID.Value != -1) 
         {
-            if (AddItem(itemScript.itemID)) 
+            if (AddItem(itemScript.itemID.Value)) 
             {
                 //If item was succsessfully added, then remove the gameobject
                 InvokeServerRpc(DestroyItemOnServer, itemScript.gameObject);
@@ -179,21 +179,14 @@ public class PlayerInventoryScript : NetworkedBehaviour
             return false;
         }
     }
-    //Spawn an item on the server then on the clients (except the owner)
+    //Spawn an item on the server
     [ServerRPC]
     private void SpawnItemOnServer(int itemID, Vector3 position, Quaternion rotation) 
     {
         GameObject itemObject = Instantiate(ItemsHandler.itemBase, position, rotation);
         //Set the item's model
-        itemObject.GetComponent<ItemScript>().itemID = itemID;
+        itemObject.GetComponent<ItemScript>().itemID.Value = itemID;
         itemObject.GetComponent<NetworkedObject>().Spawn();
-        InvokeClientRpcOnEveryone(SpawnItemOnClient, itemID, itemObject);
-    }
-    //Spawn an item on the clients
-    [ClientRPC]
-    private void SpawnItemOnClient(int itemID, GameObject itemObject) 
-    {
-        itemObject.GetComponent<ItemScript>().itemID = itemID;
     }
     #endregion
     #region Item handling

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3516786731893202479}
   - component: {fileID: 5331020339465883033}
   - component: {fileID: 8037410182261337070}
+  - component: {fileID: -4829548944924258468}
   m_Layer: 0
   m_Name: PelletPrefab
   m_TagString: Untagged
@@ -62,7 +63,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a3db2cfed81aa5468cf0b82deaf7deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemID: 2
   throwableType: 0
   speed: 0
   size: 0
@@ -83,6 +83,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23e45a924e6f19a49a98179755a4c310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-4829548944924258468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1227122033092753418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 209037615, guid: 01701b64234b4d523d8045142cbc73fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkedInstanceId: 0
+  PrefabHash: 14303697174263924053
+  PrefabHashGenerator: PelletPrefab
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!64 &3291855072568126554
 MeshCollider:
   m_ObjectHideFlags: 0

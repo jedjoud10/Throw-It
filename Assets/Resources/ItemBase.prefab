@@ -78,7 +78,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76e61ca7972d694189ae52178696ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemID: -1
+  itemID:
+    InternalValue: 0
   itemModelHolder: {fileID: 8466746254205066500}
 --- !u!64 &6569208668793091441
 MeshCollider:
@@ -139,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53500c481bc1b6943ae6d1aac5ffb4f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transmitData: 0
-  applyData: 0
+  transmitData: 1
+  applyData: 1
   positionSmoothing: 15
   rotationSmoothing: 15
