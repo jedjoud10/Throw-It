@@ -16,6 +16,7 @@ public class PlayerConfigScript : NetworkedBehaviour
         if (IsLocalPlayer) 
         {
             currentPlayerConfig = (PlayerConfig) SaverLoader.Load("playerconfig.json", new PlayerConfig(), typeof(PlayerConfig));
+
             nickname.Value = currentPlayerConfig.nickname;
             InvokeServerRpc(InitPlayerOnServer, currentPlayerConfig.nickname, OwnerClientId);
             FindObjectOfType<NetworkWorldManagerScript>().playerConfigScript = this;

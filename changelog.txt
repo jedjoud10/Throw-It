@@ -1,4 +1,4 @@
-Version: 11
-VersionName: Minor bug fixes
+Version: 12
+VersionName: Minor graphic update
 Changelog: 
--Fixed a small networking issue when consuming items
+-Added player textures
