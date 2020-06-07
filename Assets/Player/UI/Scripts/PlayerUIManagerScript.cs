@@ -21,6 +21,7 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     public TMP_Text systemChatText;
     public RectTransform systemChatTargetPos;
     public RectTransform systemChat;
+    public RawImage systemChatIcon;
     public Animation systemChatPanelAnimation;
     public float systemChatSmoothness = 5;
     // Start is called before the first frame update
@@ -65,9 +66,10 @@ public class PlayerUIManagerScript : NetworkedBehaviour
     //Update the player nickname billboard (not networked)
     public void UpdatePlayerNicknameBillboard(string nickname) { billboardNickname.text = nickname; }
     //Update the system chat on this player
-    public void UpdateSystemChat(string newChat) 
+    public void UpdateSystemChat(string newChat, string textureName) 
     { 
         systemChatText.text = newChat;
+        systemChatIcon.texture = TexturesManager.LoadTexture(textureName);
         systemChatPanelAnimation.Play();
     }
 }

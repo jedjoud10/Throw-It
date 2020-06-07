@@ -1,5 +1,6 @@
 ﻿using MLAPI;
 using MLAPI.NetworkedVar;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +13,15 @@ public class ItemScript : NetworkedBehaviour
     void Start()
     {
         //Init the item on the server and client
+        UpdateItem();//Init item
+    }
+
+    public void UpdateItem()
+    {
         if (itemID.Value != -1)
         {
-            SetItemModel(ItemsHandler.ID2Item(itemID.Value).itemModel);
-        }        
+            SetItemModel(ItemsManager.ID2Item(itemID.Value).itemModel);
+        }
     }
 
     //Sets the model for this item

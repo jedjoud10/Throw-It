@@ -20,7 +20,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
     public void ThrowOnServer(float speedFactor, string owner, ulong hostClientID, int throwableID)
     {
         //Spawn the specific item with a specific id
-        Throwable throwable = (Throwable)ItemsHandler.ID2Item(throwableID);
+        Throwable throwable = (Throwable)ItemsManager.ID2Item(throwableID);
         GameObject prefab = throwable.throwableGameObject;
 
         instanceThrowObject = Instantiate(prefab, throwPoint.position, throwPoint.rotation);//Throw throwable and set that spawned snoball as our variable so we can call the Initthrowable method
@@ -41,7 +41,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
     public void Throw(float speedFactor, string owner, int throwableID)//Throw throwable method (Client side only)
     {
         //Spawn the specific item with a specific id
-        Throwable throwable = (Throwable)ItemsHandler.ID2Item(throwableID);
+        Throwable throwable = (Throwable)ItemsManager.ID2Item(throwableID);
         GameObject prefab = throwable.throwableGameObject;
 
         instanceThrowObject = Instantiate(prefab, throwPoint.position, throwPoint.rotation);//Throw throwable and set that spawned snoball as our variable so we can call the Initthrowable method
@@ -57,7 +57,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
     private void ThrowOnClient(float speedFactor, Vector3 pos, Quaternion rot, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner, int throwableID) 
     {
         //Spawn the specific item with a specific id
-        Throwable throwable = (Throwable)ItemsHandler.ID2Item(throwableID);
+        Throwable throwable = (Throwable)ItemsManager.ID2Item(throwableID);
         GameObject prefab = throwable.throwableGameObject;
 
         instanceThrowObject = Instantiate(prefab, pos, rot);//Throw throwable and set that spawned snoball as our variable so we can call the Initthrowable method

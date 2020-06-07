@@ -6,8 +6,8 @@ using UnityEngine.Rendering.PostProcessing;
 //A handler script that loads and saves game configs and applies it
 public class GameConfigHandlerScript : MonoBehaviour
 {
-    private GameConfig currentGameConfig;
-    private GameConfigHandlerScript instance;//Using an instance method to avoid duplicates
+    public GameConfig currentGameConfig;
+    public GameConfigHandlerScript instance;//Using an instance method to avoid duplicates
     private WorldManagerScript wm;//The world manager for the current scene
     public struct CameraConfig 
     {

@@ -102,7 +102,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
         //"Activate" currently equiped item only when the inventory is closed
         if (InputManager.GetKey("ActivateEquipedItem") && !inventoryOpened)
         {
-            Item currentItem = ItemsHandler.ID2Item(equipedItem);
+            Item currentItem = ItemsManager.ID2Item(equipedItem);
             if (currentItem is Throwable)
             {
                 //Throw this item since its a throwable
@@ -116,7 +116,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
         }
         else
         {
-            Item currentItem = ItemsHandler.ID2Item(equipedItem);
+            Item currentItem = ItemsManager.ID2Item(equipedItem);
             if (currentItem is Throwable)
             {
                 playerThrowingScript.StopChargingThrowable();
@@ -183,7 +183,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     [ServerRPC]
     private void SpawnItemOnServer(int itemID, Vector3 position, Quaternion rotation) 
     {
-        GameObject itemObject = Instantiate(ItemsHandler.itemBase, position, rotation);
+        GameObject itemObject = Instantiate(ItemsManager.itemBase, position, rotation);
         //Set the item's model
         itemObject.GetComponent<ItemScript>().itemID.Value = itemID;
         itemObject.GetComponent<NetworkedObject>().Spawn();
@@ -267,7 +267,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
         if(itemIndex != -1) 
         {
             //Convert the inventory item into a equiped item
-            Item newlyEquipedItem = ItemsHandler.ID2Item(inventory.Value[itemIndex]);
+            Item newlyEquipedItem = ItemsManager.ID2Item(inventory.Value[itemIndex]);
             equipedItem = inventory.Value[itemIndex];
             equipedItemIndex = itemIndex;
 
@@ -291,7 +291,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
         if (equipedItem != -1) 
         {
             //Convert the equiped item into an inventory item
-            if (ItemsHandler.ID2Item(equipedItem) is Throwable) 
+            if (ItemsManager.ID2Item(equipedItem) is Throwable) 
             {
                 //We unequiped a throwable, so make the player unable to throw
                 playerThrowingScript.selectedThrowableID = -1;
@@ -302,7 +302,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Consume a consumable item
     private bool ConsumeItem(int itemIndex) 
     {
-        Item item = ItemsHandler.ID2Item(inventory.Value[itemIndex]);
+        Item item = ItemsManager.ID2Item(inventory.Value[itemIndex]);
         if(item is Consumable) 
         {
             //Add health to player
@@ -344,9 +344,9 @@ public class PlayerInventoryScript : NetworkedBehaviour
             }
             else
             {
-                if (ItemsHandler.ID2Item(inventory.Value[i]) != null)
+                if (ItemsManager.ID2Item(inventory.Value[i]) != null)
                 {
-                    textures[i] = ItemsHandler.ID2Item(inventory.Value[i]).itemIcon;
+                    textures[i] = ItemsManager.ID2Item(inventory.Value[i]).itemIcon;
                 }
                 else
                 {

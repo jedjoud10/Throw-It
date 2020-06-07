@@ -1,10 +1,8 @@
-Version: 9
-VersionName: InventoryTest2
+Version: 10
+VersionName: TexturePack Test1
 Changelog: 
--Better Inventory GUI
--Item Swapping while in inventory (Placeholder ?)
--Functional Hotbar; Use the scrollwheel to change between items
--New Controls:
-"E" to toggle inventory
-"F" to pickup item
-"Left Mouse Click" to activate item
+-Added support for custom / editable textures
+-New tree shader
+-Minor post-processing changes
+-Fixed a bug when fastRender is activated, the self player model is visible
+-Added helper icon in system chat

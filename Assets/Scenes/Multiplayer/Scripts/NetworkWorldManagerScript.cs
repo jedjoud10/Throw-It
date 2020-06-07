@@ -70,23 +70,23 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     #region System Chat
     //Updates the system chat on all players (executed on server)
     [ServerRPC]
-    public void UpdateSystemChat(string newChat)
+    public void UpdateSystemChat(string newChat, string newTextureName)
     {
-        InvokeClientRpcOnEveryone(UpdateSystemChatOnClient, newChat);
+        InvokeClientRpcOnEveryone(UpdateSystemChatOnClient, newChat, newTextureName);
         ChatLogger.LogNewMessage("SYSTEM CHAT: " + newChat);        
     }
     //Update the system chat on the local client
     [ClientRPC]
-    private void UpdateSystemChatOnClient(string newChat) 
+    private void UpdateSystemChatOnClient(string newChat, string newTextureName) 
     {
-        playerUIManager.UpdateSystemChat(newChat);
+        playerUIManager.UpdateSystemChat(newChat, newTextureName);
     }
     #endregion
     //When a player wants to join the game (exectued only on server)
     public void PlayerJoin(string nickname, ulong clientID) 
     {
         ChatLogger.LogNewMessage("Player joining... ID: " + clientID + " User: " + nickname);
-        UpdateSystemChat(RandomMessages.Player_Joingame(nickname));
+        UpdateSystemChat(RandomMessages.Player_Joingame(nickname), "systemchat_playerjoin.png");
         players.Add(clientID, nickname);
     }
     //When a player quits (exectued only on server)
@@ -100,7 +100,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
             //Server code
             string nickname = players[clientID];           
             ChatLogger.LogNewMessage("Player leaving... ID: " + clientID + " User: " + nickname);
-            instance.UpdateSystemChat(RandomMessages.Player_Leftgame(nickname));
+            instance.UpdateSystemChat(RandomMessages.Player_Leftgame(nickname), "systemchat_playerleaving.png");
             players.Remove(clientID);//This client disconnected, so we can remove them from the players list
         }
         else

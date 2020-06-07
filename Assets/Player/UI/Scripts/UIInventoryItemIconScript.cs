@@ -57,7 +57,7 @@ public class UIInventoryItemIconScript : MonoBehaviour
     public void ItemIconStartHover() 
     {              
         targetSize = hoveredSize;
-        UIManager.ShowItemData(ItemsHandler.ID2Item(inventoryScript.GetItemID(itemIndex)));
+        UIManager.ShowItemData(ItemsManager.ID2Item(inventoryScript.GetItemID(itemIndex)));
     }
     //When the item icon stopped being hovered by the mouse
     public void ItemIconStopHover() 

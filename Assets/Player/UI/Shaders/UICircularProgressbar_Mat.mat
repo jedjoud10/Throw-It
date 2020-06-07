@@ -27,7 +27,7 @@ Material:
     - _ColorMask: 15
     - _Glossiness: 1
     - _Metallic: 1
-    - _Percent: 0.000000834465
+    - _Percent: 0
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0

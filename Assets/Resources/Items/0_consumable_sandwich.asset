@@ -15,7 +15,8 @@ MonoBehaviour:
   itemName: Sandwich
   itemModel: {fileID: -927199367670048503, guid: 4fb516bdb779fed4ca9fe52bbb11907b,
     type: 3}
-  itemIcon: {fileID: 2800000, guid: 11768f879a893ad439918060609ed099, type: 3}
+  itemIconName: item_sandwichIcon.png
+  itemIcon: {fileID: 0}
   itemDescription: Mmmm yes tasty sandwich
   healthRegeneration: 10
   temperatureRegeneration: 5

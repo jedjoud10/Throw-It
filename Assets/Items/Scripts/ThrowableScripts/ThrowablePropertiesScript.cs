@@ -34,7 +34,7 @@ public class ThrowablePropertiesScript : NetworkedBehaviour
     //Load the throwable values from the item id
     public void LoadItemData(int throwableID) 
     {
-        Throwable throwable = (Throwable)ItemsHandler.ID2Item(throwableID);
+        Throwable throwable = (Throwable)ItemsManager.ID2Item(throwableID);
         //Set all values from scriptable object
         throwableType = throwable.type;
         speedRandomness = throwable.speedRandomness;

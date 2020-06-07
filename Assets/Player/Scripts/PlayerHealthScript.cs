@@ -36,7 +36,7 @@ public class PlayerHealthScript : NetworkedBehaviour
         {
             wm.RespawnPlayer(GetComponent<PlayerControllerScript>(), this);
             //We can do this since we are running as server
-            FindObjectOfType<NetworkWorldManagerScript>().UpdateSystemChat(deathMessage);
+            FindObjectOfType<NetworkWorldManagerScript>().UpdateSystemChat(deathMessage, "systemchat_playerdeath.png");
         }
         InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, health.Value, maxHealth, 0, UIManager);
         InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, health.Value, maxHealth, UIManager);

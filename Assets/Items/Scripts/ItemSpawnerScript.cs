@@ -13,9 +13,9 @@ public class ItemSpawnerScript : NetworkedBehaviour
     {
         if (IsServer)
         {            
-            GameObject itemObject = Instantiate(ItemsHandler.itemBase, transform.position, transform.rotation);
+            GameObject itemObject = Instantiate(ItemsManager.itemBase, transform.position, transform.rotation);
             //Set the item's model
-            itemObject.GetComponent<ItemScript>().itemID.Value = randomized ? Random.Range(0, ItemsHandler.items.Length) : itemID;
+            itemObject.GetComponent<ItemScript>().itemID.Value = randomized ? Random.Range(0, ItemsManager.items.Length) : itemID;
             itemObject.GetComponent<NetworkedObject>().Spawn();
         }
     }

@@ -12,22 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 556797029e73b2347956b6579e77e05b, type: 3}
   m_Name: DepthOfField
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 0
   focusDistance:
-    overrideState: 0
-    value: 10
+    overrideState: 1
+    value: 33.25
   aperture:
-    overrideState: 0
-    value: 5.6
+    overrideState: 1
+    value: 0.3
   focalLength:
-    overrideState: 0
-    value: 50
+    overrideState: 1
+    value: 63
   kernelSize:
-    overrideState: 0
-    value: 1
+    overrideState: 1
+    value: 3
 --- !u!114 &-5737203684731309374
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b94fcd11afffcb142908bfcb1e261fba, type: 3}
   m_Name: MotionBlur
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -67,8 +67,8 @@ MonoBehaviour:
     overrideState: 1
     value: 1
   filtering:
-    overrideState: 0
-    value: {x: 62.496338, y: 92.62775}
+    overrideState: 1
+    value: {x: 77.64803, y: 99}
   minLuminance:
     overrideState: 1
     value: -9
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cb7e9e120078f43bce4f0b1be547a7, type: 3}
   m_Name: AmbientOcclusion
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -126,13 +126,13 @@ MonoBehaviour:
     value: -12
   thicknessModifier:
     overrideState: 0
-    value: 2.31
+    value: 1
   directLightingStrength:
     overrideState: 0
     value: 0
   radius:
     overrideState: 0
-    value: 0.5
+    value: 2
   quality:
     overrideState: 1
     value: 4
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a34fa72bd4185749832024e9c8010bf, type: 3}
   m_Name: ScreenSpaceReflections
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -228,10 +228,10 @@ MonoBehaviour:
     value: 7
   maximumIterationCount:
     overrideState: 1
-    value: 32
+    value: 75
   resolution:
     overrideState: 1
-    value: 0
+    value: 1
   thickness:
     overrideState: 1
     value: 8
@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6050e2d5de785ce4d931e4dbdbf2d755, type: 3}
   m_Name: ChromaticAberration
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -1637,7 +1637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d65e486e4de6e5448a8fbb43dc8756a0, type: 3}
   m_Name: Grain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 0
@@ -1665,7 +1665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b77c5407dc277943b591ade9e6b18c5, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 0

@@ -25,8 +25,14 @@ public class WorldManagerScript : NetworkedBehaviour
         currentScene = SceneManager.GetActiveScene().name;
         if(currentScene == "MainMenuMap") 
         {
+            //----Only ran at the start of the game----\\
+
+
+            //Load the textures from the streaming assets folder
+            TexturesManager.LoadAllTextures();
             //Load items from resource folder at the start of the game
-            ItemsHandler.LoadAllItems();
+            ItemsManager.LoadAllItems();
+
 
             //Load all the key binds at the start of the game
             InputManager.SetupKeybinds();
