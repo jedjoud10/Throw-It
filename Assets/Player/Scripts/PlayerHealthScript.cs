@@ -41,10 +41,15 @@ public class PlayerHealthScript : NetworkedBehaviour
         InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, health.Value, maxHealth, 0, UIManager);
         InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, health.Value, maxHealth, UIManager);
     }
-    //Heal the player. Add health to player (Only executed on server)
+    //Heal the player. Add health to player (Only executed on server, but can be called by client)
+    [ServerRPC]
     public bool HealPlayer(int healthRegeneration) 
     {
-        if (!IsServer) return false;
+        if (!IsServer) //We are a client, so call this as an RPC
+        {
+            InvokeServerRpc(HealPlayer, healthRegeneration);
+            return health.Value < maxHealth;
+        }
         if(health.Value >= maxHealth) 
         {
             return false;//The player is already at full health

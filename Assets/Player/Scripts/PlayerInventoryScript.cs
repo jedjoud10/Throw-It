@@ -302,6 +302,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Consume a consumable item
     private bool ConsumeItem(int itemIndex) 
     {
+        Debug.Log("Consuming item at index: " + itemIndex);
         Item item = ItemsManager.ID2Item(inventory.Value[itemIndex]);
         if(item is Consumable) 
         {

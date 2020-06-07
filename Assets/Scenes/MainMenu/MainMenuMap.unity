@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 19.43
-  m_AmbientSkyColor: {r: 1.2726592, g: 1.2726592, b: 1.2726592, a: 1}
+  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.6581524, g: 0.84061944, b: 0.9622642, a: 1}
   m_AmbientGroundColor: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
   m_AmbientIntensity: 1.45
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1414661612}
-  m_IndirectSpecularColor: {r: 0.45142776, g: 0.5006445, b: 0.570847, a: 1}
+  m_IndirectSpecularColor: {r: 0.45136684, g: 0.50036734, b: 0.5696968, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6356,7 +6356,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.2
+      scalar: 0.4
       minScalar: 0.1
       maxCurve:
         serializedVersion: 2
@@ -6937,7 +6937,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 80
+      scalar: 120
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -13606,13 +13606,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414661611}
-  m_LocalRotation: {x: 0.15118559, y: -0.76636285, z: 0.18953098, w: 0.5949025}
+  m_LocalRotation: {x: -0.14258675, y: 0.76800853, z: -0.1828518, w: -0.5969901}
   m_LocalPosition: {x: 386.321, y: 26.207554, z: 386.61078}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 388.059, y: -104.45901, z: -0.404}
+  m_LocalEulerAnglesHint: {x: 386.815, y: -104.293, z: -360.045}
 --- !u!1001 &1426638571
 PrefabInstance:
   m_ObjectHideFlags: 0

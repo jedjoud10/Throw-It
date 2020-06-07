@@ -1,8 +1,4 @@
-Version: 10
-VersionName: TexturePack Test1
+Version: 11
+VersionName: Minor bug fixes
 Changelog: 
--Added support for custom / editable textures
--New tree shader
--Minor post-processing changes
--Fixed a bug when fastRender is activated, the self player model is visible
--Added helper icon in system chat
+-Fixed a small networking issue when consuming items
