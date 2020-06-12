@@ -28,7 +28,7 @@ public static class ItemsManager
             }
             else
             {
-                items[i].itemIcon = TexturesManager.LoadTexture("item_defaultIcon.png");
+                items[i].itemIcon = TexturesManager.LoadTexture("item_default.png");
             }
         }
         Debug.LogWarning("Loaded " + items.Length + " items !");

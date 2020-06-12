@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4569369603898206196}
   - component: {fileID: 6234257437430029962}
   - component: {fileID: 1629050116946640300}
+  - component: {fileID: 6430557177082641561}
   m_Layer: 0
   m_Name: Tree5
   m_TagString: Untagged
@@ -59,8 +60,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0, z: 0}
-  Bounds: {x: 1.3, y: 6, z: 1.3}
+  Bounds: {x: 1.3433584, y: 6.2001143, z: 1.3433582}
   ObstacleBounds: {x: 1.3, y: 6, z: 1.3}
+--- !u!205 &6430557177082641561
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511574949561005205}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0.026689768, y: 5.453536, z: 0.053134203}
+  m_Size: 12.899599
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.29844484
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4615647350086683668}
+    - renderer: {fileID: 3381342739669578302}
+  m_Enabled: 1
 --- !u!1001 &3103870566180757953
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -138,6 +159,18 @@ PrefabInstance:
 --- !u!4 &7956062957029755611 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 9152aedaa7ee2f842a18df7805f74828,
+    type: 3}
+  m_PrefabInstance: {fileID: 3103870566180757953}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &4615647350086683668 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1504981713932161579, guid: 9152aedaa7ee2f842a18df7805f74828,
+    type: 3}
+  m_PrefabInstance: {fileID: 3103870566180757953}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3381342739669578302 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -8791069784148585473, guid: 9152aedaa7ee2f842a18df7805f74828,
     type: 3}
   m_PrefabInstance: {fileID: 3103870566180757953}
   m_PrefabAsset: {fileID: 0}

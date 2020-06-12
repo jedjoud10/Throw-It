@@ -3865,7 +3865,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManager: {fileID: 3713312724342768470}
-  playerModelMaterial: {fileID: 2100000, guid: 8ab0178036aed4943b6a49c4a0870c40, type: 2}
   nickname:
     InternalValue: 
 --- !u!1 &3713312724342768573

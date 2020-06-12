@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Sandwich
   itemModel: {fileID: -927199367670048503, guid: 4fb516bdb779fed4ca9fe52bbb11907b,
     type: 3}
-  itemIconName: item_sandwichIcon.png
+  itemIconName: item_consumable_sandwich.png
   itemIcon: {fileID: 0}
   itemDescription: Mmmm yes tasty sandwich
   healthRegeneration: 10

@@ -76,7 +76,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Ammount: 0.175
+    - _Ammount: 0.125
     - _BillboardKwToggle: 0
     - _BillboardShadowFade: 0.5
     - _BumpScale: 1
@@ -97,7 +97,7 @@ Material:
     - _Shininess: 0.044
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0
-    - _Speed: 100
+    - _Speed: 80
     - _SquashAmount: 1
     - _SrcBlend: 1
     - _SubsurfaceIndirect: 0.25

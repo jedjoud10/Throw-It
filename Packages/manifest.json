@@ -42,11 +42,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "lock": {
-    "me.ameye.prefab-painter": {
-      "revision": "HEAD",
-      "hash": "f78b6b205ab54296ca4fd27c509a665367f84347"
-    }
   }
 }

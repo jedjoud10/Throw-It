@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Snowball
   itemModel: {fileID: -927199367670048503, guid: a183b51ffa99aaf44adbe4014a6d4612,
     type: 3}
-  itemIconName: item_snowballIcon.png
+  itemIconName: item_throwable_snowball.png
   itemIcon: {fileID: 0}
   itemDescription: hehe snowball go reeeee
   throwableGameObject: {fileID: 2592843989083868683, guid: fd2832e91e78b0e4e9a1e5ad933f370b,

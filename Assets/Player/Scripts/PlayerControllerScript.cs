@@ -169,7 +169,11 @@ public class PlayerControllerScript : NetworkedBehaviour
 
         //Make the player jump when we press the "Jump" button    
         //Smooth the InputVelociy.y because when we hit the ground the player has a "bouncing" effect so smoothing it makes it more natural
-        if (cr.isGrounded) { inputVelocity.y = Mathf.Lerp(inputVelocity.y, 0, 2 * Time.deltaTime); if (jumping) inputVelocity.y = jump; }
+        if (cr.isGrounded) 
+        { 
+            //inputVelocity.y = Mathf.Lerp(inputVelocity.y, 0, 2 * Time.deltaTime); 
+            if (jumping) inputVelocity.y = jump; 
+        }
         //Apply the gravity as an acceleration if we are in the air. Set the air friction since we are in air
         else { inputVelocity.y -= gravity * Time.deltaTime; friction = airFriction; }
         #endregion
@@ -250,13 +254,20 @@ public class PlayerControllerScript : NetworkedBehaviour
     //When the player hits something
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.normal.y < 0.9) return;//Discard the collision if it wasn't under the player
-        friction = baseFriction;//Since we are on the ground, reset the friction (The friction changes if we are in air)
-        //If we hit a PhysicsObject
-        if (hit.gameObject.GetComponent<PhysicsObjectScript>() != null)
+        //Discard the collision if it wasn't under the player
+        if (hit.normal.y > 0.5f)
         {
-            //Override the current friction
-            friction = hit.gameObject.GetComponent<PhysicsObjectScript>().friction;
+            friction = baseFriction;//Since we are on the ground, reset the friction (The friction changes if we are in air)
+                                    //If we hit a PhysicsObject
+            if (hit.gameObject.GetComponent<PhysicsObjectScript>() != null)
+            {
+                //Override the current friction
+                friction = hit.gameObject.GetComponent<PhysicsObjectScript>().friction;
+            }
+        }
+        if (hit.normal.y < 0)
+        {
+            inputVelocity.y -= gravity * Time.deltaTime / hit.moveLength;
         }
     }
 }

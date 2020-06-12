@@ -277,8 +277,8 @@ public class MarchingCubesTerrainScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {            
-        LoadChunksData();
-        ReassignChunkScriptsChunks();
+        //LoadChunksData();
+        //ReassignChunkScriptsChunks();
     }
     #region Mesh generation
     public struct MarchedCubeMeshData //Information about the mesh
@@ -489,6 +489,7 @@ public class MarchingCubesTerrainScript : MonoBehaviour
         Mesh newChunkMesh = GenerateMeshFromData(MarchCube(chunk.chunkGameObject.transform.position, chunk.cube));
         chunk.chunkGameObject.GetComponent<MeshFilter>().sharedMesh = newChunkMesh;
         chunk.chunkGameObject.GetComponent<MeshCollider>().sharedMesh = newChunkMesh;
+        chunk.chunkGameObject.GetComponent<LODGroup>().RecalculateBounds();
         chunk.x = x; chunk.y = y; chunk.z = z;
         chunks[x, y, z] = chunk;            
     }
@@ -762,19 +763,48 @@ public struct MarchedCube
     public int outcase;//Case for marched cube
     public float[,,] densities;
     public Vector3 chunkPosition;//The position of the chunk in world space
+    float smin(float a, float b, float k)
+    {
+        float h = Mathf.Clamp(0.5f + 0.5f * (b - a) / k, 0.0f, 1.0f);
+        return Mathf.Lerp(b, a, h) - k * h * (1.0f - h);
+    }
+    float smax(float a, float b, float k) 
+    {
+        return -smin(-a, -b, k);
+    }
     //Instantiate new MarchedCube class
     public void Setup(float _cubeSize, float _threshold, int _size, Vector3 _chunkPosition) //Initialization of the MarchedCube
     {
         //Setup variables for mesh generation
         SetVariables(_cubeSize, _threshold, _size + 1, _chunkPosition);
         densities = new float[_size + 1, _size + 1, _size + 1];
+        Vector3 w, s;
+        FastNoise noiseGenerator = new FastNoise();
+        noiseGenerator.SetCellularReturnType(FastNoise.CellularReturnType.Distance);
+        float density = 0;
         for (int x = 0; x < _size + 1; x++)
         {
             for (int y = 0; y < _size + 1; y++)
             {
                 for (int z = 0; z < _size + 1; z++)
                 {
-                    densities[x, y, z] = (-y*_cubeSize) + 2 -_chunkPosition.y;
+                    w.x = x * _cubeSize + _chunkPosition.x;
+                    w.y = y * _cubeSize + _chunkPosition.y;
+                    w.z = z * _cubeSize + _chunkPosition.z;
+                    s = w * 2.5f;//Noise coordinates are from world coordinates
+
+                    //---Base plane---\\
+                    density = -w.y;
+                                        
+                    //---Mountains---\\
+                    density += smax(noiseGenerator.GetSimplexFractal(s.x / 2, s.z / 2) * 4 + 2, 0, 4f);
+                    density += smax((noiseGenerator.GetCellular(s.x, s.z) * 13 - 5) * Mathf.Max(noiseGenerator.GetPerlin(s.x / 1.2f, s.z / 1.2f) * 2, 0) * 2 + 1, 0, 8f);
+
+                    //---Detail---\\
+                    density += noiseGenerator.GetCellular(s.x * 4, s.y * 4, s.z * 4) * 1;
+                    density += noiseGenerator.GetPerlinFractal(s.x * 12, s.y * 12, s.z * 12) * 0.25f;
+
+                    densities[x, y, z] = density;
                 }
             }
         }

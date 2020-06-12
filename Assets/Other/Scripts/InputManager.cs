@@ -23,7 +23,7 @@ public static class InputManager
         public string PickupItem = "F";
         public string DropItem = "Q";
         public string ActivateEquipedItem = "Mouse0";
-        public string PauseMenu = "O";
+        public string PauseMenu = "Escape";
     }
     //Turn a string to a key code
     private static KeyCode String2Keycode(string s) { return (KeyCode)System.Enum.Parse(typeof(KeyCode), s); }
