@@ -17,7 +17,7 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
         Server, Client, None
     }
     //State of the rigidbody on the clients
-    private Vector3 position, velocity, angularVelocity = Vector3.zero;
+    private Vector3 position = Vector3.zero;
     private Quaternion rotation = Quaternion.identity;
     const string sendChannel = "UnreliableOrdered";//The channel where we are going to send the rigidbody data
     
@@ -50,8 +50,6 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
             //Apply the data that the server gave us (smoothed)
             rb.position = Vector3.Lerp(rb.position, position, positionSmoothing * Time.fixedDeltaTime);
             rb.rotation = Quaternion.Lerp(rb.rotation, rotation, rotationSmoothing * Time.fixedDeltaTime);
-            //rb.velocity = velocity;
-            //rb.angularVelocity = angularVelocity;
         }
     }
     [ServerRPC]
@@ -65,8 +63,6 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
     private void UpdateRigidbodyStateOnClient(Vector3 _position, Quaternion _rotation)
     {
         position = _position;
-        //velocity = _velocity;
         rotation = _rotation;
-        //angularVelocity = _angularVelocity;
     }
 }
