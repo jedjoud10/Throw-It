@@ -54,7 +54,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     {
         if (!IsServer) return;
         //Reset position and velocity
-        playerController.ResetPlayer();
+        playerController.SetPlayerPosition(playerSpawnPoint.position);
         //Reset player health
         playerHealth.SetupPlayerHealth();
 
@@ -64,7 +64,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     //Respawns a certain player on all clients
     private void RespawnPlayerOnClients(PlayerControllerScript playerController, PlayerHealthScript playerHealth) 
     {
-        playerController.ResetPlayer();
+        playerController.SetPlayerPosition(playerSpawnPoint.position);
     }
     #endregion
     #region System Chat

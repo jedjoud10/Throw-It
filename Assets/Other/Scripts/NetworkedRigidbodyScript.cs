@@ -7,6 +7,7 @@ using UnityEngine;
 public class NetworkedRigidbodyScript : NetworkedBehaviour
 {
     public bool transmitData = false;//Should the server transmit the data
+    public bool clientTransmit = false;//Can the owner of this rigidbody update it's state on the server and on other clients ?
     public bool applyData = false;//Should the clients the data the server gave them ?
     public float positionSmoothing = 15;//How much to smooth the position the server gave us
     public float rotationSmoothing = 15;//How much to smooth the rotation the server gave us
@@ -21,14 +22,24 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();//Get the rigidbody
+        if ((clientTransmit && IsOwner) || (IsServer && transmitData))
+        {
+            applyData = false;//Why apply data when we are the sender ?
+        }
     }
 
     // FixedUpdate is called each physics timestep
     void FixedUpdate()
     {
-        if (IsServer && transmitData)
+        //Server owned
+        if (IsServer && transmitData && !clientTransmit)
         {
             InvokeClientRpcOnEveryone(UpdateRigidbodyStateOnClient, rb.position, rb.rotation, sendChannel); //Send the new state to the clients
+        }
+        //Client owned
+        if (clientTransmit && IsOwner) 
+        {
+            InvokeServerRpc(UpdateRigidbodyStateOnServer, rb.position, rb.rotation, sendChannel);
         }
 
         if (IsClient && rotation.IsValid() && applyData)
@@ -40,7 +51,13 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
             //rb.angularVelocity = angularVelocity;
         }
     }
-    //Update the state of the rigidbody on the clients
+    [ServerRPC]
+    //Update the state of the rigidbody on the server (called from client)
+    private void UpdateRigidbodyStateOnServer(Vector3 _position, Quaternion _rotation) 
+    {
+        InvokeClientRpcOnEveryone(UpdateRigidbodyStateOnClient, _position, _rotation, sendChannel); //Send the new state to the clients
+    }
+    //Update the state of the rigidbody on the clients (Called from server)
     [ClientRPC]
     private void UpdateRigidbodyStateOnClient(Vector3 _position, Quaternion _rotation)
     {
