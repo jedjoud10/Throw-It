@@ -7,7 +7,7 @@ using UnityEngine;
 public class NetworkedRigidbodyScript : NetworkedBehaviour
 {
     public TransmitRigidbodyDataMode transmitData = TransmitRigidbodyDataMode.None;//Can the owner of this rigidbody update it's state on the server and on other clients ?
-    public bool applyData = false;//Should the clients the data the server gave them ?
+    public bool applyData = false;//Should the clients apply the data the server gave them ?
     public float positionSmoothing = 15;//How much to smooth the position the server gave us
     public float rotationSmoothing = 15;//How much to smooth the rotation the server gave us
 
@@ -27,7 +27,7 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
         rb = GetComponent<Rigidbody>();//Get the rigidbody
         if ((IsOwner && transmitData == TransmitRigidbodyDataMode.Client) || (IsServer && transmitData == TransmitRigidbodyDataMode.Server))
         {
-            applyData = false;//Why apply data when we are the sender ?
+            applyData = false;//No need to apply the data when we are the sender
         }
     }
 
