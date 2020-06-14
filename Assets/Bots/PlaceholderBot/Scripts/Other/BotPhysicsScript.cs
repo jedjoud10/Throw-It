@@ -22,8 +22,6 @@ public class BotPhysicsScript : NetworkedBehaviour
         rb = GetComponent<Rigidbody>();
         joint = GetComponent<Joint>();
         networkedRigidbody = GetComponent<NetworkedRigidbodyScript>();
-        networkedRigidbody.applyData = false;
-        networkedRigidbody.transmitData = false;
     }   
     //Damages the joint (only executed on the server)
     public void DamageJoint(Vector3 force, Vector3 _position, int Damage) 
@@ -37,14 +35,14 @@ public class BotPhysicsScript : NetworkedBehaviour
             rb.AddForce(force);//Add force to our rigidbody to make it go  Y E E T
             Debug.DrawRay(_position, force, Color.black, 5.0f);
             networkedRigidbody.applyData = true;
-            networkedRigidbody.transmitData = true;
+            networkedRigidbody.transmitData = NetworkedRigidbodyScript.TransmitRigidbodyDataMode.Server;
             Destroy(gameObject, decayTime);
             //When the bot stops moving because its head got yeeted :  
             //Bot : y am i ded now
             //Bot 2 : bro that's cringe
             //Armor bot : you guys are dying?
             //Factory guys : What no dont waste the fricking materials
-            //Amalgam bot: don't worry I'm eating it
+            //Amalgam bot : don't worry I'm eating it
             if (gameObject.name == "Head") botscript.healthScript.DamageBot(99999);
             
             InvokeClientRpcOnEveryone(RemoveJointOnClient);//Replicate on clients

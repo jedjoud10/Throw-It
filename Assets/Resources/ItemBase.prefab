@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53500c481bc1b6943ae6d1aac5ffb4f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transmitData: 1
+  transmitData: 0
   applyData: 1
   positionSmoothing: 15
   rotationSmoothing: 15

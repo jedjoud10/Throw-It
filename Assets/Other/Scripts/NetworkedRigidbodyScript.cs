@@ -6,13 +6,16 @@ using UnityEngine;
 //Well uhh... a networked rigidbody yes
 public class NetworkedRigidbodyScript : NetworkedBehaviour
 {
-    public bool transmitData = false;//Should the server transmit the data
-    public bool clientTransmit = false;//Can the owner of this rigidbody update it's state on the server and on other clients ?
+    public TransmitRigidbodyDataMode transmitData = TransmitRigidbodyDataMode.None;//Can the owner of this rigidbody update it's state on the server and on other clients ?
     public bool applyData = false;//Should the clients the data the server gave them ?
     public float positionSmoothing = 15;//How much to smooth the position the server gave us
     public float rotationSmoothing = 15;//How much to smooth the rotation the server gave us
 
     private Rigidbody rb;//The rigidbody of this part
+    public enum TransmitRigidbodyDataMode 
+    {
+        Server, Client, None
+    }
     //State of the rigidbody on the clients
     private Vector3 position, velocity, angularVelocity = Vector3.zero;
     private Quaternion rotation = Quaternion.identity;
@@ -22,7 +25,7 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();//Get the rigidbody
-        if ((clientTransmit && IsOwner) || (IsServer && transmitData))
+        if ((IsOwner && transmitData == TransmitRigidbodyDataMode.Client) || (IsServer && transmitData == TransmitRigidbodyDataMode.Server))
         {
             applyData = false;//Why apply data when we are the sender ?
         }
@@ -32,12 +35,12 @@ public class NetworkedRigidbodyScript : NetworkedBehaviour
     void FixedUpdate()
     {
         //Server owned
-        if (IsServer && transmitData && !clientTransmit)
+        if (IsServer && transmitData == TransmitRigidbodyDataMode.Server)
         {
             InvokeClientRpcOnEveryone(UpdateRigidbodyStateOnClient, rb.position, rb.rotation, sendChannel); //Send the new state to the clients
         }
         //Client owned
-        if (clientTransmit && IsOwner) 
+        if (IsOwner && transmitData == TransmitRigidbodyDataMode.Client) 
         {
             InvokeServerRpc(UpdateRigidbodyStateOnServer, rb.position, rb.rotation, sendChannel);
         }
