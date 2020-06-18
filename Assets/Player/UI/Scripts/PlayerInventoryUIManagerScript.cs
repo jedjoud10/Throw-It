@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class PlayerInventoryUIManagerScript : MonoBehaviour
 {
     public GameObject draggedItemIconPrefab;//The gameobject that we will instantiate when dragging an item
-    private DraggedItemIconScript draggedItemIconInstance;//The instance of the draggedItemIconPrefab
     public Canvas inventoryCanvas;//The whole inventory canvas
     public RawImage[] itemIcons;//The item icons
     public UIInventoryItemIconScript[] itemIconScripts;

@@ -214,8 +214,8 @@ public class PlayerInventoryScript : NetworkedBehaviour
         return false;
     }
     //Removes an item from the inventory using a specificed index
-    public bool RemoveItemAtIndex(int itemIndex) 
-    {
+    public bool RemoveItemAtIndex(int itemIndex)
+    { 
         if (inventory.Value[itemIndex] != -1)
         {
             if (equipedItem == inventory.Value[itemIndex])

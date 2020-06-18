@@ -4965,13 +4965,7 @@ MonoBehaviour:
   IPField: {fileID: 2007468030}
   autoDisconnectTimeout: 1000
   selectableScenes:
-  - TestMap
-  - Map1
-  - Map2
-  - Map3
-  - MultiplayerLobbyMap
-  - MarchingCubesTestMap
-  - InventoryTestMap
+  - World
   selectHostScene: {fileID: 1544394839}
   nicknameSelectPanel: {fileID: 1601255518}
   nicknameInputField: {fileID: 1168277208}
@@ -12879,7 +12873,7 @@ MonoBehaviour:
         type: 3}
       PlayerPrefab: 0
     PlayerPrefabHash:
-      Value: 4529605043381124101
+      Value: 1897319656204293034
     CreatePlayerPrefab: 1
     ReceiveTickrate: 512
     MaxReceiveEventsPerTickRate: 500
