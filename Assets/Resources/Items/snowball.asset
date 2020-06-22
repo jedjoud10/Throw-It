@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28b56e25b5578c04eb76379db30e0655, type: 3}
-  m_Name: 2_throwable_snowball_pellet
+  m_Name: snowball
   m_EditorClassIdentifier: 
-  itemName: Pellet
-  itemModel: {fileID: -927199367670048503, guid: d329d29a0e1857b489fbbe0ac6e7f5d7,
+  itemName: Snowball
+  itemModel: {fileID: -927199367670048503, guid: a183b51ffa99aaf44adbe4014a6d4612,
     type: 3}
-  itemIconName: 
-  itemIcon: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
-  itemDescription: A smol boio
-  throwableGameObject: {fileID: 1227122033092753418, guid: e201ae30ff0c7ba46aa7d1f53a34532f,
+  itemIconName: item_throwable_snowball.png
+  itemIcon: {fileID: 0}
+  itemDescription: hehe snowball go reeeee
+  throwableGameObject: {fileID: 2592843989083868683, guid: fd2832e91e78b0e4e9a1e5ad933f370b,
     type: 3}
   type: 0
   speedRandomness: {x: 500, y: 600}
-  sizeRandomness: {x: 1, y: 1}
+  sizeRandomness: {x: 1, y: 1.2}
   damageRandomness: {x: 3, y: 6}
   damageVelocityWeight: 0.125
   lifetime: 10

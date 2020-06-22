@@ -12,9 +12,9 @@ public class PlayerInventoryScript : NetworkedBehaviour
     public Transform cameraObject;//The camera of the player
     private PlayerInventoryUIManagerScript inventoryUIManager;//Manages the UI for this inventory
     private PlayerControllerScript playerController;//Movement and rotation controller for this player
-    private int equipedItem = -1;//The current item the player is holding
+    private string equipedItem = "";//The current item the player is holding
     public int equipedItemIndex = 0;//The index of the currently equiped item in the inventory
-    private NetworkedVar<int[]> inventory = new NetworkedVar<int[]>(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone });//What the player is currently holding in their inventory
+    private NetworkedVar<string[]> inventory = new NetworkedVar<string[]>(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone });//What the player is currently holding in their inventory
     private PlayerHealthScript healthScript;//The health script of the player
     const int maxInventorySize = 16;//Maximum number of items that the player can hold
     private bool inventoryOpened;//If the UI for the inventory is visible
@@ -28,10 +28,10 @@ public class PlayerInventoryScript : NetworkedBehaviour
     {
         if (IsLocalPlayer) 
         {
-            inventory = new NetworkedVar<int[]>(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone }, new int[maxInventorySize]);
+            inventory = new NetworkedVar<string[]>(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone }, new string[maxInventorySize]);
             for (int i = 0; i < maxInventorySize; i++)
             {
-                inventory.Value[i] = -1;
+                inventory.Value[i] = "";
             }
             //Init components            
             healthScript = GetComponent<PlayerHealthScript>();
@@ -132,7 +132,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Pick up an item
     private bool PickupItem(ItemScript itemScript) 
     {
-        if(itemScript != null && itemScript.itemID.Value != -1) 
+        if(itemScript != null && itemScript.itemID.Value != "") 
         {
             if (AddItem(itemScript.itemID.Value)) 
             {
@@ -159,7 +159,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Drops an item infront of the player
     private bool DropItem(int itemIndex) 
     {
-        int itemID = inventory.Value[itemIndex];//Saving the item id since it will be destroyed in the inventory array
+        string itemID = inventory.Value[itemIndex];//Saving the item id since it will be destroyed in the inventory array
         if (RemoveItemAtIndex(itemIndex)) 
         {
             //Spawn a new base item into the world
@@ -181,7 +181,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     }
     //Spawn an item on the server
     [ServerRPC]
-    private void SpawnItemOnServer(int itemID, Vector3 position, Quaternion rotation) 
+    private void SpawnItemOnServer(string itemID, Vector3 position, Quaternion rotation) 
     {
         GameObject itemObject = Instantiate(ItemsManager.itemBase, position, rotation);
         //Set the item's model
@@ -191,7 +191,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     #endregion
     #region Item handling
     //Removes an item from the inventory
-    public bool RemoveItem(int itemID) 
+    public bool RemoveItem(string itemID) 
     {
         for (int i = 0; i < maxInventorySize; i++)
         {
@@ -201,7 +201,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
                 {
                     UnequipItem();
                 }
-                inventory.Value[i] = -1;
+                inventory.Value[i] = "";
                 inventoryUIManager.HideItemData();//Hide the item data when removing an item
                 UpdateUIInventory();
                 return true;
@@ -216,13 +216,13 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Removes an item from the inventory using a specificed index
     public bool RemoveItemAtIndex(int itemIndex)
     { 
-        if (inventory.Value[itemIndex] != -1)
+        if (inventory.Value[itemIndex] != "")
         {
             if (equipedItem == inventory.Value[itemIndex])
             {
                 UnequipItem();
             }
-            inventory.Value[itemIndex] = -1;
+            inventory.Value[itemIndex] = "";
             inventoryUIManager.HideItemData();//Hide the item data when removing an item
             UpdateUIInventory();
             return true;
@@ -234,12 +234,12 @@ public class PlayerInventoryScript : NetworkedBehaviour
         }
     }
     //Adds an item to the inventory
-    private bool AddItem(int itemID)
+    private bool AddItem(string itemID)
     {
         bool changedInventory = false;
         for (int i = 0; i < maxInventorySize; i++)
         {
-            if(inventory.Value[i] == -1) 
+            if(inventory.Value[i] == "") 
             {
                 inventory.Value[i] = itemID;
                 if(equipedItemIndex == i) 
@@ -256,7 +256,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
     //Swap two items using their itemIndexes
     public void SwapItems(int itemIndex, int itemIndex2) 
     {
-        int oldItemID = inventory.Value[itemIndex];
+        string oldItemID = inventory.Value[itemIndex];
         inventory.Value[itemIndex] = inventory.Value[itemIndex2];
         inventory.Value[itemIndex2] = oldItemID;
         UpdateUIInventory();
@@ -277,26 +277,26 @@ public class PlayerInventoryScript : NetworkedBehaviour
                 //If the item is throwable, then set it as the current throwable item
                 playerThrowingScript.selectedThrowableID = inventory.Value[itemIndex];
             }
-            else { playerThrowingScript.selectedThrowableID = -1; }//Item is not a throwable, disable throwing
+            else { playerThrowingScript.selectedThrowableID = ""; }//Item is not a throwable, disable throwing
             inventoryUIManager.SetEquipedItemIndex(equipedItemIndex);//Update ui
         }
         else
         {
-            equipedItem = -1;
+            equipedItem = "";
         }
     }
     //Un-equip an item
     private void UnequipItem() 
     {
-        if (equipedItem != -1) 
+        if (equipedItem != "") 
         {
             //Convert the equiped item into an inventory item
             if (ItemsManager.ID2Item(equipedItem) is Throwable) 
             {
                 //We unequiped a throwable, so make the player unable to throw
-                playerThrowingScript.selectedThrowableID = -1;
+                playerThrowingScript.selectedThrowableID = "";
             }
-            equipedItem = -1;        
+            equipedItem = "";        
         }
     }
     //Consume a consumable item
@@ -324,7 +324,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
         }
     }
     //Gets an itemID from the inventory with an index
-    public int GetItemID(int itemIndex) 
+    public string GetItemID(int itemIndex) 
     {
         return inventory.Value[itemIndex];
     }
@@ -337,7 +337,7 @@ public class PlayerInventoryScript : NetworkedBehaviour
         Texture[] textures = new Texture[maxInventorySize];
         for (int i = 0; i < textures.Length; i++)
         {
-            if(inventory.Value[i] == -1) 
+            if(inventory.Value[i] == "") 
             {
                 //The inventory doesnt have the correct items, so set the textures as blank
                 textures[i] = null;

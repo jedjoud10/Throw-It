@@ -9,34 +9,37 @@ using System.Reflection;
 //Loads all the items from the resources folder
 public static class ItemsManager
 {
-    public static Item[] items;//The loaded items
+    public static Dictionary<string, Item> items;//The loaded items
     public static GameObject itemBase;//The item base
     //Load all the items from the resource folder and store them into the variable
     public static void LoadAllItems()
     {
         itemBase = Resources.Load<GameObject>("ItemBase");
-        items = Resources.LoadAll<Item>("Items");
-        items = items.OrderBy(item => int.Parse(item.name.Split('_')[0])).ToArray();
-        for (int i = 0; i < items.Length; i++)
+        Item[] preItems = Resources.LoadAll<Item>("Items");
+        items = new Dictionary<string, Item>();
+        foreach (var item in preItems)
         {
-            Texture2D itemIcon = TexturesManager.LoadTexture(items[i].itemIconName);
-            if(itemIcon != null) 
+            Item editedItem = item;
+            Texture2D itemIcon = TexturesManager.LoadTexture(editedItem.itemIconName);
+            if (itemIcon != null) 
             {
                 Texture2D newTexture = new Texture2D(itemIcon.width, itemIcon.height, itemIcon.format, false);
                 newTexture.LoadImage(itemIcon.EncodeToPNG());
-                items[i].itemIcon = newTexture;            
+                editedItem.itemIcon = newTexture;            
             }
             else
             {
-                items[i].itemIcon = TexturesManager.LoadTexture("item_default.png");
+                editedItem.itemIcon = TexturesManager.LoadTexture("item_default.png");
             }
+            items.Add(item.name, editedItem);//Default
+            SystemLogger.LogNewMessage("Loaded item: " + item.name);
         }
-        Debug.LogWarning("Loaded " + items.Length + " items !");
+        Debug.LogWarning("Loaded " + items.Count + " items !");
     }
     //Transform an itemID into an item
-    public static Item ID2Item(int id)
+    public static Item ID2Item(string id)
     {
-        if (id < items.Length && id != -1)
+        if (items.ContainsKey(id))
         {
             return items[id];
         }
@@ -44,5 +47,10 @@ public static class ItemsManager
         {
             return null;
         }
+    }
+    //Gets a random item
+    public static string RandomItemID()
+    {
+        return items.ElementAt(UnityEngine.Random.Range(0, items.Count)).Key;
     }
 }

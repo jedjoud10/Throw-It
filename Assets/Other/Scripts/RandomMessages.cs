@@ -35,13 +35,12 @@ public static class RandomMessages
         "{0} went to go play minecraft.",
         "{0} realized they left the oven on."
     };
-    private static string[] player_joingame = new string[5]
+    private static string[] player_joingame = new string[4]
     {
         "{0} dropped in. Welcome to the warzone.",
         "{0} joined. You're in Snow Man's Land.",
         "{0} popped into the fort. You'll be assigned to a station soon.",
-        "Guess who came to the playground? {0}!",
-        "{0} joined... EVERYONE TO YOUR BATTLE STATIONS!"
+        "Guess who came to the playground? {0}!"
     };
     private static string[] player_death_machinery_general = new string[1]
     {

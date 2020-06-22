@@ -32,7 +32,7 @@ public class ThrowablePropertiesScript : NetworkedBehaviour
     [HideInInspector]
     public string owner;//The owner for this snowball
     //Load the throwable values from the item id
-    public void LoadItemData(int throwableID) 
+    public void LoadItemData(string throwableID) 
     {
         Throwable throwable = (Throwable)ItemsManager.ID2Item(throwableID);
         //Set all values from scriptable object

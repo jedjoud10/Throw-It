@@ -6,7 +6,7 @@ using MLAPI.NetworkedVar;
 public class PlayerThrowableThrowingScript : NetworkedBehaviour
 {
     private PlayerUIManagerScript UIManager;//Handles UI for us
-    public int selectedThrowableID = -1;//The ID of the throwable that we can throw
+    public string selectedThrowableID = "";//The ID of the throwable that we can throw
     private float charge = 1;
     const float chargeSpeed = 3f;//How fast the throwable charging is
     const float chargeTimeThreshold = 0.2f;//If the player holds the charging button more that this number (in seconds) it will start charging
@@ -32,7 +32,7 @@ public class PlayerThrowableThrowingScript : NetworkedBehaviour
     {
         if (!IsLocalPlayer) return;
         UIManager.UpdatePlayerCharge(charge);
-        if (selectedThrowableID == -1)//Reseting the thing
+        if (selectedThrowableID == "")//Reseting the thing
         {
             //Player cant charge, reset everything
             charge = Mathf.Lerp(charge, 1, chargeSpeed * Time.deltaTime);//Slowly go back to 1

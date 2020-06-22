@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27b05c6702ab3474eb320bbacccc83f4, type: 3}
-  m_Name: 3_consumable_baguette
+  m_Name: baguette
   m_EditorClassIdentifier: 
   itemName: Baguette
   itemModel: {fileID: -927199367670048503, guid: e156bb34c8a733d4186cdb9736f6e4fb,
     type: 3}
-  itemIcon: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+  itemIconName: 
+  itemIcon: {fileID: 0}
   itemDescription: Mmmm tasty baguette
   healthRegeneration: 5
   temperatureRegeneration: 2

@@ -7,7 +7,7 @@ using UnityEngine;
 //Script that is applied to items on the ground
 public class ItemScript : NetworkedBehaviour
 {
-    public NetworkedVarInt itemID;//The item data associated with this item
+    public NetworkedVarString itemID;//The item data associated with this item
     public Transform itemModelHolder;//The holder for the instantiated model
     // Start is called before the first frame update
     void Start()
@@ -18,7 +18,7 @@ public class ItemScript : NetworkedBehaviour
 
     public void UpdateItem()
     {
-        if (itemID.Value != -1)
+        if (itemID.Value != "")
         {
             SetItemModel(ItemsManager.ID2Item(itemID.Value).itemModel);
         }

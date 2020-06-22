@@ -12,9 +12,6 @@ public class PlayerControllerScript : NetworkedBehaviour
     public float mouseSensivity = 1.0f;//How much to scale the mouse input values before passing them to the playeRotation/cameraRotation
     public float walkingSpeed, sprintingSpeed;//All the possible FOVs based on the state of the player
     public float jump;//How much the player can jump        
-    private int jumpState;//What state the jump is in
-    //0: Touching ground
-    //1: Jumping
     public float factorSmoothingSpeed;//How fast a Factor (WalkingFactor or SprintingFactor) goes to it's correct value
     [Header("Objects")]
     public Camera playerCamera;//The camera (Disabled on non-local players)
@@ -38,11 +35,8 @@ public class PlayerControllerScript : NetworkedBehaviour
     private float walkingFactor, sprintingFactor;//Two factors for the player to smoothly transition between values
     private float speed;//The current speed smoothed from WalkingSpeed and SprintingSpeed
     const string sendChannel = "UnreliableOrdered";//The channel where we are going to send the player data
-
     private float cameraRotationXServer;//Data from server
-
-
-    bool grounded;
+    private bool wantsToJump;//If the player is holding the jump button or not
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -78,7 +72,6 @@ public class PlayerControllerScript : NetworkedBehaviour
             return;
         };
 
-        if (!controllable) return;//Haha player go stop
         //This code is only ran on the local client machine
 
         #region Walking/Sprinting factors
@@ -98,57 +91,69 @@ public class PlayerControllerScript : NetworkedBehaviour
         #region Input
 
         //Read the input
-        worldVelocity = Vector3.zero;
-        //Movement left / right
-        if (InputManager.GetKey("Left")) 
+        worldVelocity = Vector3.zero; worldVelocity.x = 0; worldVelocity.z = 0;
+        wantsToJump = false;
+        if (controllable)
         {
-            worldVelocity.x = -speed;
+            //Movement left / right
+            if (InputManager.GetKey("Left"))
+            {
+                worldVelocity.x = -speed;
+            }
+            else if (InputManager.GetKey("Right"))
+            {
+                worldVelocity.x = speed;
+            }
+            //Movement backwards / forwards
+            if (InputManager.GetKey("Backward"))
+            {
+                worldVelocity.z = -speed;
+            }
+            else if (InputManager.GetKey("Forward"))
+            {
+                worldVelocity.z = speed;
+            }
+            wantsToJump = InputManager.GetKey("Jump");
+
+            worldVelocity = transform.TransformDirection(worldVelocity);
+            //Apply the velocity to the movement script
+
+            //Rotate the player left and right
+            playerRotationY += Input.GetAxis("Mouse X") * mouseSensivity;
+            //Rotate the camera up and down
+            cameraRotationX -= Input.GetAxis("Mouse Y") * mouseSensivity;
+            //Clamp the head rotation because necks can absolutely bend over infinitely
+            cameraRotationX = Mathf.Clamp(cameraRotationX, -90, 90);
+            //Rotate the player on the local client
+            rb.rotation = Quaternion.Euler(0, playerRotationY, 0);
+            //Rotate the camera on the local client
+            playerCamera.transform.localRotation = Quaternion.Euler(cameraRotationX, 0, 0);
+            headObject.transform.localRotation = playerCamera.transform.localRotation;
+            InvokeServerRpc(UpdatePlayerStateOnServer, cameraRotationX, sendChannel);
         }
-        else if(InputManager.GetKey("Right"))
-        {
-            worldVelocity.x = speed;
-        }
-        //Movement backwards / forwards
-        if (InputManager.GetKey("Backward"))
-        {
-            worldVelocity.z = -speed;
-        }
-        else if (InputManager.GetKey("Forward"))
-        {
-            worldVelocity.z = speed;
-        }
-        worldVelocity = transform.TransformDirection(worldVelocity);
-        //Apply the velocity to the movement script
         movementScript.inputVelocity.x = worldVelocity.x;
         movementScript.inputVelocity.y = worldVelocity.z;
 
-        if (InputManager.GetKey("Jump")) 
-        {
-            jumpState = 1;
-        }
 
-        //Rotate the player left and right
-        playerRotationY += Input.GetAxis("Mouse X") * mouseSensivity;
-        //Rotate the camera up and down
-        cameraRotationX -= Input.GetAxis("Mouse Y") * mouseSensivity;
-        //Clamp the head rotation because necks can absolutely bend over infinitely
-        cameraRotationX = Mathf.Clamp(cameraRotationX, -90, 90);
-        //Rotate the player on the local client
-        rb.rotation = Quaternion.Euler(0, playerRotationY, 0);
-        //Rotate the camera on the local client
-        playerCamera.transform.localRotation = Quaternion.Euler(cameraRotationX, 0, 0);
-        headObject.transform.localRotation = playerCamera.transform.localRotation;
-        InvokeServerRpc(UpdatePlayerStateOnServer, cameraRotationX, sendChannel);
-        
+
         #endregion
     }
-    // FixedUpdate is called each physics timestep
-    void FixedUpdate()
+    private void OnCollisionStay(Collision collision)
     {
-        if (jumpState == 1)
+        float minDotNormal = 0;
+        foreach (var contacts in collision.contacts)
         {
-
-            jumpState = 0;
+            Debug.DrawRay(contacts.point, contacts.normal);
+            if (Vector3.Dot(contacts.normal, Vector3.up) > minDotNormal)
+            {
+                minDotNormal = Vector3.Dot(contacts.normal, Vector3.up);//Check if there is ground below us
+            }
+        }
+        if(minDotNormal > 0.1f && wantsToJump) 
+        {
+            Vector3 vel = rb.velocity;
+            vel.y = jump;
+            rb.velocity = vel;
         }
     }
     #region Networking

@@ -39,8 +39,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
                 singleton.StartHost(playerSpawnTransform.position);
                 players = new NetworkedDictionary<ulong, string>(new Dictionary<ulong, string>());
                 Debug.Log("Server has started");
-                ChatLogger.StartLogger();
-                ChatLogger.LogNewMessage("Server has started");                
+                SystemLogger.LogNewMessage("Server has started");                
             }
         }
     }
@@ -49,7 +48,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     //When a player wants to join the game (exectued only on server)
     public void RegisterPlayer(string nickname, ulong clientID, GameObject playerObject)
     {
-        ChatLogger.LogNewMessage("Player joining... ID: " + clientID + " User: " + nickname);
+        SystemLogger.LogNewMessage("Player joining... ID: " + clientID + " User: " + nickname);
         UpdateSystemChat(RandomMessages.Player_Joingame(nickname), "systemchat_playerjoin.png");
         playerObject.GetComponent<PlayerControllerScript>().SetPlayerPositionOnServer(playerSpawnTransform.position);//Spawn player at correct position
         players.Add(clientID, nickname);
@@ -63,7 +62,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
             if (!players.ContainsKey(clientID)) return;
             //Server code
             string nickname = players[clientID];
-            ChatLogger.LogNewMessage("Player leaving... ID: " + clientID + " User: " + nickname);
+            SystemLogger.LogNewMessage("Player leaving... ID: " + clientID + " User: " + nickname);
             instance.UpdateSystemChat(RandomMessages.Player_Leftgame(nickname), "systemchat_playerleaving.png");
             players.Remove(clientID);//This client disconnected, so we can remove them from the players list
         }
@@ -91,7 +90,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
     public void UpdateSystemChat(string newChat, string newTextureName)
     {
         InvokeClientRpcOnEveryone(UpdateSystemChatOnClient, newChat, newTextureName);
-        ChatLogger.LogNewMessage("SYSTEM CHAT: " + newChat);        
+        SystemLogger.LogNewMessage("SYSTEM CHAT: " + newChat);        
     }
     //Update the system chat on the local client
     [ClientRPC]
@@ -110,6 +109,7 @@ public class NetworkWorldManagerScript : NetworkedBehaviour
             if (!IsHost) //If we are a normal client
             {
                 singleton.StopClient();
+                SceneManager.LoadScene("MainMenuMap", LoadSceneMode.Single);
             }
             else
             {

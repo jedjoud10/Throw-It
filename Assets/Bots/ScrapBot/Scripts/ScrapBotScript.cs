@@ -52,6 +52,6 @@ public class ScrapBotScript : BotScript
     //Throws a single pellet (Only executed on server)
     private void ThrowPellet() 
     {
-        if (throwing.Value) thrower.ThrowOnServer(1f, "ScrapBot", OwnerClientId, 2);
+        if (throwing.Value) thrower.ThrowOnServer(1f, "ScrapBot", OwnerClientId, "pellet");
     }
 }

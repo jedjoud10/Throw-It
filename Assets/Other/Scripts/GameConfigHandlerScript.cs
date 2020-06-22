@@ -56,7 +56,7 @@ public class GameConfigHandlerScript : MonoBehaviour
     private void ApplyConfig(GameConfig inconfig)
     {
         Screen.SetResolution(inconfig.ScreenWidth, inconfig.ScreenHeight, inconfig.Fullscreen);
-        Application.targetFrameRate = inconfig.TargetFrameRate;
+        if (inconfig.TargetFrameRate != 0) { Application.targetFrameRate = inconfig.TargetFrameRate; }
 
         QualitySettings.pixelLightCount = inconfig.PixelLightCount;
         QualitySettings.masterTextureLimit = inconfig.TextureQuality;
@@ -162,7 +162,7 @@ public class GameConfig
 {
     #region QualitySettings
     //Rendering    
-    public bool Fullscreen = true; public int TargetFrameRate = 60;
+    public bool Fullscreen = true; public int TargetFrameRate = 0;
     public int ScreenHeight = 1080; public int ScreenWidth = 1920;
     public int PixelLightCount = 5;
     public int TextureQuality = 2;

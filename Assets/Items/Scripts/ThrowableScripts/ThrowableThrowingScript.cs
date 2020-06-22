@@ -17,7 +17,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
         
     }
     //Spawns the object on the server (with random parameters) (not called from clients)
-    public void ThrowOnServer(float speedFactor, string owner, ulong hostClientID, int throwableID)
+    public void ThrowOnServer(float speedFactor, string owner, ulong hostClientID, string throwableID)
     {
         //Spawn the specific item with a specific id
         Throwable throwable = (Throwable)ItemsManager.ID2Item(throwableID);
@@ -34,11 +34,11 @@ public class ThrowableThrowingScript : NetworkedBehaviour
     #region Player throwing
     [ServerRPC]
     //Spawns the object on the server
-    public void ThrowOnServer(float speedFactor, Vector3 pos, Quaternion rot, ulong clientID, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner, int throwableID)
+    public void ThrowOnServer(float speedFactor, Vector3 pos, Quaternion rot, ulong clientID, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner, string throwableID)
     {
         InvokeClientRpcOnEveryoneExcept(ThrowOnClient, clientID, speedFactor, pos, rot, _speed, _size, _angularVelocity, _rigidbodyForce, _damage, owner, throwableID);
     }
-    public void Throw(float speedFactor, string owner, int throwableID)//Throw throwable method (Client side only)
+    public void Throw(float speedFactor, string owner, string throwableID)//Throw throwable method (Client side only)
     {
         //Spawn the specific item with a specific id
         Throwable throwable = (Throwable)ItemsManager.ID2Item(throwableID);
@@ -54,7 +54,7 @@ public class ThrowableThrowingScript : NetworkedBehaviour
     }
     [ClientRPC]
     //Spawns the object on all the clients except the owner
-    private void ThrowOnClient(float speedFactor, Vector3 pos, Quaternion rot, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner, int throwableID) 
+    private void ThrowOnClient(float speedFactor, Vector3 pos, Quaternion rot, float _speed, float _size, Vector3 _angularVelocity, float _rigidbodyForce, int _damage, string owner, string throwableID) 
     {
         //Spawn the specific item with a specific id
         Throwable throwable = (Throwable)ItemsManager.ID2Item(throwableID);
