@@ -8,7 +8,7 @@ using MLAPI.Messaging;
 public class PlayerHealthScript : NetworkedBehaviour
 {
     public int maxHealth;//Maximum health of player
-    public NetworkedVarInt health;//Current health
+    public NetworkedVarInt health = new NetworkedVarInt(new NetworkedVarSettings() { WritePermission = NetworkedVarPermission.OwnerOnly, ReadPermission = NetworkedVarPermission.Everyone });//Current health
     private PlayerUIManagerScript UIManager;//Handles UI for us
     private NetworkWorldManagerScript wm;//Our networked world manager
 
@@ -32,16 +32,15 @@ public class PlayerHealthScript : NetworkedBehaviour
     {
         if (!IsServer) return;
         health.Value -= damage;//Apply damage to health            
-        if(health.Value < 0) 
+        if(health.Value <= 0) 
         {
             wm.RespawnPlayer(GetComponent<PlayerControllerScript>(), this);
             //We can do this since we are running as server
             FindObjectOfType<NetworkWorldManagerScript>().UpdateSystemChat(deathMessage, "systemchat_playerdeath.png");
         }
-        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, health.Value, maxHealth, 0, UIManager);
-        InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, health.Value, maxHealth, UIManager);
+        OnHealthUpdated(health.Value, -damage);
     }
-    //Heal the player. Add health to player (Only executed on server, but can be called by client)
+    //Heal the player. Add health to player (Only executed on client)
     [ServerRPC]
     public bool HealPlayer(int healthRegeneration) 
     {
@@ -55,10 +54,15 @@ public class PlayerHealthScript : NetworkedBehaviour
             return false;//The player is already at full health
         }
         health.Value += healthRegeneration;//Apply healing to health  
-        health.Value = Mathf.Min(health.Value, maxHealth);//Dont let the health exceed the max health
-        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, health.Value, maxHealth, 1, UIManager);
-        InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, health.Value, maxHealth, UIManager);
+        OnHealthUpdated(health.Value, healthRegeneration);
         return true;
+    }
+    //When the health of this player is updated on the server
+    private void OnHealthUpdated(int newHealth, int delta) 
+    {
+        health.Value = Mathf.Clamp(newHealth, 0, maxHealth);//Dont let the health exceed the max health and become negative
+        InvokeClientRpcOnClient(UpdateHealthbarOnClient, OwnerClientId, newHealth, maxHealth, 1, UIManager);
+        InvokeClientRpcOnEveryoneExcept(UpdateBillboardHealthbarOnClients, OwnerClientId, newHealth, maxHealth, UIManager);
     }
     //Executed on the client to update his UI health bar
     [ClientRPC]

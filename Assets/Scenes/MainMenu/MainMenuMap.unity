@@ -397,7 +397,7 @@ ReflectionProbe:
   serializedVersion: 2
   m_Type: 0
   m_Mode: 0
-  m_RefreshMode: 0
+  m_RefreshMode: 1
   m_TimeSlicingMode: 0
   m_Resolution: 256
   m_UpdateFrequency: 0
@@ -412,7 +412,7 @@ ReflectionProbe:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
-  m_BlendDistance: 1
+  m_BlendDistance: 17.41
   m_HDR: 1
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
@@ -427,7 +427,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 104925749}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 436.15, y: 44.27, z: 405.97}
+  m_LocalPosition: {x: 435.37, y: 44.79, z: 405.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3941,22 +3941,22 @@ PrefabInstance:
     - target: {fileID: 3572286743302639588, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967232
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4739799047818485291, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967232
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5275245649495361895, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967232
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5518395607784141084, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 4294967232
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 6385653187937861115, guid: 20dc3ca5236ea654faad7b13f016b1f8,
         type: 3}
