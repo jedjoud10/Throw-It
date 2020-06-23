@@ -36,7 +36,6 @@ public class PlayerControllerScript : NetworkedBehaviour
     private float speed;//The current speed smoothed from WalkingSpeed and SprintingSpeed
     const string sendChannel = "UnreliableOrdered";//The channel where we are going to send the player data
     private float cameraRotationXServer;//Data from server
-    private bool wantsToJump;//If the player is holding the jump button or not
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -92,7 +91,6 @@ public class PlayerControllerScript : NetworkedBehaviour
 
         //Read the input
         worldVelocity = Vector3.zero; worldVelocity.x = 0; worldVelocity.z = 0;
-        wantsToJump = false;
         if (controllable)
         {
             //Movement left / right
@@ -113,7 +111,12 @@ public class PlayerControllerScript : NetworkedBehaviour
             {
                 worldVelocity.z = speed;
             }
-            wantsToJump = InputManager.GetKey("Jump");
+            if (movementScript.isGrounded && InputManager.GetKey("Jump"))
+            {
+                Vector3 vel = rb.velocity;
+                vel.y = jump;
+                rb.velocity = vel;
+            }
 
             worldVelocity = transform.TransformDirection(worldVelocity);
             //Apply the velocity to the movement script
@@ -137,25 +140,7 @@ public class PlayerControllerScript : NetworkedBehaviour
 
 
         #endregion
-    }
-    private void OnCollisionStay(Collision collision)
-    {
-        float minDotNormal = 0;
-        foreach (var contacts in collision.contacts)
-        {
-            Debug.DrawRay(contacts.point, contacts.normal);
-            if (Vector3.Dot(contacts.normal, Vector3.up) > minDotNormal)
-            {
-                minDotNormal = Vector3.Dot(contacts.normal, Vector3.up);//Check if there is ground below us
-            }
-        }
-        if(minDotNormal > 0.1f && wantsToJump) 
-        {
-            Vector3 vel = rb.velocity;
-            vel.y = jump;
-            rb.velocity = vel;
-        }
-    }
+    }    
     #region Networking
     //Update the state of the player on the server
     [ServerRPC]

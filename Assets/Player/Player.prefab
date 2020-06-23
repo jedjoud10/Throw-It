@@ -3696,6 +3696,8 @@ MonoBehaviour:
   speed: 0
   inputVelocity: {x: 0, y: 0}
   acceleration: 4.6
+  isGrounded: 0
+  groundedThresholdAngle: 0.1
 --- !u!114 &3713312724342768480
 MonoBehaviour:
   m_ObjectHideFlags: 0
