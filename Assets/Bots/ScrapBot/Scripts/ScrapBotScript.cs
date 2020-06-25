@@ -6,7 +6,7 @@ using UnityEngine;
 
 //Auto add scripts if they are not already on the gameobject
 //TODO : Networking support
-[RequireComponent(typeof(BotMovementScript))]
+[RequireComponent(typeof(BotMovementBaseMethodScript))]
 public class ScrapBotScript : BotScript
 {
     private BotStraightPathScript straightpathScript;//Goes straight to the specified destination

@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 //Parent script that will be inherited from other scripts for bot creation
 //Auto add scripts if they are not already on the gameobject
-[RequireComponent(typeof(BotMovementScript))]
+[RequireComponent(typeof(BotMovementBaseMethodScript))]
 [RequireComponent(typeof(BotHealthScript))]
 public class BotScript : NetworkedBehaviour
 {
     //Internal variables for children classes to use
-    public BotMovementScript botMovementScript;
+    public BotMovementBaseMethodScript botMovementScript;
     public EntityMovementScript entityMovementScript;
     public BotBobbingScript bobbingScript;
     public BotHealthScript healthScript;
@@ -20,7 +20,7 @@ public class BotScript : NetworkedBehaviour
     // Start is called before the first frame update
     virtual public void Start()
     {
-        botMovementScript = GetComponent<BotMovementScript>();
+        botMovementScript = GetComponent<BotMovementBaseMethodScript>();
         entityMovementScript = GetComponent<EntityMovementScript>();
         healthScript = GetComponent<BotHealthScript>();
         //Init this instance for bot scripts
